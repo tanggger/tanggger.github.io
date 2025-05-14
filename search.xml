@@ -403,4 +403,146 @@
         <tag>oo</tag>
       </tags>
   </entry>
+  <entry>
+    <title>oo-unit2</title>
+    <url>/2025/05/14/oo-unit2/</url>
+    <content><![CDATA[<h2 id="同步块设置与锁选择分析"><a href="#同步块设置与锁选择分析" class="headerlink" title="同步块设置与锁选择分析"></a>同步块设置与锁选择分析</h2><h3 id="Elevator-java-中的同步："><a href="#Elevator-java-中的同步：" class="headerlink" title="Elevator.java 中的同步："></a><strong><code>Elevator.java</code></strong> 中的同步：</h3><ul>
+<li><p><strong>同步块</strong>：</p>
+<ul>
+<li><p>在 <code>Elevator.java</code> 类中，使用了 <code>synchronized</code> 关键字来同步对共享资源的访问，特别是在对 <code>requestTable</code> 进行操作时，这个资源在多个电梯实例间共享。</p>
+</li>
+<li><p>例如：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (requestTable) &#123;</span><br><span class="line">    requestTable.notifyAll();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>这确保了多个线程访问 <code>requestTable</code> 时不会发生并发问题（例如多个电梯同时尝试修改或检查 <code>requestTable</code>）。</p>
+</li>
+<li><p>同步机制主要用于处理共享资源的访问，确保同一时刻只有一个线程能够执行某个特定操作，避免数据竞争。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>锁的选择</strong>：</p>
+<ul>
+<li><code>synLock</code> 作为一个静态锁对象，用于同步整个电梯实例的关键操作。它确保在某些操作期间，例如电梯调度（<code>handleSche</code>）时，不会发生多个线程对电梯对象的并发修改。</li>
+<li>同时，在电梯的双重模式下（<code>DuplexMode</code>），每个电梯会等待与配对电梯的同步操作。这些同步操作通过 <code>synchronized</code> 和 <code>wait</code>/<code>notify</code> 方法实现线程间的协调，保证两个电梯在执行更新操作时能够互相等待和通知。</li>
+</ul>
+</li>
+</ul>
+<h3 id="InputThread-java-中的同步："><a href="#InputThread-java-中的同步：" class="headerlink" title="InputThread.java 中的同步："></a><strong><code>InputThread.java</code></strong> 中的同步：</h3><ul>
+<li><p>在 <code>InputThread</code> 中，同样使用了 <code>synchronized</code> 来确保多个线程对 <code>mainRequestTable</code> 的修改是线程安全的。例如：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">    mainRequestTable.setEnd();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>这种同步确保了当请求输入线程结束时，不会发生并发访问 <code>mainRequestTable</code> 的问题。</p>
+</li>
+</ul>
+<h3 id="RequestTable-java-中的同步："><a href="#RequestTable-java-中的同步：" class="headerlink" title="RequestTable.java 中的同步："></a><strong><code>RequestTable.java</code></strong> 中的同步：</h3><ul>
+<li><strong>同步块</strong>：<ul>
+<li><code>RequestTable</code> 中的大部分方法（如 <code>addRequest</code>、<code>takeRequest</code> 等）都使用了 <code>synchronized</code>，确保多个线程对请求表的操作（添加、删除请求等）是互斥的。</li>
+<li>例如，在 <code>takeRequest</code> 方法中，电梯在取出请求时会等待请求表中的内容，如果没有请求，线程会在 <code>wait()</code> 调用上阻塞，直到有新的请求加入或操作结束。</li>
+<li>这通过 <code>wait</code> 和 <code>notifyAll</code> 方法协调线程间的通知和等待，避免了死锁问题。</li>
+</ul>
+</li>
+<li><strong>锁的选择</strong>：<ul>
+<li>使用 <code>synchronized</code> 来同步方法，确保在访问或修改 <code>requestTable</code> 时，只有一个线程可以执行相应的代码块。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Schedule-java-中的同步："><a href="#Schedule-java-中的同步：" class="headerlink" title="Schedule.java 中的同步："></a><strong><code>Schedule.java</code></strong> 中的同步：</h3><ul>
+<li><p><strong>同步块</strong>：</p>
+<ul>
+<li><p><code>Schedule</code> 线程在检查和处理 <code>mainRequestTable</code> 时，同样使用了 <code>synchronized</code> 来确保在多个线程操作 <code>requestTable</code> 时，避免并发修改的问题。特别是在检查请求是否结束时：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (mainRequestTable) &#123;</span><br><span class="line">    <span class="keyword">if</span> (mainRequestTable.isEnd() &amp;&amp; !isAllEmpty()) &#123;</span><br><span class="line">        mainRequestTable.wait();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><code>wait</code> 和 <code>notifyAll</code> 用于通知其他线程 <code>mainRequestTable</code> 状态的变化，并确保电梯调度任务能够继续执行。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="锁与同步块中处理语句之间的关系："><a href="#锁与同步块中处理语句之间的关系：" class="headerlink" title="锁与同步块中处理语句之间的关系："></a><strong>锁与同步块中处理语句之间的关系</strong>：</h3><ul>
+<li>锁和同步块的选择是为了保证在多线程环境下对共享资源的安全访问。在上述代码中，所有共享资源（如 <code>requestTable</code>、电梯状态、配对电梯等）都通过 <code>synchronized</code> 关键字确保了同一时刻只有一个线程可以修改它们。</li>
+<li><code>wait</code> 和 <code>notify</code> 方法在这些同步块中被用来处理线程间的协调。<code>wait</code> 会让线程在条件不满足时阻塞，直到其他线程通过 <code>notify</code> 或 <code>notifyAll</code> 通知其继续执行。例如，在电梯到达请求楼层并准备继续移动时，通过 <code>notifyAll</code> 来唤醒等待的线程。</li>
+<li>通过精确控制线程的执行顺序，避免了由于并发访问共享资源而引发的数据一致性问题。</li>
+</ul>
+<h2 id="调度器与调度策略设计"><a href="#调度器与调度策略设计" class="headerlink" title="调度器与调度策略设计"></a>调度器与调度策略设计</h2><h3 id="1-调度器设计总结分析"><a href="#1-调度器设计总结分析" class="headerlink" title="1. 调度器设计总结分析"></a>1. <strong>调度器设计总结分析</strong></h3><p>在这次作业中，调度器（<code>Schedule</code> 类）主要负责调度电梯的运行，确保电梯按请求表中的顺序执行任务，并通过合理的调度策略分配任务。调度器的设计关注以下几个方面：</p>
+<h4 id="1-1-调度器的职责："><a href="#1-1-调度器的职责：" class="headerlink" title="1.1 调度器的职责："></a>1.1 <strong>调度器的职责</strong>：</h4><ul>
+<li><p><strong>任务调度</strong>：调度器从 <code>mainRequestTable</code> 中获取请求，并根据请求的优先级和楼层，决定哪个电梯处理该请求。调度器根据请求的类型（如乘客请求、调度请求等），通知合适的电梯进行处理。</p>
+</li>
+<li><p><strong>线程协调</strong>：调度器与多个电梯线程（<code>Elevator</code> 类）协同工作。通过 <code>wait</code> 和 <code>notifyAll</code> 等同步机制，确保各个线程之间的协调与数据一致性。例如，当调度器发现 <code>mainRequestTable</code> 为空时，它会调用 <code>wait</code> 让当前线程等待，直到有新请求进入。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (mainRequestTable) &#123;</span><br><span class="line">    <span class="keyword">if</span> (mainRequestTable.isEmpty() &amp;&amp; !mainRequestTable.isEnd()) &#123;</span><br><span class="line">        mainRequestTable.wait(); <span class="comment">// 等待直到有请求</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><strong>调度结束控制</strong>：调度器负责检测是否所有电梯的任务都已完成（如 <code>isEnd()</code> 方法判断请求表是否为空）。当所有任务完成时，调度器会结束整个调度过程。</p>
+</li>
+</ul>
+<h4 id="1-2-与线程的交互："><a href="#1-2-与线程的交互：" class="headerlink" title="1.2 与线程的交互："></a>1.2 <strong>与线程的交互</strong>：</h4><ul>
+<li><p><strong>电梯线程和调度器的协作</strong>：调度器通过 <code>mainRequestTable</code> 与多个电梯线程进行协作。调度器定期检查请求表，并将任务分配给电梯。电梯线程则从请求表中取出任务，并在完成后向调度器报告其状态。</p>
+<p>例如：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (mainRequestTable) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!mainRequestTable.isEnd()) &#123;</span><br><span class="line">        mainRequestTable.wait();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><strong>通知机制</strong>：当调度器处理完一个任务后，会通过 <code>notifyAll</code> 通知相关电梯线程开始处理任务。同时，如果电梯需要等待新的请求，调度器会确保电梯线程在请求到来前不会被过早唤醒，避免浪费资源。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (mainRequestTable) &#123;</span><br><span class="line">    mainRequestTable.notifyAll(); <span class="comment">// 通知电梯线程继续执行</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<h3 id="2-调度策略总结分析"><a href="#2-调度策略总结分析" class="headerlink" title="2. 调度策略总结分析"></a>2. <strong>调度策略总结分析</strong></h3><p>调度策略的核心目的是合理分配电梯的任务，考虑多个因素（如时间、电量、优先级等），确保系统整体效率。以下是对当前调度策略的分析：</p>
+<h4 id="2-1-调度策略的设计："><a href="#2-1-调度策略的设计：" class="headerlink" title="2.1 调度策略的设计："></a>2.1 <strong>调度策略的设计</strong>：</h4><p>调度策略主要通过 <code>Strategy</code> 类进行实现，并根据不同的条件（如电梯的当前楼层、方向、是否处于双电梯模式等）决定电梯的行为。<code>Strategy</code> 类使用了不同的策略来控制电梯的行动，如：</p>
+<ul>
+<li><p><strong>常规模式（<code>normal</code>）</strong>：该模式根据<code>Look</code>算法来决定电梯是移动、等待还是开门。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Advice <span class="title function_">normal</span><span class="params">(<span class="type">int</span> nowFloor, <span class="type">int</span> nowNum, <span class="type">int</span> direction, HashMap&lt;Integer, PriorityBlockingQueue&lt;Person&gt;&gt; destMap, RequestTable requestTable)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (canOpenForOut(nowFloor, destMap) || canOpenForIn(nowFloor, nowNum, direction, requestTable)) &#123;</span><br><span class="line">        <span class="keyword">return</span> Advice.OPEN; <span class="comment">// 开门</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 其他决策（如移动、等待等）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><strong>双电梯模式（<code>DuplexMode</code>）</strong>：当电梯处于双重模式时，会考虑与配对电梯的协作，避免电梯之间的冲突。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Advice <span class="title function_">DuplexMode</span><span class="params">(<span class="type">int</span> nowFloor, <span class="type">int</span> nowNum, <span class="type">int</span> direction, HashMap&lt;Integer, PriorityBlockingQueue&lt;Person&gt;&gt; destMap, RequestTable requestTable, Elevator thisElevator, Elevator pairElevator)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (willCollide(thisElevator, pairElevator)) &#123;</span><br><span class="line">        <span class="keyword">return</span> Advice.SLEEP; <span class="comment">// 如果发生冲突，休眠</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Advice.MOVE; <span class="comment">// 否则继续移动</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<h2 id="整体架构分析"><a href="#整体架构分析" class="headerlink" title="整体架构分析"></a>整体架构分析</h2><h3 id="UML类图"><a href="#UML类图" class="headerlink" title="UML类图"></a>UML类图</h3><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/$%7Bfiilename%7D/image-20250417163058473.png"
+                      alt="image-20250417163058473"
+                ></p>
+<h4 id="三次作业架构设计迭代"><a href="#三次作业架构设计迭代" class="headerlink" title="三次作业架构设计迭代"></a>三次作业架构设计迭代</h4><h5 id="第五次作业"><a href="#第五次作业" class="headerlink" title="第五次作业"></a>第五次作业</h5><p>第五次作业作为多线程单元的开始，要求我们模拟一个多线程实时电梯系统，涉及到对乘客进行输入的接收，分配以及电梯对乘客的运输。本次作业我参考往届学长学姐的博客，设计了<code>InputThread</code>、<code>Schedule</code>、<code>ElevatorThread</code>三个种类的线程，分别对应着上述的三个功能。由于本次作业强行固定了乘客乘坐的电梯序号，因此在本次作业中<code>Schedule</code>线程其实没有太大作用，主要是为了给后续迭代中需要手动给乘客分配电梯做铺垫。</p>
+<p>具体到电梯的调度策略，我采用了<code>Look</code>算法，并建立了<code>Strategy</code>类，为每一个电梯线程提供策略：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Strategy</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> RequestTable requestTable;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Advice <span class="title function_">getAdvice</span><span class="params">(<span class="type">int</span> nowFloor, <span class="type">int</span> nowNum, <span class="type">int</span> direction,</span></span><br><span class="line"><span class="params">                            HashMap&lt;Integer, ArrayList&lt;Person&gt;&gt; destMap)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (canOpenForOut(nowFloor, destMap) </span><br><span class="line">            || canOpenForIn(nowFloor, nowNum, direction)) &#123; </span><br><span class="line">            <span class="keyword">return</span> Advice.OPEN;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (nowNum != <span class="number">0</span>) &#123; </span><br><span class="line">            <span class="keyword">return</span> Advice.MOVE;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;  </span><br><span class="line">            <span class="keyword">if</span> (requestTable.isEmpty()) &#123; </span><br><span class="line">                <span class="keyword">if</span> (requestTable.isEnd()) &#123; </span><br><span class="line">                    <span class="keyword">return</span> Advice.OVER; </span><br><span class="line">                &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">                    <span class="keyword">return</span> Advice.WAIT; </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (hasReqInOriginDirection(nowFloor, direction)) &#123;</span><br><span class="line">                <span class="keyword">return</span> Advice.MOVE; </span><br><span class="line">            &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">                <span class="keyword">return</span> Advice.REVERSE; </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<h5 id="第六次作业"><a href="#第六次作业" class="headerlink" title="第六次作业"></a>第六次作业</h5><p>第六次作业与第五次作业相比，取消了乘客请求指定电梯的约束，需要自行设计电梯分配策略；新增了“临时调度”的请求；新增“RECEIVE”约束；修改乘客输出指令格式等。</p>
+<p>针对取消乘客请求指定电梯的约束，自行设计电梯分配策略这个问题，我采用的是简单的随机分配的策略，即采用随机的方式将每一个乘客请求分配到电梯等待队列中。经过验证，随机分配的策略与其他的分配策略相比，似乎并没有对性能产生太大的差距，因此我将随机分配的策略沿用到第七次作业。但是有一个明显的缺陷就是在<code>debug</code>的时候很难对<code>bug</code>造成复现</p>
+<h5 id="第七次作业"><a href="#第七次作业" class="headerlink" title="第七次作业"></a>第七次作业</h5><p>第七次作业与第六次作业相比，增加了双轿厢电梯的改造，因此本次作业的重点在于双轿厢改造的设计。</p>
+<h6 id="实现双轿厢电梯的同步开始改造"><a href="#实现双轿厢电梯的同步开始改造" class="headerlink" title="实现双轿厢电梯的同步开始改造"></a>实现双轿厢电梯的同步开始改造</h6><p>根据题意，在改造开始之前，需要让<strong>两部电梯都停下后</strong>输出<code>UPDATE-BEGIN</code>才能开始改造动作。这个部分的将两个电梯停下之后在开始改造是一个小难点。根据这个问题，我的解决思路是：设置一个<code>isStop</code>的信号，若对检测到对方已经停止了，则将对方线程唤醒，否则将自己的线程进入睡眠态，从而达到使两个电梯达到同步。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line">isStop = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">if</span> (pairElevator.getIsStop()) &#123;</span><br><span class="line">	<span class="keyword">synchronized</span> (pairElevator) &#123;</span><br><span class="line">    	pairElevator.notify();</span><br><span class="line">	&#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">    	<span class="built_in">this</span>.wait();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<h6 id="防撞机制"><a href="#防撞机制" class="headerlink" title="防撞机制"></a>防撞机制</h6><p>对于轿厢运行到换乘楼层的问题，我使用的解决方案是：<code>Strategy</code>类会检查当前电梯与配对电梯的以下状态：</p>
+<ul>
+<li>当前楼层（<code>nowFloor</code>）</li>
+<li>运行方向（<code>direction</code>）</li>
+<li>当前指令（<code>advice</code>）</li>
+</ul>
+<p>然后对两个电梯进行判断，若两个轿厢的运行方向，当前楼层以及当前指令符合特定的判断条件，则让本电梯睡眠一定时长，等待另外一个电梯安全地离开中转楼层再进行移动操作，依据这种躲避策略达到防撞的目的。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="variable">judge1</span> <span class="operator">=</span> (thisNowFloor == transFloor + <span class="number">1</span> &amp;&amp; transFloor != -<span class="number">1</span>)</span><br><span class="line">	|| (thisNowFloor == transFloor + <span class="number">2</span> &amp;&amp; transFloor == -<span class="number">1</span>);</span><br><span class="line"><span class="type">boolean</span> <span class="variable">judge2</span> <span class="operator">=</span> (pairNowFloor == transFloor - <span class="number">1</span> &amp;&amp; transFloor != <span class="number">1</span>)</span><br><span class="line">	|| (pairNowFloor == transFloor - <span class="number">2</span> &amp;&amp; transFloor == <span class="number">1</span>);</span><br><span class="line"><span class="type">boolean</span> <span class="variable">judge3</span> <span class="operator">=</span> (pairNowFloor == transFloor - <span class="number">2</span> &amp;&amp; transFloor != <span class="number">2</span>)</span><br><span class="line">    || (pairNowFloor == transFloor - <span class="number">3</span> &amp;&amp; transFloor == <span class="number">2</span>);</span><br><span class="line"><span class="keyword">if</span> (judge1 &amp;&amp; judge3 &amp;&amp;</span><br><span class="line">    thisDirection == -<span class="number">1</span> &amp;&amp; pairDirection == <span class="number">1</span> &amp;&amp; pairAdvice == Advice.MOVE) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (judge1 &amp;&amp; (pairNowFloor == transFloor ||(judge2 &amp;&amp; pairAdvice == Advice.MOVE)) &amp;&amp; thisDirection == -<span class="number">1</span>) &#123;</span><br><span class="line">     <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> (pairNowFloor == transFloor || judge2) &amp;&amp;pairDirection == -<span class="number">1</span> &amp;&amp; pairAdvice == Advice.MOVE;</span><br></pre></td></tr></table></figure></div>
+<p>此设计确保了两部电梯在共享电梯井的时候，通过严格的路劲估测和状态同步，避免物理碰撞。</p>
+<h3 id="UML协作图"><a href="#UML协作图" class="headerlink" title="UML协作图"></a>UML协作图</h3><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/$%7Bfiilename%7D/image-20250418093116560.png"
+                      alt="image-20250418093116560"
+                ></p>
+<h3 id="稳定以及易变内容分析"><a href="#稳定以及易变内容分析" class="headerlink" title="稳定以及易变内容分析"></a>稳定以及易变内容分析</h3><h4 id="稳定内容"><a href="#稳定内容" class="headerlink" title="稳定内容"></a>稳定内容</h4><p>主要的结构是稳定的。三次作业中，我的架构始终是<code>InputThread</code>、<code>Schedule</code>、<code>ElevatorThread</code>三个部分，分别对应着乘客的接收、分配以及电梯对乘客的运输。针对临时调度以及电梯双轿厢部分，我采用的是特殊处理的方式，并没有将临时调度请求和双轿厢请求放入<code>requestTable</code>中，因此我的架构的整体设计并没有做很大改变。</p>
+<h4 id="易变内容"><a href="#易变内容" class="headerlink" title="易变内容"></a>易变内容</h4><p>对输入的请求的处理和电梯运动策略是易变的：</p>
+<ul>
+<li>由于在历次迭代中，逐渐添加了一些特殊的请求，比如说临时调度请求以及双轿厢电梯请求，因此在<code>InputThread</code>接收到请求之后，需要对请求的种类进行辨别，如果是临时调度请求或者双轿厢电梯请求，则对其进行特殊处理。</li>
+<li>由于正常情况、临时调度以及双轿厢三种情况电梯调度的策略都不尽相同，因此需要在<code>Strategy</code>中进行修改</li>
+<li>另外，还有<code>InputThread</code>线程的终止条件的判断在迭代中也产生了变化。在第五次作业的时候，判断<code>Schedule</code>线程终止的条件是<code>mainRequestTable</code>的输入已经终止了，但是在后面迭代中，由于临时调度和双轿厢要求在改造时将本电梯中所有<code>receive</code>了的乘客重新放回主请求表，因此判断<code>Schedule</code>线程终止的时候需要将电梯线程中打回的乘客请求纳入处理。</li>
+</ul>
+<h2 id="bug和debug"><a href="#bug和debug" class="headerlink" title="bug和debug"></a><code>bug</code>和<code>debug</code></h2><h3 id="出现过的bug"><a href="#出现过的bug" class="headerlink" title="出现过的bug"></a>出现过的<code>bug</code></h3><h4 id="第五次作业-1"><a href="#第五次作业-1" class="headerlink" title="第五次作业"></a>第五次作业</h4><p>第五次作业强测没有出现问题，但是在<code>hack</code>部分出现问题了，主要是当输入请求中暂时没有请求，但是程序仍然没有结束时，我没有将线程进入等待，导致我线程中一直处于轮询的状态，导致了<code>ctle</code>的问题。</p>
+<h4 id="第六次作业-1"><a href="#第六次作业-1" class="headerlink" title="第六次作业"></a>第六次作业</h4><p>第六次作业主要碰到的问题是电梯在<code>SCHE-BEGIN</code>之后，几乎在同时输出了<code>RECEIVE</code>操作。这个是线程不安全的原因，因为不能确定在同一时间内线程中的指令执行的先后，针对这个问题，我设置了一个缓冲池，将乘客请求先放在缓冲池中，再在<code>Elevator</code>线程中从缓冲池中进行提取请求，这样，乘客的<code>RECEIVE</code>与<code>SCHE-BEGIN</code>属于串行的指令，也就自然消除了输出先后的问题。</p>
+<h4 id="第七次问题"><a href="#第七次问题" class="headerlink" title="第七次问题"></a>第七次问题</h4><p>第七次问题主要问题是电梯防撞功能的优化和改进。由于在线程中访问其他线程的属性是不安全的，会产生刚读取完属性值就产生改变的情况。针对这个问题，我对双轿厢电梯的策略的获取加了锁，即每一次只能有一个轿厢取得策略，这样能很好地避免防撞判断时状态获取不准确的问题发生。</p>
+<p>多线程程序的<code>debug</code>方法</p>
+<h3 id="debug方法"><a href="#debug方法" class="headerlink" title="debug方法"></a><code>debug</code>方法</h3><h4 id="断点-线程监视器"><a href="#断点-线程监视器" class="headerlink" title="断点 + 线程监视器"></a>断点 + 线程监视器</h4><ul>
+<li>使用 IntelliJ IDEA 的 <code>Thread Debugger</code>，在可疑代码处设置断点，右键选择 <code>Suspend: Thread</code>。<ul>
+<li>这种方法只能在程序里面步进，只能简单的检查自己是否有逻辑上的错误，并不能清楚的看出进程之间的关系，可能不能找出线程之间的潜在的问题。所以这个<code>debug</code>方法只能进行初步的检测。</li>
+</ul>
+</li>
+</ul>
+<h4 id="Print大法"><a href="#Print大法" class="headerlink" title="Print大法"></a><code>Print</code>大法</h4><p>在关键路径处插入需要监测的属性，并以 <code>TimableOutput.println</code>的形式输出，这样可以很好的找出线程中的问题，但是有缺陷就是便利性不足，程序流程透明。</p>
+<h2 id="心得体会"><a href="#心得体会" class="headerlink" title="心得体会"></a>心得体会</h2><h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p>由于电梯系统天然是一个多线程协同调度的问题，需要多个电梯线程与输入、调度线程并发运行，如何避免竞态条件和线程阻塞成为核心挑战。例如在 <code>RequestTable</code> 中通过 <code>synchronized</code> 同步方法与 <code>wait/notifyAll()</code> 实现线程安全的生产者-消费者模型，确保请求的有序添加与处理。而在 <code>Elevator</code> 类中，对于共享资源如电梯当前楼层、请求队列、状态标志等，也通过细粒度的锁保证状态更新的一致性与原子性，避免了调度混乱与死锁风险。此外，<code>InputThread</code> 与 <code>Schedule</code> 的解耦设计，也体现了对输入处理与请求调度之间同步性的合理控制。</p>
+<h3 id="层次化设计"><a href="#层次化设计" class="headerlink" title="层次化设计"></a>层次化设计</h3><p>在<strong>层次化设计</strong>方面，系统采用了清晰的职责划分架构。例如，<code>MainClass</code> 负责系统初始化，<code>InputThread</code> 负责请求接收与解析，<code>Schedule</code> 统一管理调度策略，而每个 <code>Elevator</code> 实例则自主管理自身状态与行为响应。各模块之间通过 <code>RequestTable</code> 和 <code>Person</code> 类传递数据，确保了数据逻辑的模块内封装、模块间低耦合。在电梯运行策略层面，进一步引入了 <code>Strategy</code> 模块封装调度决策逻辑，通过 <code>Advice</code> 枚举类实现电梯行为控制流的抽象，增强了代码的可维护性与可拓展性。</p>
+]]></content>
+      <tags>
+        <tag>oo</tag>
+      </tags>
+  </entry>
 </search>
