@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Zixuan Tang">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2025/05/14/oo-unit3/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="oo-unit3">
+<meta property="og:url" content="http://example.com/2025/05/14/oo-unit3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-05-14T11:37:09.000Z">
+<meta property="article:modified_time" content="2025-05-14T11:39:25.921Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="oo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/favicon.jpg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.jpg">
+    <meta name="theme-color" content="#002FA7">
+    <link rel="shortcut icon" href="/images/favicon.jpg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            oo-unit3 | Tanggger
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"ÍĆźöÔÄśÁ","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#002FA7","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"Tanggger's Blog","subtitle":{"text":["我惦着你","在时间里洄游"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"之外","artist":"陈奕迅","url":"music/eason_zhiwai.mp3","cover":"images/t018e6740ba46684c66.jpg","lrc":"music/eason_zhiwai.lrc"},{"name":"如果你也听说","artist":"张惠妹","url":"music/如果你也听说-张惠妹.mp3","cover":"images/t01bbdb98901103893e.jpg","lrc":"music/如果你也听说-张惠妹-歌词.lrc"},{"name":"回留","artist":"方大同","url":"music/回留-方大同.mp3","cover":"images/OIP-C.jpg","lrc":"music/回留-方大同-歌词.lrc"}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.2","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Tags":{"icon":"fa-solid fa-tags","path":"/tags/"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/2/13 22:21:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/favicon.jpg" class="w-full h-full rounded-sm">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Tanggger
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/tags/"
+                                        >
+                                    <i class="fa-solid fa-tags fa-fw"></i>
+                                    TAGS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/tags/"
+                        >
+                            <span>
+                                TAGS
+                            </span>
+                            
+                                <i class="fa-solid fa-tags fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">2</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">0</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">4</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">oo-unit3</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/favicon.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">Zixuan Tang</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv1</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-05-14 19:37:09</span>
+        <span class="mobile">2025-05-14 19:37:09</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-05-14 19:39:25</span>
+            <span class="mobile">2025-05-14 19:39:25</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/oo/">oo</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="本单元测试过程"><a href="#本单元测试过程" class="headerlink" title="本单元测试过程"></a>本单元测试过程</h2><h3 id="对各类测试的理解与应用"><a href="#对各类测试的理解与应用" class="headerlink" title="对各类测试的理解与应用"></a>对各类测试的理解与应用</h3><p>在本单元的社交网络项目中，我们可以应用多种测试方法来保证代码的质量：</p>
+<h4 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h4><p>这是最基础也是最重要的测试环节。它针对程序中的最小可测试单元（通常是类中的一个方法）进行验证，确保其行为符合JML规格的描述。JML的 <code>requires</code>, <code>ensures</code>, <code>assignable</code>, <code>signals</code> 等子句为单元测试用例的设计提供了直接依据。</p>
+<ul>
+<li><p><code>requires</code> 子句：帮助我们构造合法的输入参数和前置条件。</p>
+</li>
+<li><p><code>ensures</code> 子句：定义了方法执行后期望的返回结果和对象状态，是断言的主要依据。</p>
+</li>
+<li><p><code>assignable</code> 子句：指明了方法执行过程中哪些对象的状态可以被修改，测试时需要验证未在 <code>assignable</code> 中列出的对象状态是否保持不变 (即副作用控制)。</p>
+</li>
+<li><p><code>signals</code> 子句：明确了在何种条件下应抛出何种异常。测试时需要构造触发这些条件的情况，并验证是否正确抛出了预期的异常。</p>
+</li>
+</ul>
+<h4 id="功能测试"><a href="#功能测试" class="headerlink" title="功能测试"></a>功能测试</h4><p>功能测试关注的是软件作为一个整体或特定功能模块是否满足需求规格说明中定义的功能。在本单元中，这意味着验证整个社交网络系统是否能正确处理指令文件中的各种操作，并产生预期的输出或状态变化。</p>
+<ul>
+<li>构造一系列指令，模拟用户在社交网络中的典型操作序列，例如：添加用户 -&gt; 建立关系 -&gt; 发送消息 -&gt; 查询信息 -&gt; 删除表情等。</li>
+<li>从输入指令到最终输出（或通过查询方法验证内部状态）进行完整路径的测试。</li>
+<li>确保所有JML定义的正常流程和异常流程都能按预期工作。</li>
+</ul>
+<h4 id="集成测试"><a href="#集成测试" class="headerlink" title="集成测试"></a>集成测试</h4><p>当多个单元（类或模块）组合在一起工作时，集成测试用于发现它们之间接口和交互的问题。在我们的项目中，<code>Network</code> 类是核心，它集成了 <code>Person</code>, <code>Tag</code>, <code>Message</code> 等多个组件。</p>
+<ul>
+<li><p><strong><code>Network</code> 作为集成点</strong>：大部分集成测试可以围绕 <code>Network</code> 类展开。</p>
+</li>
+<li><p><strong>跨类交互</strong>：</p>
+<ul>
+<li><p><code>sendMessage</code> (类型0): <code>Message</code> 对象创建 -&gt; <code>Person</code> (sender) <code>isLinked</code> <code>Person</code> (receiver) -&gt; <code>Person</code> 对象的 <code>socialValue</code>, <code>money</code>, <code>messages</code> 列表更新。</p>
+</li>
+<li><p><code>sendMessage</code> (类型1): <code>Message</code> 对象创建 -&gt; <code>Person</code> (sender) <code>containsTag</code> -&gt; <code>Tag</code> 对象 <code>getPersons</code> -&gt; 多个 <code>Person</code> 对象的 <code>socialValue</code>, <code>money</code>, <code>messages</code> 更新。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="压力测试"><a href="#压力测试" class="headerlink" title="压力测试"></a>压力测试</h4><p>压力测试评估系统在极端负载（如大量数据、高并发请求——本单元主要是大量数据和指令）下的稳定性和性能表现。目的是找到系统的瓶颈和失效点。</p>
+<ul>
+<li><strong>大数据量</strong>：构造包含大量用户（如JML中允许的最大数量）、大量关系、大量消息、大量标签的网络。</li>
+<li><p><strong>高频复杂指令</strong>：执行大量查询指令（如 <code>qts</code>, <code>qcs</code>, <code>qbs</code>, <code>qsv</code>, <code>dce</code> 等），特别是那些时间复杂度较高的指令。</p>
+</li>
+<li><p><strong>性能瓶颈识别</strong>：通过压力测试，可以发现哪些操作（如 <code>isCircle</code> 的朴素实现、未优化的 <code>queryTripleSum</code>、大量成员的 <code>Tag</code> 的 <code>valueSum</code> 计算等）在数据量大时会超时。</p>
+</li>
+</ul>
+<h4 id="回归测试"><a href="#回归测试" class="headerlink" title="回归测试"></a>回归测试</h4><p>当代码发生修改（如bug修复、功能增强、性能优化）后，重新运行之前的测试用例，以确保新的改动没有引入新的错误，或导致原有功能失效。</p>
+<h3 id="数据构造策略"><a href="#数据构造策略" class="headerlink" title="数据构造策略"></a>数据构造策略</h3><h4 id="基于JML规格的构造"><a href="#基于JML规格的构造" class="headerlink" title="基于JML规格的构造"></a>基于JML规格的构造</h4><ul>
+<li><p>边界值分析</p>
+<ul>
+<li>容器大小</li>
+<li>ID范围</li>
+<li>数值范围</li>
+<li><code>limit</code> 参数</li>
+</ul>
+</li>
+<li><p>等价类划分：将输入数据划分为若干个等价类，从每个类中选取代表性数据作为测试用例</p>
+</li>
+<li><p>异常条件构造：严格按照JML的 <code>signals</code> 子句构造触发异常的数据，如为<code>PersonIdNotFoundException</code> 构造一个不存在的 <code>personId</code> 作为输入，为<code>EqualRelationException</code> 构造两个已存在关系的 <code>id</code>。</p>
+</li>
+</ul>
+<h4 id="基于社交网络特性的构造"><a href="#基于社交网络特性的构造" class="headerlink" title="基于社交网络特性的构造"></a>基于社交网络特性的构造</h4><p>图的结构，特殊状态，指令序列的特定组合等等。</p>
+<h2 id="如何引导大模型"><a href="#如何引导大模型" class="headerlink" title="如何引导大模型"></a>如何引导大模型</h2><p>利用大模型辅助JML规格设计与代码实现时，关键在于<strong>有效引导</strong>。</p>
+<h3 id="核心策略"><a href="#核心策略" class="headerlink" title="核心策略"></a>核心策略</h3><ul>
+<li>精准提问与充足上下文：向模型清晰描述你的目标，提供所有相关的JML规格、接口定义、已有的类结构和代码片段。例如，要实现<code>Network.addRelation</code>，需给出<code>PersonInterface</code>、<code>TagInterface</code>以及该方法的完整JML。</li>
+<li>任务分解：将复杂任务（如实现整个<code>Network</code>类）分解为小步骤（如实现单个方法，或方法中的某个逻辑分支）。</li>
+<li>明确关键约束：在提问时，突出JML中的核心约束（如<code>pure</code>函数不能有副作用，<code>assignable</code>的精确范围）和性能要求。</li>
+</ul>
+<h3 id="JML特定场景引导技巧"><a href="#JML特定场景引导技巧" class="headerlink" title="JML特定场景引导技巧"></a>JML特定场景引导技巧</h3><ul>
+<li>精确到子句提问，如“<code>\forall</code> 和 <code>\exists</code> 在这里如何理解？”</li>
+<li>重点关注JML的副作用（<code>assignable</code>）和契约（<code>ensures</code>, <code>signals</code>），以及<code>\old()</code>表达式的正确处理。</li>
+<li>明确指出期望的算法（如DFS/BFS），并提供项目中相关的数据结构和方法（如<code>Person</code>的邻接点获取方式）。</li>
+<li>要求模型基于JML的各个条件分支（正常、边界、异常）提出测试场景。</li>
+</ul>
+<h2 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h2><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/ae0dafd62c46cf1c6c93df1d7c782fec.png"
+                      alt="image-20250514164659061"
+                ></p>
+<h3 id="整体架构设计"><a href="#整体架构设计" class="headerlink" title="整体架构设计"></a>整体架构设计</h3><h4 id="接口层"><a href="#接口层" class="headerlink" title="接口层"></a>接口层</h4><h4 id="实体层"><a href="#实体层" class="headerlink" title="实体层"></a>实体层</h4><ul>
+<li><strong><code>Person</code></strong>: 代表社交网络中的个体用户。核心数据包括ID、姓名、年龄，以及与其他用户的关系（熟人及其关系值）、拥有的标签、消息列表、社交活跃度、金钱等。</li>
+<li><strong><code>Message</code> (及其子类)</strong>: 代表用户间的交互信息。<code>Message</code>作为基类，封装了消息ID、类型（个人消息/标签消息）、发送者、社交价值等基本信息。子类如 <code>EmojiMessage</code>, <code>ForwardMessage</code>, <code>RedEnvelopeMessage</code> 则在其基础上增加了特定属性（表情ID、文章ID、红包金额）。这是一个典型的<strong>继承</strong>应用，不同消息类型共享通用属性和行为，同时具有各自特性。</li>
+<li><p><strong><code>Tag</code></strong>: 代表用户标签，可以包含一组用户。核心数据包括标签ID、标签内的用户集合，以及一些统计值。</p>
+</li>
+<li><p><strong><code>OfficialAccount</code></strong>: 代表公众号实体。核心数据包括所有者ID、公众号ID、名称、关注者列表、发布的文章ID列表以及贡献度信息。</p>
+</li>
+</ul>
+<h4 id="网络管理层"><a href="#网络管理层" class="headerlink" title="网络管理层"></a>网络管理层</h4><ul>
+<li>这是整个社交网络的核心控制器和数据中心。它负责管理所有的实体对象（<code>Person</code>, <code>Message</code>, <code>Tag</code>, <code>OfficialAccount</code>），并处理它们之间的复杂交互和查询。</li>
+</ul>
+<h3 id="图模型构建与数据结构选择"><a href="#图模型构建与数据结构选择" class="headerlink" title="图模型构建与数据结构选择"></a>图模型构建与数据结构选择</h3><p>社交网络本质上是一个图，其中用户是节点 (Node/Vertex)，用户间的关系是边 (Edge)。在本次实验中，我的图模型主要体现在 <code>Person</code> 类和 <code>Network</code> 类中对这些节点和边的管理。</p>
+<ul>
+<li><p>节点 (Person) 的存储：在 <code>Network</code> 类中，使用了 <code>private final HashMap&lt;Integer, Person&gt; people = new HashMap&lt;&gt;();</code> 来存储所有的 <code>Person</code> 对象。</p>
+<ul>
+<li><code>HashMap</code> 提供了 O(1) 的平均时间复杂度来通过用户ID (<code>Integer</code>) 检索 <code>Person</code> 对象。</li>
+</ul>
+</li>
+<li><p>边 (Relation) 的存储与表示：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ArrayList&lt;PersonInterface&gt; acquaintance = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(); <span class="comment">// 存储熟人对象</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ArrayList&lt;Integer&gt; value = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(); <span class="comment">// 存储对应熟人的关系值</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> HashMap&lt;Integer, Integer&gt; acquaintanceMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;(); <span class="comment">// 存储熟人ID到其在acquaintance列表中的索引，用于快速查找和删除</span></span><br></pre></td></tr></table></figure></div>
+<ul>
+<li><code>acquaintance</code> 和 <code>value</code> 两个 <code>ArrayList</code> 通过索引一一对应，可以方便地获取一个人的所有熟人及其对应的关系值。遍历所有熟人时效率尚可。</li>
+<li>引入 <code>acquaintanceMap</code> 是一个关键优化。如果没有它，当需要查询特定熟人的 <code>value</code> (如 <code>queryValue(person)</code>) 或者修改/删除特定关系时，需要在 <code>acquaintance</code> 列表中进行线性搜索，时间复杂度为 O(k)（k为熟人数量）。有了 <code>acquaintanceMap</code>，可以通过熟人ID在 O(1) 时间内定位到其在列表中的索引，从而快速访问或修改其关系值，或者在删除时高效地维护列表（尽管删除本身在 <code>ArrayList</code> 中可能涉及元素移动，但定位是快速的）。</li>
+</ul>
+</li>
+<li><p>标签 (<code>Tag</code>) 与人的关系：</p>
+<ul>
+<li><code>Person</code> 类中: <code>private final HashMap&lt;Integer, TagInterface&gt; tags = new HashMap&lt;&gt;();</code> 存储该用户拥有的所有标签，通过标签ID快速查找。</li>
+<li><code>Tag</code> 类中: <code>private final HashSet&lt;PersonInterface&gt; persons = new HashSet&lt;&gt;();</code> 存储该标签下的所有用户。</li>
+</ul>
+</li>
+<li><p>消息 (<code>Message</code>) 的管理</p>
+</li>
+<li><p>公众号 (<code>OfficialAccount</code>) 的管理：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ArrayList&lt;PersonInterface&gt; followers = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ArrayList&lt;Integer&gt; contributions = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> HashMap&lt;Integer, Integer&gt; followerIndexMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br></pre></td></tr></table></figure></div>
+<ul>
+<li>这与 <code>Person</code> 中管理熟人的方式类似，<code>followerIndexMap</code> 用于快速定位关注者在列表中的位置，便于更新贡献度或检查关注状态。</li>
+</ul>
+</li>
+</ul>
+<h3 id="图模型维护策略与性能优化"><a href="#图模型维护策略与性能优化" class="headerlink" title="图模型维护策略与性能优化"></a>图模型维护策略与性能优化</h3><p>动态维护图结构及其相关属性是本单元的难点，特别是在需要保证JML规格正确性的同时追求性能。</p>
+<ul>
+<li><p>添加/修改关系 (<code>Network.addRelation</code>, <code>Network.modifyRelation</code>)：</p>
+<ul>
+<li><code>Person.bestAcquaintanceDirty = true;</code>：当关系发生变化时，标记“最佳熟人”缓存失效，下次查询时重新计算，这个方法采用的是懒更新。</li>
+<li><p><code>Tag.valueSumCache</code> 的维护：当 <code>addRelation</code> 或 <code>modifyRelation</code> 发生时，涉及到这两个人的标签的 <code>valueSumCache</code> 可能需要更新。我采用的策略是在<code>addRelation</code> 和 <code>modifyRelation</code>时，找出这两个人共同所属的标签，并直接调整这些标签的<code>valueSumCache</code>。</p>
+</li>
+<li><p><code>Network.tripleSum</code> 的维护：<code>queryTripleSum</code> 是一个典型的需要高效维护的全局状态。</p>
+<ul>
+<li>JML中的<code>qts</code>指令要求O(N)的复杂度，这意味着不能在查询时实时计算。</li>
+<li>在 <code>addRelation(id1, id2, value)</code> 时，遍历 <code>id1</code> 的熟人 <code>p</code>，如果 <code>p</code> 同时也是 <code>id2</code> 的熟人，则形成了一个新的三元组 (<code>id1</code>, <code>id2</code>, <code>p</code>)，<code>tripleSum</code> 增加。<code>modifyRelation</code> 中删除关系时则相反。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>查询连通性 (<code>Network.isCircle</code>)：</p>
+<ul>
+<li>我使用了 DFS (深度优先搜索)，从一个节点开始DFS，看是否能到达另一个节点。使用 <code>HashSet&lt;Integer&gt; visited</code> 防止重复访问和死循环。</li>
+</ul>
+</li>
+<li><p>最短路径 (<code>Network.queryShortestPath</code>)：</p>
+<ul>
+<li>我使用了 BFS (广度优先搜索)，从起点开始BFS，层层扩展，最先到达终点时的层数即为最短路径长度。使用队列和 <code>visited</code> 集合。</li>
+</ul>
+</li>
+</ul>
+<h2 id="性能瓶颈剖析与优化实践"><a href="#性能瓶颈剖析与优化实践" class="headerlink" title="性能瓶颈剖析与优化实践"></a>性能瓶颈剖析与优化实践</h2><h3 id="出现过的性能问题"><a href="#出现过的性能问题" class="headerlink" title="出现过的性能问题"></a>出现过的性能问题</h3><h4 id="queryTripleSum-查询效率低下"><a href="#queryTripleSum-查询效率低下" class="headerlink" title="queryTripleSum 查询效率低下"></a><code>queryTripleSum</code> 查询效率低下</h4><ul>
+<li>如果 <code>queryTripleSum</code> 采用暴力遍历所有用户三元组的方式，其复杂度将是 O(N^3) 或 O(N⋅K^2)（N为总人数，K为平均度数），在用户和关系数量较多时极易超时。JML中 <code>qts</code> 指令通常有 O(N) 或类似的性能要求。</li>
+<li>修复策略：在 <code>Network</code> 类中维护一个全局变量 <code>tripleSum</code>，当 <code>addRelation(id1, id2, value)</code> 时：遍历 <code>id1</code> 的所有熟人 <code>p</code>，如果 <code>p</code> 也是 <code>id2</code> 的熟人（即 <code>p.isLinked(people.get(id2))</code>），则说明形成了一个新的三元组 (<code>id1</code>, <code>id2</code>, <code>p</code>)，此时 <code>tripleSum</code> 增加。</li>
+<li><code>queryTripleSum</code> 变为 O(1) 操作。</li>
+</ul>
+<h4 id="Tag-getValueSum-计算效率低下"><a href="#Tag-getValueSum-计算效率低下" class="headerlink" title="Tag.getValueSum() 计算效率低下"></a><code>Tag.getValueSum()</code> 计算效率低下</h4><ul>
+<li>如果每次调用 <code>getValueSum</code> 都遍历标签内所有用户对 (P_i,P_j)，并调用 <code>P_i.queryValue(P_j)</code>，复杂度将是 O(M^2⋅K)。</li>
+<li>修复策略：在 <code>Tag</code> 类中引入 <code>private int valueSumCache = 0</code>，在<code>addPerson</code>，<code>delPerson</code>，<code>addRelation</code>，<code>modefyRelation</code>方法中进行动态维护。</li>
+</ul>
+<h4 id="Person-getBestAcquaintance-效率"><a href="#Person-getBestAcquaintance-效率" class="headerlink" title="Person.getBestAcquaintance() 效率"></a><code>Person.getBestAcquaintance()</code> 效率</h4><ul>
+<li>如果每次调用都遍历所有熟人比较<code>value</code>，复杂度为 O(K)。如果此方法被高频调用，会累积不少耗时。</li>
+<li>修复策略：缓存与脏位机制。</li>
+</ul>
+<h3 id="对规格与实现分离的理解"><a href="#对规格与实现分离的理解" class="headerlink" title="对规格与实现分离的理解"></a>对规格与实现分离的理解</h3><p>JML在本单元中扮演了“规格”的角色，而我们的Java代码则是“实现”。我对这两者分离的理解如下：</p>
+<ul>
+<li>契约的明确性与稳定性：规格定义了一个方法或一个类的”做什么“，实现关注的是“如何做”。</li>
+<li>规格与实现分离的好处：<ul>
+<li>设计与实现分离：可以先专注于通过JML定义清晰、无歧义的系统行为，而不必过早陷入实现细节。</li>
+<li>并行开发与团队协作：一旦规格确定，不同的开发者可以依据规格独立实现不同的模块，或者对同一模块进行不同的实现尝试。</li>
+<li>可替换性与可维护性：只要实现严格遵守规格，我们就可以在不影响系统其他部分的前提下，替换掉某个模块的旧实现（比如为了性能优化），或者修改其内部实现细节。</li>
+</ul>
+</li>
+</ul>
+<h2 id="JML规格驱动的JUnit测试设计与一致性检验"><a href="#JML规格驱动的JUnit测试设计与一致性检验" class="headerlink" title="JML规格驱动的JUnit测试设计与一致性检验"></a>JML规格驱动的JUnit测试设计与一致性检验</h2><h3 id="如何利用JML规格信息设计JUnit测试"><a href="#如何利用JML规格信息设计JUnit测试" class="headerlink" title="如何利用JML规格信息设计JUnit测试"></a>如何利用JML规格信息设计JUnit测试</h3><ul>
+<li><strong>前置条件 (<code>requires</code>) → 构造测试输入</strong>：<code>requires</code>定义了方法调用前必须满足的状态。用它来准备合法的测试数据和场景。</li>
+<li><p><strong>后置条件 (<code>ensures</code>) → 验证测试结果</strong>：</p>
+<ul>
+<li><code>ensures</code>描述了方法成功执行后的预期结果（返回值 <code>\result</code>）和对象状态变化。这是JUnit <code>assert</code>语句的依据。</li>
+<li><code>\old(expr)</code>：表示<code>expr</code>在方法执行前的值。测试时需记录旧值，调用方法后用旧值验证<code>ensures</code>中断言。</li>
+</ul>
+</li>
+<li><p><strong>副作用约束 (<code>assignable</code> / <code>pure</code>) → 检查状态修改范围</strong>：</p>
+<ul>
+<li><code>assignable</code>列出了方法能修改的状态。测试要验证这些状态按预期改变，且其他无关状态不变。</li>
+<li><code>pure</code>方法（即<code>assignable \nothing</code>）不应修改任何状态。测试需验证调用前后对象状态完全一致。</li>
+</ul>
+</li>
+</ul>
+<h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h3><ul>
+<li>测试直指JML定义的每个细节。</li>
+<li>JML帮助考虑边界、正常、异常情况，测试更全面。</li>
+</ul>
+<h2 id="学习体会"><a href="#学习体会" class="headerlink" title="学习体会"></a>学习体会</h2><p>本单元的学习让我深刻体会到JML规格在软件开发中的重要性。通过精确的形式化语言定义接口行为，JML为代码实现提供了清晰的“契约”，减少了理解偏差。初期，阅读和理解复杂的JML表达式，如<code>\forall</code>和<code>\old</code>，确有挑战，但一旦掌握，便能准确把握方法的功能边界和状态变化。</p>
+<p>最大的收获在于理解“规格与实现分离”。JML仅定义“做什么”，给予实现“如何做”的极大自由。这促使我不仅要保证功能正确，更要思考数据结构和算法选择以优化性能，如通过增量维护<code>tripleSum</code>和<code>valueSumCache</code>来避免超时。同时，JML也直接指导了JUnit测试用例的设计，特别是针对边界条件和异常情况的测试，有效提升了代码的健壮性。这次经历让我认识到，<strong>严谨的规格是构建高质量、可维护软件系统的坚实基础</strong>。</p>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/oo/">#oo</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/03/19/oo-unit1/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">oo-unit1</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+          
+          
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">oo-unit3</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="nav-text">本单元测试过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E5%90%84%E7%B1%BB%E6%B5%8B%E8%AF%95%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-text">对各类测试的理解与应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%9E%84%E9%80%A0%E7%AD%96%E7%95%A5"><span class="nav-text">数据构造策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%BC%95%E5%AF%BC%E5%A4%A7%E6%A8%A1%E5%9E%8B"><span class="nav-text">如何引导大模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%AD%96%E7%95%A5"><span class="nav-text">核心策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JML%E7%89%B9%E5%AE%9A%E5%9C%BA%E6%99%AF%E5%BC%95%E5%AF%BC%E6%8A%80%E5%B7%A7"><span class="nav-text">JML特定场景引导技巧</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-text">架构设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-text">整体架构设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E6%A8%A1%E5%9E%8B%E6%9E%84%E5%BB%BA%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E9%80%89%E6%8B%A9"><span class="nav-text">图模型构建与数据结构选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E6%A8%A1%E5%9E%8B%E7%BB%B4%E6%8A%A4%E7%AD%96%E7%95%A5%E4%B8%8E%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-text">图模型维护策略与性能优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88%E5%89%96%E6%9E%90%E4%B8%8E%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5"><span class="nav-text">性能瓶颈剖析与优化实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BA%E7%8E%B0%E8%BF%87%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98"><span class="nav-text">出现过的性能问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%A7%84%E6%A0%BC%E4%B8%8E%E5%AE%9E%E7%8E%B0%E5%88%86%E7%A6%BB%E7%9A%84%E7%90%86%E8%A7%A3"><span class="nav-text">对规格与实现分离的理解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JML%E8%A7%84%E6%A0%BC%E9%A9%B1%E5%8A%A8%E7%9A%84JUnit%E6%B5%8B%E8%AF%95%E8%AE%BE%E8%AE%A1%E4%B8%8E%E4%B8%80%E8%87%B4%E6%80%A7%E6%A3%80%E9%AA%8C"><span class="nav-text">JML规格驱动的JUnit测试设计与一致性检验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8JML%E8%A7%84%E6%A0%BC%E4%BF%A1%E6%81%AF%E8%AE%BE%E8%AE%A1JUnit%E6%B5%8B%E8%AF%95"><span class="nav-text">如何利用JML规格信息设计JUnit测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%88%E6%9E%9C"><span class="nav-text">效果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E4%BD%93%E4%BC%9A"><span class="nav-text">学习体会</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Zixuan Tang</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        4 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.2</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+	<div id="aplayer"></div>
+
+<script src="/js/build/libs/APlayer.min.js"></script>
+
+
+<script src="/js/build/plugins/aplayer.js"></script>
+
+
+	
+</body>
+
+</html>
