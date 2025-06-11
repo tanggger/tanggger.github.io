@@ -545,4 +545,150 @@
         <tag>oo</tag>
       </tags>
   </entry>
+  <entry>
+    <title>oo-unit4</title>
+    <url>/2025/06/11/oo-unit4/</url>
+    <content><![CDATA[<h2 id="正向建模与开发"><a href="#正向建模与开发" class="headerlink" title="正向建模与开发"></a>正向建模与开发</h2><blockquote>
+<p>正向建模指的是从高层设计模型开始，逐步细化并生成或指导代码实现的过程。</p>
+</blockquote>
+<p>这个单元的正向建模主要体现在以下几个方面：</p>
+<h3 id="需求分析与抽象"><a href="#需求分析与抽象" class="headerlink" title="需求分析与抽象"></a>需求分析与抽象</h3><p>首先需要从图书馆管理系统的需求描述开始，分析出系统中的主要实体（如图书、用户、书架、图书馆各部门）及其之间的关系。这对应了面向对象思想中的<strong>抽象</strong>过程，将现实世界的复杂问题简化为模型中的概念。</p>
+<h3 id="UML建模"><a href="#UML建模" class="headerlink" title="UML建模"></a>UML建模</h3><p>这个单元指导我们在代码实现之前，通过绘制UML图来指导设计。</p>
+<ul>
+<li><p>类图</p>
+<ul>
+<li><p>类图是通过设计类、属性、方法以及类之间的关系（如关联、继承、实现），来构建系统的静态结构。</p>
+</li>
+<li><p><strong>类图是正向建模的核心</strong>。</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>状态图<ul>
+<li>描述了单一对象在其生命周期中可能经历的所有状态以及导致状态转换的事件和条件。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>顺序图<ul>
+<li>展示了对象之间如何通过消息传递或者方法调用来完成特定功能或用例的时序关系。</li>
+</ul>
+</li>
+</ul>
+<h3 id="代码实现以及一致性检查"><a href="#代码实现以及一致性检查" class="headerlink" title="代码实现以及一致性检查"></a>代码实现以及一致性检查</h3><ul>
+<li>依据UML图的设计，逐步编写Java代码。</li>
+<li>在编写代码过程中，肯定会对最开始设计的UML图进行必要的调整和更新，来保持模型与自己实现的代码同步</li>
+</ul>
+<h2 id="架构设计以及代码设计与UML设计的追踪关系"><a href="#架构设计以及代码设计与UML设计的追踪关系" class="headerlink" title="架构设计以及代码设计与UML设计的追踪关系"></a>架构设计以及代码设计与UML设计的追踪关系</h2><h3 id="架构设计总结"><a href="#架构设计总结" class="headerlink" title="架构设计总结"></a>架构设计总结</h3><h4 id="核心实体"><a href="#核心实体" class="headerlink" title="核心实体"></a>核心实体</h4><ul>
+<li><p><code>BookDetails</code>：表示图书的抽象信息如ISBN、类别、是否热门等。</p>
+</li>
+<li><p><code>BookCopy</code>：表示具体的图书副本，封装了其唯一的书号、当前位置、借阅/预约状态、日期信息等。</p>
+</li>
+<li><code>Student</code>：表示用户，管理其信用分、当前借阅/阅读/预约状态以及处理各类请求的入口方法。</li>
+</ul>
+<h4 id="物理位置"><a href="#物理位置" class="headerlink" title="物理位置"></a>物理位置</h4><ul>
+<li><code>Shelf</code> 接口：定义了书架的基本操作（添加、移除、查找、获取所有副本）。其中<code>NormalBookshelf</code> 和 <code>HotBookshelf</code>分别实现了 <code>Shelf</code> 接口，分别管理普通图书和热门图书。</li>
+<li><code>BorrowReturnOffice</code>：模拟借还处，负责暂时存放待归还或待整理的图书。</li>
+<li><code>AppointmentOffice</code>：模拟预约处，管理被预约并送达的图书副本，并处理逾期预约书。</li>
+<li><code>ReadingRoom</code>：模拟阅览室，管理正在被用户阅读的图书。</li>
+</ul>
+<h4 id="业务逻辑"><a href="#业务逻辑" class="headerlink" title="业务逻辑"></a>业务逻辑</h4><ul>
+<li><code>BorrowLibrarian</code>：处理借书和还书请求，包括各种借阅限制和信用分计算。</li>
+<li><code>OrderLibrarian</code>：处理预约和取书请求，包括预约限制和预约书的流转。</li>
+<li><code>ReadingLibrarian</code>：处理阅读和阅读归还请求，包括阅读限制。</li>
+<li><code>ArrangeLibrarian</code>：负责图书馆的整理工作，包括每日开馆/闭馆时的图书整理和信用分计算。</li>
+</ul>
+<h4 id="协调"><a href="#协调" class="headerlink" title="协调"></a>协调</h4><ul>
+<li><code>SelfMachine</code>：作为学生与图书馆各项业务处理的代理，将学生的请求分发给相应的 <code>Librarian</code> 类进行处理。这种设计降低了 <code>Student</code> 类与具体 <code>Librarian</code> 类之间的耦合。</li>
+<li><code>StudentTable</code>：管理所有学生对象，提供根据ID获取或注册学生的功能。</li>
+<li><code>LibrarySystem</code>：整个图书馆系统的入口，负责初始化图书、处理所有输入命令，并协调各个 <code>Librarian</code> 和物理位置对象的工作。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/image-20250611112902897.png"
+                      alt="image-20250611112902897"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/image-20250611113013658.png"
+                      alt="image-20250611113013658"
+                ></p>
+<h3 id="代码设计与UML模型设计之间的追踪关系"><a href="#代码设计与UML模型设计之间的追踪关系" class="headerlink" title="代码设计与UML模型设计之间的追踪关系"></a>代码设计与UML模型设计之间的追踪关系</h3><h4 id="类与对象映射"><a href="#类与对象映射" class="headerlink" title="类与对象映射"></a>类与对象映射</h4><ul>
+<li>UML类图中的“类”，属性，方法，接口均与代码中的一一对应</li>
+</ul>
+<h4 id="关系映射"><a href="#关系映射" class="headerlink" title="关系映射"></a>关系映射</h4><ul>
+<li>关联：<ul>
+<li><strong>单向关联</strong>: 例如 <code>Student</code> 类持有 <code>SelfMachine</code> 对象的引用 (<code>private SelfMachine selfMachine;</code>)，这在UML类图中会表现为从 <code>Student</code> 到 <code>SelfMachine</code> 的单向关联。</li>
+<li><strong>聚合</strong>: 表示整体与部分的关系，但部分可以独立存在。</li>
+<li><strong>组合</strong>: 体现在构造函数中对部分对象的创建和生命周期管理上。</li>
+</ul>
+</li>
+<li>继承：UML中会用实线带空心三角箭头表示，代码中则通过 <code>extends</code> 关键字实现。</li>
+</ul>
+<h4 id="行为与状态映射"><a href="#行为与状态映射" class="headerlink" title="行为与状态映射"></a>行为与状态映射</h4><ul>
+<li>这一点主要体现在状态图和顺序图。这两类图的概念和作用在上面已经介绍过，这里就不过多赘述。</li>
+</ul>
+<h2 id="大模型辅助正向建模"><a href="#大模型辅助正向建模" class="headerlink" title="大模型辅助正向建模"></a>大模型辅助正向建模</h2><ul>
+<li><p>在本次的单元中，我通过使用大模型了解怎么画UML类图，理解关联、聚合、组合等具体的概念以及如何判断类和类之间的具体关系。在生成UML类图的参考代码的时候，大模型没有给出我<code>.mdj</code>的文件代码，而是给了我<code>.puml</code>代码，也就是plantUML的代码。<br>个人感觉<code>.puml</code>代码会比<code>.mdj</code>代码更能专注到系统的结构上，而不是一个一个添加属性与方法，而是通过代码的方式来进行类图的绘制。于是，我本单元采取了大模型的建议，先使用plantUML进行初步建模，再根据这个类图进行代码的书写，最后反向优化类图之后才把类图绘制到<code>.mdj</code>文件里面的。</p>
+</li>
+<li><p>还有就是大模型最后不要用来进行代码整体架构的建立，因为大模型生成架构的时候，经常会不能分清楚用户的需求，会根据用户的一些要求添加一些冗余的一些类，而更难做到在原有给的架构上进行优化，也就是大模型善于“加”东西，而不是“减”东西，最终导致架构的臃肿。</p>
+</li>
+</ul>
+<h2 id="思维演进"><a href="#思维演进" class="headerlink" title="思维演进"></a>思维演进</h2><h3 id="架构设计思维的演进"><a href="#架构设计思维的演进" class="headerlink" title="架构设计思维的演进"></a>架构设计思维的演进</h3><h4 id="第一单元——层次化设计与初步抽象"><a href="#第一单元——层次化设计与初步抽象" class="headerlink" title="第一单元——层次化设计与初步抽象"></a>第一单元——层次化设计与初步抽象</h4><h5 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h5><p>本单元我的核心思路是<code>String -&gt; Lexer -&gt; Parser -&gt; Poly -&gt; String</code>。但 <code>Poly</code> 类内部（尤其是 <code>Mono</code>）最初可能更多地是基于字符串或简单数据类型（如 <code>HashMap&lt;String, Integer&gt;</code> 表示 <code>x</code> 的幂来存储和操作表达式的不同部分。自定义递归函数部分，我采用的是 <code>token</code> 流的替换，这是一种在文本层面解决递归调用的策略，而非在对象层面进行递归的构建和求值。</p>
+<h5 id="设计局限"><a href="#设计局限" class="headerlink" title="设计局限"></a>设计局限</h5><ul>
+<li><p><strong>功能扩展困难</strong>：当 <code>Mono</code> 内部的结构（三角函数的参数）本身也是一个“因子”时，原有的简单 <code>HashMap</code> 结构难以直接应对这种递归嵌套。为了合并相同的 <code>Mono</code>，我采取了“递归的比较思路，即若三角函数因子存在的话，就对三角函数里面的因子进行比较，通过逐步比较系数，自变量指数，三角函数相等，从而一直递归到三角函数的因子内部没有三角函数为止，从而结束递归比较”。 这种复杂且需要大量递归比较的逻辑，正是由于内部结构没有被彻底对象化所致。</p>
+</li>
+<li><p><strong>“大类”与职责混淆</strong>： <code>Lexer</code> 部分的替换功能性强、代码量较多，导致调试困难。 这表明我的 <code>Lexer</code> 不仅负责词法分析，还承担了复杂的“宏展开”或“替换”逻辑，使得单个方法的职责过于庞大，难以维护。</p>
+</li>
+</ul>
+<h5 id="思维演进-1"><a href="#思维演进-1" class="headerlink" title="思维演进"></a>思维演进</h5><ul>
+<li><strong>理解了抽象的深化</strong>：认识到“因子”内部可以包含更复杂的“表达式”结构。例如，<code>sin(Poly)</code> 中的 <code>Poly</code> 本身就是一个完整的表达式。这意味着 <code>Factor</code> 不再仅仅是 <code>x</code> 或简单的三角函数项，而是一个可以包含其他 <code>Poly</code> 对象的抽象概念。这可以促使思考如何用对象来表示表达式的<strong>递归嵌套</strong>特性。</li>
+<li><strong>组合构建树形结构</strong>：自然而然地思考如何通过对象之间的<strong>组合关系</strong>来表示表达式的层次结构，即构建<strong>表达式树</strong>。</li>
+<li><strong>多态统一行为</strong>：理解到对于表达式的各种统一操作（如求导、化简或求值），可以通过<strong>多态</strong>机制来极大地简化和统一处理逻辑。</li>
+</ul>
+<h4 id="第二单元——并发控制与职责分离"><a href="#第二单元——并发控制与职责分离" class="headerlink" title="第二单元——并发控制与职责分离"></a>第二单元——并发控制与职责分离</h4><h5 id="设计思路-1"><a href="#设计思路-1" class="headerlink" title="设计思路"></a>设计思路</h5><ul>
+<li><p>设计了 <code>InputThread</code> (请求接收)、<code>Schedule</code> (请求分配)、<code>ElevatorThread</code> (电梯运输) 三种线程。</p>
+</li>
+<li><p>对于涉及共享数据（如请求表 <code>RequestTable</code>）的访问，运用 <code>synchronized</code> 关键字进行同步，对线程安全有了初步的认识，并尝试通过同步机制来管理共享资源的访问，应对多线程环境下的潜在问题。</p>
+</li>
+</ul>
+<h5 id="设计局限-1"><a href="#设计局限-1" class="headerlink" title="设计局限"></a>设计局限</h5><ul>
+<li><strong>并发安全问题与数据一致性挑战</strong>：对共享状态（如乘客请求的接收状态）的并发访问可能会导致不确定的行为。</li>
+<li><strong>调试复杂性</strong>：多线程环境下非确定性行为对问题定位和复现带来的巨大挑战。</li>
+</ul>
+<h5 id="思维演进-2"><a href="#思维演进-2" class="headerlink" title="思维演进"></a>思维演进</h5><ul>
+<li><strong>线程安全的核心性与深度理解</strong>：在多线程环境中，对任何<strong>共享资源</strong>（如 <code>RequestTable</code>、电梯内部乘客列表、电梯状态、配对电梯状态）的访问都必须通过<strong>精确的同步机制</strong>来保护，以确保数据的一致性和操作的原子性。</li>
+</ul>
+<h4 id="第三单元——契约式编程与高效数据结构选择"><a href="#第三单元——契约式编程与高效数据结构选择" class="headerlink" title="第三单元——契约式编程与高效数据结构选择"></a>第三单元——契约式编程与高效数据结构选择</h4><h5 id="设计思路-2"><a href="#设计思路-2" class="headerlink" title="设计思路"></a>设计思路</h5><ul>
+<li>在第一次接触JML规格时，倾向于直接将JML的描述“翻译”成Java代码。对于对象状态的维护，可能更多地是在方法执行时进行实时计算，而非考虑增量维护或缓存机制。</li>
+</ul>
+<h5 id="设计局限-2"><a href="#设计局限-2" class="headerlink" title="设计局限"></a>设计局限</h5><ul>
+<li><strong>性能瓶颈</strong>：仅仅根据JML的功能描述进行直译式的实现，往往无法满足实际的性能要求（如 <code>qts</code> 指令的 <code>O(N)</code> 复杂度）。</li>
+</ul>
+<h5 id="思维演进-3"><a href="#思维演进-3" class="headerlink" title="思维演进"></a>思维演进</h5><ul>
+<li><p><strong>契约式编程 </strong>：通过JML规格，您深刻理解了软件模块之间（或方法与调用者之间）的契约关系。<code>requires</code> 定义了调用方法的“前提”，<code>ensures</code> 定义了方法执行后的“结果保证”，<code>assignable</code> 明确了方法可以修改的“范围”，<code>signals</code> 则规定了在特定异常条件下的“行为”。</p>
+</li>
+<li><p><strong>规格与实现分离</strong>：JML只定义了“做什么”（功能和行为），而没有规定“怎么做”（具体实现细节）</p>
+</li>
+</ul>
+<h4 id="第四单元——程序架构的设计与抽象以及UML"><a href="#第四单元——程序架构的设计与抽象以及UML" class="headerlink" title="第四单元——程序架构的设计与抽象以及UML"></a>第四单元——程序架构的设计与抽象以及UML</h4><p>这一部分上面讲的比较清楚了，就不再赘述了。</p>
+<h3 id="测试思维的演进"><a href="#测试思维的演进" class="headerlink" title="测试思维的演进"></a>测试思维的演进</h3><h5 id="第一单元"><a href="#第一单元" class="headerlink" title="第一单元"></a>第一单元</h5><p>手动构造少量包含各种操作符和嵌套层数的表达式字符串作为输入，然后人工比对程序的输出结果。</p>
+<h5 id="第二单元"><a href="#第二单元" class="headerlink" title="第二单元"></a>第二单元</h5><p>多线程引入了极大的复杂性，要考虑并发安全和运行时行为，这个单元我使用了评测机来构造极端并发场景（如大量请求瞬间涌入、请求类型高度重复、临界点请求）来进行压力测试。</p>
+<h5 id="第三单元"><a href="#第三单元" class="headerlink" title="第三单元"></a>第三单元</h5><p>开始掌握规格驱动测试，严格依据JML定义设计单元测试和异常测试，并利用 <code>JUnit</code> 等工具实现自动化。</p>
+<h5 id="第四单元"><a href="#第四单元" class="headerlink" title="第四单元"></a>第四单元</h5><p>设计能触发复杂规则的数据，并通过日志分析等方法，确保系统在长期运行中的鲁棒性。</p>
+<h2 id="课程收获"><a href="#课程收获" class="headerlink" title="课程收获"></a>课程收获</h2><p>这个学期的面向对象课终于结束了……就我现在的感觉来说，只有深深的解脱。我认为oo绝对是我到现在以来花时间最长的一门课，我相信后面可能也不会再有来者了。</p>
+<p>回想我每周因为oo坐在电脑面前苦思冥想bug到底在哪里，一坐就是五六个小时，意识到的时候已经腰酸背痛的时光；<br>回想弱测的时候出现<code>WA</code>，点进去看具体样例，发现是一片空白，只能心里暗骂，却又无可奈何，对着代码干瞪眼，不知道从何入手的时光；<br>回想我第3次作业bug直到周六下午都没有找出来，坐在三号楼手足无措，只能一遍遍点着调试的“下一步”，时不时点开属性页面看能不能对上正确值的时光；<br>回想我每一次互测拿着评测机，苦思冥想造点造不出来，自己却被人刀了十多刀的时光……我绝对不会说这门课是一门很轻松很有趣的课。</p>
+<p>但是，每当我沉浸其中，一步步把要求从抽象的想法变成结构清晰的代码的时候；<br>每当我检查代码，发现bug，运行样例，惊喜的发现运行出来正确答案的时候；<br>每当我紧张地点击提交，页面里出现了十个<code>accept</code>的时候；<br>每当我周日清晨打开互测，不是“很抱歉，你未能成功入围本次互测。我们鼓励你先掌握基础内容，为下一次的互测做准备”，而是显示互测页面，而且看到自己在A房的时候；<br>每当研讨课上，我不再像以前一样跟别人讨论的时候没有观点，而是能自信的分享自己代码架构，集思广益的时候，我总是觉得，oo这门课也总会给人带来一些小确幸的。</p>
+<p>oo，实话说，你真的让我成长了很多，一次次迭代让我构建起面向对象的思想，让我有从容和信心从零开始面对一个项目，一次次研讨课让我也能敢于发表自己的观点，一次次<code>WA</code>磨平了我的锐气和棱角（bushi)。</p>
+<blockquote>
+<p>谢谢你们，oo课的老师们，谢谢你们，oo的助教们，谢谢你，oo。</p>
+</blockquote>
+]]></content>
+      <tags>
+        <tag>oo</tag>
+      </tags>
+  </entry>
 </search>

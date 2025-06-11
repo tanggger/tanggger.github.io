@@ -13,7 +13,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/2025/03/19/oo-unit1/"/>
+    <link rel="canonical" href="http://example.com/2025/06/11/oo-unit4/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -23,14 +23,14 @@
         
         <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="oo-unit1">
-<meta property="og:url" content="http://example.com/2025/03/19/oo-unit1/index.html">
+<meta property="og:title" content="oo-unit4">
+<meta property="og:url" content="http://example.com/2025/06/11/oo-unit4/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
-<meta property="article:published_time" content="2025-03-19T14:11:23.000Z">
-<meta property="article:modified_time" content="2025-05-04T15:27:58.850Z">
+<meta property="article:published_time" content="2025-06-11T09:19:03.000Z">
+<meta property="article:modified_time" content="2025-06-11T09:24:51.757Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="oo">
 <meta name="twitter:card" content="summary">
@@ -46,7 +46,7 @@
     
     <title>
         
-            oo-unit1 | Tanggger
+            oo-unit4 | Tanggger
         
     </title>
 
@@ -283,7 +283,7 @@
 		<div class="article-title relative w-full">
 			
 			<div class="w-full flex items-center pt-6 justify-start">
-				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">oo-unit1</h1>
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">oo-unit4</h1>
 			</div>
 			
 		</div>
@@ -304,15 +304,15 @@
 					<div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
-        <span class="desktop">2025-03-19 22:11:23</span>
-        <span class="mobile">2025-03-19 22:11:23</span>
+        <span class="desktop">2025-06-11 17:19:03</span>
+        <span class="mobile">2025-06-11 17:19:03</span>
         <span class="hover-info">Created</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2025-05-04 23:27:58</span>
-            <span class="mobile">2025-05-04 23:27:58</span>
+            <span class="desktop">2025-06-11 17:24:51</span>
+            <span class="mobile">2025-06-11 17:24:51</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -350,117 +350,144 @@
 
 
 		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
-			<h2 id="程序结构分析"><a href="#程序结构分析" class="headerlink" title="程序结构分析"></a>程序结构分析</h2><h3 id="度量分析"><a href="#度量分析" class="headerlink" title="度量分析"></a>度量分析</h3><h4 id="基于statistic插件进行代码规模分析"><a href="#基于statistic插件进行代码规模分析" class="headerlink" title="基于statistic插件进行代码规模分析"></a>基于<code>statistic</code>插件进行代码规模分析</h4><p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/image-20250318082718491.png"
-                      alt="image-20250318082718491"
-                ></p>
-<p>从分析结果我们可以清楚地看到，代码行数最多的几个类分别是<code>Lexer</code>，<code>Func</code>，<code>Poly</code>以及<code>Parser</code>是代码量最大的几个类。<code>Lexer</code>类主要功能是词法解析器，即将输入的<code>String</code>处理成一个个<code>token</code>的形式，此外，我还在这个类里面设计了替换自定义递归函数，自定义普通函数，以及<code>dx</code>算子中的表达式三大功能，可以看到，本人代码的<code>Lexer</code>类功能设计较多，因此代码量最大是有一定合理性的。其次，<code>Func</code>，<code>Poly</code>两个类功能性也非常强，分别负责处理递归函数从而返回最终<code>Lexer</code>，以及实现对两个<code>Poly</code>进行运算操作的功能；最后是<code>Parser</code>类，功能是文法解析器，主要包含对<code>Expr</code>，<code>Term</code>以及<code>Factor</code>进行解析，由于上述类负责的要求比较繁杂，因此造成了代码量较大的情况。</p>
-<h4 id="基于MetricsReloaded插件进行复杂度分析"><a href="#基于MetricsReloaded插件进行复杂度分析" class="headerlink" title="基于MetricsReloaded插件进行复杂度分析"></a>基于<code>MetricsReloaded</code>插件进行复杂度分析</h4><h5 id="方法复杂度分析"><a href="#方法复杂度分析" class="headerlink" title="方法复杂度分析"></a>方法复杂度分析</h5><p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/image-20250318090827244.png"
-                      alt="image-20250318090827244"
-                ></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/image-20250318090835344.png"
-                      alt="image-20250318090835344"
-                ></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/image-20250318090840436.png"
-                      alt="image-20250318090840436"
-                ></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/image-20250318090845527.png"
-                      alt="image-20250318090845527"
-                ></p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/image-20250318090850210.png"
-                      alt="image-20250318090850210"
-                ></p>
-<h6 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h6><ul>
-<li><code>CogC</code>：认知复杂度，衡量理解代码逻辑所需的认知努力。它关注代码的控制流（如条件、循环、嵌套等）对开发者理解代码的难度。</li>
-<li><code>ev(G)</code>：基本复杂度，衡量代码中无法通过重构简化的复杂度。它反映了问题本身的复杂性。</li>
-<li><code>iv(G)</code>：设计复杂度，用于衡量模块之间的调用关系。复杂度越高，模块之间的耦合性越高，越难以隔离、维护和复用。</li>
-<li><code>v(G)</code>：衡量代码中独立路径的数量，反映代码的测试难度和维护难度。圈复杂度越高，代码越难测试和维护。</li>
-</ul>
-<h6 id="参数分析"><a href="#参数分析" class="headerlink" title="参数分析"></a>参数分析</h6><p>在这个方法复杂度的列表中，能够很明显的看到，各个方法中用红色标注出来的方法绝大多数都是存在于上述的几个代码量较大的类中，由于他们负责一些目的性较强的功能，比如说合并三角函数同类项、解析表达式、替换递归函数等等，因此这些方法的代码复杂度相对较高，函数、循环嵌套相对复杂，因此导致了这些类里面的某些方法的<code>CogC</code>和<code>v(G)</code>值较高。</p>
-<h5 id="类复杂度分析"><a href="#类复杂度分析" class="headerlink" title="类复杂度分析"></a>类复杂度分析</h5><p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/image-20250318105905143.png"
-                      alt="image-20250318105905143"
-                ></p>
-<h6 id="名词解释-1"><a href="#名词解释-1" class="headerlink" title="名词解释"></a>名词解释</h6><ul>
-<li><code>OCavg</code>: 平均操作复杂度</li>
-<li><code>OCmax</code>: 最大操作复杂度</li>
-<li><code>WMC</code>: 加权方法复杂度</li>
-</ul>
-<h6 id="参数分析-1"><a href="#参数分析-1" class="headerlink" title="参数分析"></a>参数分析</h6><p>分析大致与上一致，需要另外说明的是，<code>Main</code>类由于需要读入各个种类的函数，以及引用各个类，所以<code>OCavg</code>值会偏高，<code>Mono</code>类由于有判断<code>Mono</code>相等，以及对<code>Mono</code>求导等一些比较复杂的操作，其<code>WMC</code>值会偏高一些。</p>
-<h3 id="unit1作业类图展示"><a href="#unit1作业类图展示" class="headerlink" title="unit1作业类图展示"></a>unit1作业类图展示</h3><p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/bcbee409445ba3e263ff9e3fbbb7c4f.png"
-                      alt="bcbee409445ba3e263ff9e3fbbb7c4f"
-                ></p>
-<h4 id="类图介绍"><a href="#类图介绍" class="headerlink" title="类图介绍"></a>类图介绍</h4><ul>
-<li><p><code>MainClass</code>：主类作用主要是接收自定义普通表达式、自定义递归表达式以及最后的计算表达式输入，以及调用一系列处理输入的核心方法。</p>
-</li>
-<li><p><code>Token</code>：<code>Token</code>类主要负责将输入的每一个字符对应成特定的词元，以便后续的词法分析以及语法分析。</p>
-</li>
-<li><p><code>Lexer</code>：<code>Lexer</code>类是词法分析器，它实现了词法分析功能，并且将分析得到的信息存储到<code>token</code>流中。在<code>hw1</code>的开发中，<code>Lexer</code>的功能仅限于遍历输入，将每一个元素转换成<code>token</code>；但是在后续<code>hw2</code>和<code>hw3</code>的迭代中，<code>Lexer</code>还承担了替换自定义函数递归表达式、自定义函数普通表达式、以及求导算子结果的功能，因此在我的架构中，<code>Lexer</code>类应该属于核心部分之一。</p>
-</li>
-<li><p><code>Func</code>：<code>Func</code>类定义的是自定义递归函数，主要功能是存储自定义递归函数的关键要素，如序号，形参因子，函数<code>Lexer</code>等，以及一个核心功能，即得出自定义递归表达式的最终结果。</p>
-</li>
-<li><p><code>NormalFunc</code>：<code>NormalFunc</code>类定义的是自定义普通函数，同样存储自定义普通函数的序号，形参因子，函数<code>Lexer</code>等，以及代入可能出现的普通函数调用。</p>
-</li>
-<li><p><code>Parser</code>：<code>Parser</code>同样是核心部分之一，主要功能是将在<code>Lexer</code>部分处理好的<code>token</code>流做处理，建立语法树，从而清晰表达表达式的语法结构。<code>Parser</code>类中，采取了自上而下，逐步拆分表达式、项以及因子的做法，因子如果是表达式的话再重新返回解析表达式的步骤，若是一些特殊种类的因子，则建立特殊的类，一直解析到最后形成一棵语法树。</p>
-</li>
-<li><p><code>Expr</code>，<code>Term</code>，<code>Factor</code>：这三个类定义了<code>Parser</code>中要解析的三个部分，即表达式、项、以及因子。</p>
-</li>
-<li><p><code>NumFactor</code>，<code>VarFactor</code>，<code>SinFactor</code>，<code>CosFactor</code>：这四个类是特殊的因子，并且都继承<code>Factor</code>类。</p>
-</li>
-<li><p><code>Mono</code>：<code>unit1</code>中，最终输出的表达式其实是一个</p>
-</li>
-</ul>
-<p>$$<br>Expr &#x3D; \sum (coe_i * x_{i}^{exp_i} * \prod sin_j(Expr)^{exp_j} * \prod cos_j(Expr)^{exp_j})<br>$$</p>
-<p>的形式。因此我们定义了一个<code>Mono</code>类来存储一个最小单元的内容，包括系数、<code>x</code>指数以及三角函数项。</p>
+			<h2 id="正向建模与开发"><a href="#正向建模与开发" class="headerlink" title="正向建模与开发"></a>正向建模与开发</h2><blockquote>
+<p>正向建模指的是从高层设计模型开始，逐步细化并生成或指导代码实现的过程。</p>
+</blockquote>
+<p>这个单元的正向建模主要体现在以下几个方面：</p>
+<h3 id="需求分析与抽象"><a href="#需求分析与抽象" class="headerlink" title="需求分析与抽象"></a>需求分析与抽象</h3><p>首先需要从图书馆管理系统的需求描述开始，分析出系统中的主要实体（如图书、用户、书架、图书馆各部门）及其之间的关系。这对应了面向对象思想中的<strong>抽象</strong>过程，将现实世界的复杂问题简化为模型中的概念。</p>
+<h3 id="UML建模"><a href="#UML建模" class="headerlink" title="UML建模"></a>UML建模</h3><p>这个单元指导我们在代码实现之前，通过绘制UML图来指导设计。</p>
 <ul>
-<li><code>Poly</code>：<code>Poly</code>类其实就是一个<code>Mono</code>的列表，就是表达式的最终形态。</li>
-</ul>
-<h2 id="架构设计体验"><a href="#架构设计体验" class="headerlink" title="架构设计体验"></a>架构设计体验</h2><h3 id="hw1"><a href="#hw1" class="headerlink" title="hw1"></a><code>hw1</code></h3><p>在第一次作业中，我的大体架构已经确定，基本上就是<code>String -&gt; Lexer -&gt; Parser -&gt; Poly -&gt; String</code>的步骤，在后续的迭代之中，<code>hw1</code>的架构都没有进行改变。</p>
-<h3 id="hw2"><a href="#hw2" class="headerlink" title="hw2"></a><code>hw2</code></h3><p>第二次作业是本次<code>unit</code>最难的一个部分，添加了三角函数部分以及自定义递归函数部分，针对这两个难题，我分别对<code>hw1</code>的代码进行了如下的迭代：</p>
-<h4 id="三角函数部分"><a href="#三角函数部分" class="headerlink" title="三角函数部分"></a>三角函数部分</h4><p>针对三角函数部分，我意识到<code>hw1</code>的<code>Mono</code>部分需要作出重大的改变，原先只是系数与自变量（及其指数）的乘积，本次作业则需要添加三角函数项，因此我首先在<code>Mono</code>类中添加<code>sin</code>和<code>cos</code>的<code>HashMap</code>，其中<code>key</code>存储的是三角函数括号内部的因子，<code>value</code>存储的是三角函数的指数。然后，添加三角函数之后，我们需要对<code>Poly</code>部分的运算也进行迭代，这个部分难度最大的是如何将相同的<code>Mono</code>合并，由于三角函数内部其实是一个因子，所以还会有出现三角函数的可能性。于是，针对这一问题，我采取了递归的比较思路，即若三角函数因子存在的话，就对三角函数里面的因子进行比较，通过逐步比较系数，自变量指数，三角函数相等，从而一直递归到三角函数的因子内部没有三角函数为止，从而结束递归比较，得出最终的比较结果。</p>
-<h4 id="自定义递归函数部分"><a href="#自定义递归函数部分" class="headerlink" title="自定义递归函数部分"></a>自定义递归函数部分</h4><p>针对自定义递归函数部分，我采用的是函数替换的方法。简要的来说，就是在字符串输入的时候，将<code>Func</code>的关键信息存进类中，比如说形参表达式、序号、<code>token</code>流等。再对这个<code>token</code>流进行遍历，若遍历到<code>f</code>，则进行递归，用<code>f&#123;n-1&#125;</code>的<code>token</code>流对<code>f</code>进行替换，一直替换到<code>f&#123;0&#125;</code>和<code>f&#123;1&#125;</code>。这样进行架构设计的优点是可以及其直观地观察<code>token</code>流生成以及替换的流程，在<code>debug</code>过程中也会比较轻松等方面，缺点则可能是代码量可能较大，替换的<code>token</code>流易错。</p>
-<h3 id="hw3"><a href="#hw3" class="headerlink" title="hw3"></a><code>hw3</code></h3><p>第三次作业的难度则要比第二次作业要简单很多，无非就是多了一个自定义普通函数以及求导。而这两个新增的要求也比较简单：</p>
-<h4 id="自定义普通函数"><a href="#自定义普通函数" class="headerlink" title="自定义普通函数"></a>自定义普通函数</h4><p>针对自定义普通函数，我考虑的是先按照正常的<code>token</code>流进行读入，由于自定义普通函数可能会调用之前定义过的普通函数，则需要考虑当读到<code>h</code>或读到<code>g</code>的时候对普通函数进行<code>lexer</code>进行替换。</p>
-<h4 id="求导"><a href="#求导" class="headerlink" title="求导"></a>求导</h4><p>针对求导的操作，我决定在<code>Poly</code>类中对求导算子中的表达式进行求导。一个<code>Poly</code>类的求导我将其拆分为每一个<code>Mono</code>的求导。因此，具体的求导方法我放在了<code>Mono</code>类。由于<code>Mono</code>类是系数、自变量以及三角函数的乘积，所以对<code>Mono</code>求导要进行链式法则，即对<code>Mono</code>里面的每一个子项进行求导，其他子项不变，再进行相加。很自然地，我又分别添加了单独对自变量以及三角函数的求导法则。这样的架构使我的求导计算十分简洁、可观性强。</p>
-<h4 id="自定新的迭代场景"><a href="#自定新的迭代场景" class="headerlink" title="自定新的迭代场景"></a>自定新的迭代场景</h4><p>我自定义一个新的要求：</p>
-<p>在前三次作业中，自定义递推函数中递推表达式只能由<code>f&#123;n-1&#125;</code>和<code>f&#123;n-2&#125;</code>生成，并且两个函数前面只能由一个系数链接，<code>f</code>也只能是一次方。因此新增的要求中，解除上述的两个限制，即递推表达式中<code>f&#123;n-1&#125;</code>和<code>f&#123;n-2&#125;</code>前面的系数可以是一个表达式，<code>f</code>的指数也不局限于<code>1</code>，可以有正常的指数。<br>在我的架构中，采用的核心方法是<code>Lexer</code>的替换，即碰到<code>f</code>的时候就将其替换成其表达的具体的表达式，因此，我的架构丝毫不会受到除了<code>f</code>以外的任何格式的影响，包括<code>f</code>的系数的形式，以及其是否存在不同的指数。因此我的代码架构对自定义递推函数格式的可拓展性上较高。</p>
-<h2 id="Bug分析"><a href="#Bug分析" class="headerlink" title="Bug分析"></a>Bug分析</h2><h3 id="hw1-1"><a href="#hw1-1" class="headerlink" title="hw1"></a><code>hw1</code></h3><p><code>hw1</code>开发过程中，我大体上没有经历<code>debug</code>的过程。</p>
-<h3 id="hw2-1"><a href="#hw2-1" class="headerlink" title="hw2"></a><code>hw2</code></h3><p><code>hw2</code>迭代过程中，我出现了两大<code>bug</code>：</p>
+<li><p>类图</p>
 <ul>
-<li>第一个判断两个<code>Mono</code>是否相等的方法判断出现<code>bug</code>。判断<code>Mono</code>相等的核心问题就是解决三角函数的递归比较问题。这个问题的特征是需要对两个<code>Mono</code>的三角函数内部的<code>Poly</code>进行逐一的检查，检查是否它们是不是一一对应的，而检查的方法又涉及到了对两个三角函数内部<code>Poly</code>的比较。因此在这个部分递归很容易错，由于递归比较是难免的，因此避免这方面<code>bug</code>的方法只能通过构造一些数据来进行验证正确性。</li>
-<li>第二个是<code>Lexer</code>部分替换出现失误。在我的设计架构中，需要将递推表达式中的<code>f</code>替换成相应的<code>Lexer</code>。又由于地推函数具有实参，因此需要将<code>Lexer</code>中的形参转换为实参。因此我在这个地方出现了很多意想不到的问题，导致了<code>bug</code>的产生。由于这个替换<code>Lexer</code>的方法功能性比较强，因此代码量较多，导致我在<code>debug</code>的过程中产生了阻碍，进度被拖慢。可以改进的措施是对这个方法进行简化，将可以提取的方法提取出来，再对每一个方法针对性<code>debug</code>，可能效率会高一些，也能有效地降低<code>bug</code>的产生。</li>
+<li><p>类图是通过设计类、属性、方法以及类之间的关系（如关联、继承、实现），来构建系统的静态结构。</p>
+</li>
+<li><p><strong>类图是正向建模的核心</strong>。</p>
+</li>
 </ul>
-<h3 id="hw3-1"><a href="#hw3-1" class="headerlink" title="hw3"></a><code>hw3</code></h3><p>在<code>hw3</code>的迭代中，我主要就是一个<code>bug</code>，即在强测的时候出现了一个<code>bug</code>，就是由于三角函数内部需要是因子，因此内部是表达式形式的时候，需要将其转换为表达式因子，即套上一层括号。这个地方我错误的原因是由于我追求输出串的长度尽量短，仅仅将三角函数里面是表达式因子的情况作特判并添加括号，就是在特判的地方，我没有考虑到内部仅含多个<code>sin</code>或者<code>cos</code>的情况，导致特判出现<code>bug</code>，输出串中少了一对括号。改善的方法就是在构造测试样例的时候，尽量出一些边界样例，尽量把每一种情况都测试到。</p>
-<h2 id="分析自己进行的优化"><a href="#分析自己进行的优化" class="headerlink" title="分析自己进行的优化"></a>分析自己进行的优化</h2><p>本次单元的优化主要有两点：</p>
+</li>
+</ul>
 <ul>
-<li><code>hw1</code>我将多项式的输出顺序按照指数从小到大的顺序进行排列，但是这样的优化仅仅能方便<code>debug</code>，在一些最高项符号为负的情况时，输出结果会比最优结果多一个符号，因此并没有达到优化长度的效果。</li>
-<li><code>hw2</code>我仅仅对<code>sin(0)=0</code>以及<code>cos(0)=1</code>这两种情况进行了优化，当三角函数内部系数为零时将此<code>Mono</code>进行替换。更进一步的简化策略在本次单元并没有实现，因为考虑到三角函数的判断过于复杂，涉及到递归，因此只能放弃进一步的优化了。</li>
+<li>状态图<ul>
+<li>描述了单一对象在其生命周期中可能经历的所有状态以及导致状态转换的事件和条件。</li>
 </ul>
-<h2 id="心得体会"><a href="#心得体会" class="headerlink" title="心得体会"></a>心得体会</h2><p>在本次的作业中，我最开始进行构建的时候真的一头雾水，在看完<code>oolens</code>中对递归下降的深度解析后才开始对这个思想有了一个初步的认识。我认为本次作业<strong>递归</strong>是一个关键词，其实考虑递归的写法不用考虑到这个函数时怎么一层一层递归下去的，只需要注意到最多两（三）层递归时怎么进行的，就可以应对任何层次的递归处理。</p>
-<p>另外一个重要的体会就是我对代码的简洁性和可扩展性有了比较深刻的认识。在<code>hw1</code>写的时候，我其实并没有考虑到可扩展性，想到只是把这一次的要求完成即可，但是这样的结果就是我在<code>hw2</code>和<code>hw3</code>的时候对很多方法进行了重写和改进。在真正的实践过程中，新增的要求可能是自己无法想象的，因此代码在最开始的时候就需要对其的可扩展性进行深刻地考虑。还有代码的简洁性，代码构建过程中需要尽量增强代码的复用性，减少<code>debug</code>难度。</p>
-<p>还有极其重要的就是本次作业我的代码中需要着重注意深浅拷贝问题。由于我的核心思想是<code>Lexer</code>的替换，因此在替换的过程中会时常出现更改参数的操作，而有些时候在退出递归的时候我并不需要这些参数进行改变，因此在深浅拷贝上我出现了比较多的<code>bug</code>，也进行了很多考虑，我认为这个部分也是我的架构在具体实现上的难点。</p>
+</li>
+</ul>
+<ul>
+<li>顺序图<ul>
+<li>展示了对象之间如何通过消息传递或者方法调用来完成特定功能或用例的时序关系。</li>
+</ul>
+</li>
+</ul>
+<h3 id="代码实现以及一致性检查"><a href="#代码实现以及一致性检查" class="headerlink" title="代码实现以及一致性检查"></a>代码实现以及一致性检查</h3><ul>
+<li>依据UML图的设计，逐步编写Java代码。</li>
+<li>在编写代码过程中，肯定会对最开始设计的UML图进行必要的调整和更新，来保持模型与自己实现的代码同步</li>
+</ul>
+<h2 id="架构设计以及代码设计与UML设计的追踪关系"><a href="#架构设计以及代码设计与UML设计的追踪关系" class="headerlink" title="架构设计以及代码设计与UML设计的追踪关系"></a>架构设计以及代码设计与UML设计的追踪关系</h2><h3 id="架构设计总结"><a href="#架构设计总结" class="headerlink" title="架构设计总结"></a>架构设计总结</h3><h4 id="核心实体"><a href="#核心实体" class="headerlink" title="核心实体"></a>核心实体</h4><ul>
+<li><p><code>BookDetails</code>：表示图书的抽象信息如ISBN、类别、是否热门等。</p>
+</li>
+<li><p><code>BookCopy</code>：表示具体的图书副本，封装了其唯一的书号、当前位置、借阅/预约状态、日期信息等。</p>
+</li>
+<li><code>Student</code>：表示用户，管理其信用分、当前借阅/阅读/预约状态以及处理各类请求的入口方法。</li>
+</ul>
+<h4 id="物理位置"><a href="#物理位置" class="headerlink" title="物理位置"></a>物理位置</h4><ul>
+<li><code>Shelf</code> 接口：定义了书架的基本操作（添加、移除、查找、获取所有副本）。其中<code>NormalBookshelf</code> 和 <code>HotBookshelf</code>分别实现了 <code>Shelf</code> 接口，分别管理普通图书和热门图书。</li>
+<li><code>BorrowReturnOffice</code>：模拟借还处，负责暂时存放待归还或待整理的图书。</li>
+<li><code>AppointmentOffice</code>：模拟预约处，管理被预约并送达的图书副本，并处理逾期预约书。</li>
+<li><code>ReadingRoom</code>：模拟阅览室，管理正在被用户阅读的图书。</li>
+</ul>
+<h4 id="业务逻辑"><a href="#业务逻辑" class="headerlink" title="业务逻辑"></a>业务逻辑</h4><ul>
+<li><code>BorrowLibrarian</code>：处理借书和还书请求，包括各种借阅限制和信用分计算。</li>
+<li><code>OrderLibrarian</code>：处理预约和取书请求，包括预约限制和预约书的流转。</li>
+<li><code>ReadingLibrarian</code>：处理阅读和阅读归还请求，包括阅读限制。</li>
+<li><code>ArrangeLibrarian</code>：负责图书馆的整理工作，包括每日开馆/闭馆时的图书整理和信用分计算。</li>
+</ul>
+<h4 id="协调"><a href="#协调" class="headerlink" title="协调"></a>协调</h4><ul>
+<li><code>SelfMachine</code>：作为学生与图书馆各项业务处理的代理，将学生的请求分发给相应的 <code>Librarian</code> 类进行处理。这种设计降低了 <code>Student</code> 类与具体 <code>Librarian</code> 类之间的耦合。</li>
+<li><code>StudentTable</code>：管理所有学生对象，提供根据ID获取或注册学生的功能。</li>
+<li><code>LibrarySystem</code>：整个图书馆系统的入口，负责初始化图书、处理所有输入命令，并协调各个 <code>Librarian</code> 和物理位置对象的工作。</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/image-20250611112902897.png"
+                      alt="image-20250611112902897"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/image-20250611113013658.png"
+                      alt="image-20250611113013658"
+                ></p>
+<h3 id="代码设计与UML模型设计之间的追踪关系"><a href="#代码设计与UML模型设计之间的追踪关系" class="headerlink" title="代码设计与UML模型设计之间的追踪关系"></a>代码设计与UML模型设计之间的追踪关系</h3><h4 id="类与对象映射"><a href="#类与对象映射" class="headerlink" title="类与对象映射"></a>类与对象映射</h4><ul>
+<li>UML类图中的“类”，属性，方法，接口均与代码中的一一对应</li>
+</ul>
+<h4 id="关系映射"><a href="#关系映射" class="headerlink" title="关系映射"></a>关系映射</h4><ul>
+<li>关联：<ul>
+<li><strong>单向关联</strong>: 例如 <code>Student</code> 类持有 <code>SelfMachine</code> 对象的引用 (<code>private SelfMachine selfMachine;</code>)，这在UML类图中会表现为从 <code>Student</code> 到 <code>SelfMachine</code> 的单向关联。</li>
+<li><strong>聚合</strong>: 表示整体与部分的关系，但部分可以独立存在。</li>
+<li><strong>组合</strong>: 体现在构造函数中对部分对象的创建和生命周期管理上。</li>
+</ul>
+</li>
+<li>继承：UML中会用实线带空心三角箭头表示，代码中则通过 <code>extends</code> 关键字实现。</li>
+</ul>
+<h4 id="行为与状态映射"><a href="#行为与状态映射" class="headerlink" title="行为与状态映射"></a>行为与状态映射</h4><ul>
+<li>这一点主要体现在状态图和顺序图。这两类图的概念和作用在上面已经介绍过，这里就不过多赘述。</li>
+</ul>
+<h2 id="大模型辅助正向建模"><a href="#大模型辅助正向建模" class="headerlink" title="大模型辅助正向建模"></a>大模型辅助正向建模</h2><ul>
+<li><p>在本次的单元中，我通过使用大模型了解怎么画UML类图，理解关联、聚合、组合等具体的概念以及如何判断类和类之间的具体关系。在生成UML类图的参考代码的时候，大模型没有给出我<code>.mdj</code>的文件代码，而是给了我<code>.puml</code>代码，也就是plantUML的代码。<br>个人感觉<code>.puml</code>代码会比<code>.mdj</code>代码更能专注到系统的结构上，而不是一个一个添加属性与方法，而是通过代码的方式来进行类图的绘制。于是，我本单元采取了大模型的建议，先使用plantUML进行初步建模，再根据这个类图进行代码的书写，最后反向优化类图之后才把类图绘制到<code>.mdj</code>文件里面的。</p>
+</li>
+<li><p>还有就是大模型最后不要用来进行代码整体架构的建立，因为大模型生成架构的时候，经常会不能分清楚用户的需求，会根据用户的一些要求添加一些冗余的一些类，而更难做到在原有给的架构上进行优化，也就是大模型善于“加”东西，而不是“减”东西，最终导致架构的臃肿。</p>
+</li>
+</ul>
+<h2 id="思维演进"><a href="#思维演进" class="headerlink" title="思维演进"></a>思维演进</h2><h3 id="架构设计思维的演进"><a href="#架构设计思维的演进" class="headerlink" title="架构设计思维的演进"></a>架构设计思维的演进</h3><h4 id="第一单元——层次化设计与初步抽象"><a href="#第一单元——层次化设计与初步抽象" class="headerlink" title="第一单元——层次化设计与初步抽象"></a>第一单元——层次化设计与初步抽象</h4><h5 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h5><p>本单元我的核心思路是<code>String -&gt; Lexer -&gt; Parser -&gt; Poly -&gt; String</code>。但 <code>Poly</code> 类内部（尤其是 <code>Mono</code>）最初可能更多地是基于字符串或简单数据类型（如 <code>HashMap&lt;String, Integer&gt;</code> 表示 <code>x</code> 的幂来存储和操作表达式的不同部分。自定义递归函数部分，我采用的是 <code>token</code> 流的替换，这是一种在文本层面解决递归调用的策略，而非在对象层面进行递归的构建和求值。</p>
+<h5 id="设计局限"><a href="#设计局限" class="headerlink" title="设计局限"></a>设计局限</h5><ul>
+<li><p><strong>功能扩展困难</strong>：当 <code>Mono</code> 内部的结构（三角函数的参数）本身也是一个“因子”时，原有的简单 <code>HashMap</code> 结构难以直接应对这种递归嵌套。为了合并相同的 <code>Mono</code>，我采取了“递归的比较思路，即若三角函数因子存在的话，就对三角函数里面的因子进行比较，通过逐步比较系数，自变量指数，三角函数相等，从而一直递归到三角函数的因子内部没有三角函数为止，从而结束递归比较”。 这种复杂且需要大量递归比较的逻辑，正是由于内部结构没有被彻底对象化所致。</p>
+</li>
+<li><p><strong>“大类”与职责混淆</strong>： <code>Lexer</code> 部分的替换功能性强、代码量较多，导致调试困难。 这表明我的 <code>Lexer</code> 不仅负责词法分析，还承担了复杂的“宏展开”或“替换”逻辑，使得单个方法的职责过于庞大，难以维护。</p>
+</li>
+</ul>
+<h5 id="思维演进-1"><a href="#思维演进-1" class="headerlink" title="思维演进"></a>思维演进</h5><ul>
+<li><strong>理解了抽象的深化</strong>：认识到“因子”内部可以包含更复杂的“表达式”结构。例如，<code>sin(Poly)</code> 中的 <code>Poly</code> 本身就是一个完整的表达式。这意味着 <code>Factor</code> 不再仅仅是 <code>x</code> 或简单的三角函数项，而是一个可以包含其他 <code>Poly</code> 对象的抽象概念。这可以促使思考如何用对象来表示表达式的<strong>递归嵌套</strong>特性。</li>
+<li><strong>组合构建树形结构</strong>：自然而然地思考如何通过对象之间的<strong>组合关系</strong>来表示表达式的层次结构，即构建<strong>表达式树</strong>。</li>
+<li><strong>多态统一行为</strong>：理解到对于表达式的各种统一操作（如求导、化简或求值），可以通过<strong>多态</strong>机制来极大地简化和统一处理逻辑。</li>
+</ul>
+<h4 id="第二单元——并发控制与职责分离"><a href="#第二单元——并发控制与职责分离" class="headerlink" title="第二单元——并发控制与职责分离"></a>第二单元——并发控制与职责分离</h4><h5 id="设计思路-1"><a href="#设计思路-1" class="headerlink" title="设计思路"></a>设计思路</h5><ul>
+<li><p>设计了 <code>InputThread</code> (请求接收)、<code>Schedule</code> (请求分配)、<code>ElevatorThread</code> (电梯运输) 三种线程。</p>
+</li>
+<li><p>对于涉及共享数据（如请求表 <code>RequestTable</code>）的访问，运用 <code>synchronized</code> 关键字进行同步，对线程安全有了初步的认识，并尝试通过同步机制来管理共享资源的访问，应对多线程环境下的潜在问题。</p>
+</li>
+</ul>
+<h5 id="设计局限-1"><a href="#设计局限-1" class="headerlink" title="设计局限"></a>设计局限</h5><ul>
+<li><strong>并发安全问题与数据一致性挑战</strong>：对共享状态（如乘客请求的接收状态）的并发访问可能会导致不确定的行为。</li>
+<li><strong>调试复杂性</strong>：多线程环境下非确定性行为对问题定位和复现带来的巨大挑战。</li>
+</ul>
+<h5 id="思维演进-2"><a href="#思维演进-2" class="headerlink" title="思维演进"></a>思维演进</h5><ul>
+<li><strong>线程安全的核心性与深度理解</strong>：在多线程环境中，对任何<strong>共享资源</strong>（如 <code>RequestTable</code>、电梯内部乘客列表、电梯状态、配对电梯状态）的访问都必须通过<strong>精确的同步机制</strong>来保护，以确保数据的一致性和操作的原子性。</li>
+</ul>
+<h4 id="第三单元——契约式编程与高效数据结构选择"><a href="#第三单元——契约式编程与高效数据结构选择" class="headerlink" title="第三单元——契约式编程与高效数据结构选择"></a>第三单元——契约式编程与高效数据结构选择</h4><h5 id="设计思路-2"><a href="#设计思路-2" class="headerlink" title="设计思路"></a>设计思路</h5><ul>
+<li>在第一次接触JML规格时，倾向于直接将JML的描述“翻译”成Java代码。对于对象状态的维护，可能更多地是在方法执行时进行实时计算，而非考虑增量维护或缓存机制。</li>
+</ul>
+<h5 id="设计局限-2"><a href="#设计局限-2" class="headerlink" title="设计局限"></a>设计局限</h5><ul>
+<li><strong>性能瓶颈</strong>：仅仅根据JML的功能描述进行直译式的实现，往往无法满足实际的性能要求（如 <code>qts</code> 指令的 <code>O(N)</code> 复杂度）。</li>
+</ul>
+<h5 id="思维演进-3"><a href="#思维演进-3" class="headerlink" title="思维演进"></a>思维演进</h5><ul>
+<li><p><strong>契约式编程 </strong>：通过JML规格，您深刻理解了软件模块之间（或方法与调用者之间）的契约关系。<code>requires</code> 定义了调用方法的“前提”，<code>ensures</code> 定义了方法执行后的“结果保证”，<code>assignable</code> 明确了方法可以修改的“范围”，<code>signals</code> 则规定了在特定异常条件下的“行为”。</p>
+</li>
+<li><p><strong>规格与实现分离</strong>：JML只定义了“做什么”（功能和行为），而没有规定“怎么做”（具体实现细节）</p>
+</li>
+</ul>
+<h4 id="第四单元——程序架构的设计与抽象以及UML"><a href="#第四单元——程序架构的设计与抽象以及UML" class="headerlink" title="第四单元——程序架构的设计与抽象以及UML"></a>第四单元——程序架构的设计与抽象以及UML</h4><p>这一部分上面讲的比较清楚了，就不再赘述了。</p>
+<h3 id="测试思维的演进"><a href="#测试思维的演进" class="headerlink" title="测试思维的演进"></a>测试思维的演进</h3><h5 id="第一单元"><a href="#第一单元" class="headerlink" title="第一单元"></a>第一单元</h5><p>手动构造少量包含各种操作符和嵌套层数的表达式字符串作为输入，然后人工比对程序的输出结果。</p>
+<h5 id="第二单元"><a href="#第二单元" class="headerlink" title="第二单元"></a>第二单元</h5><p>多线程引入了极大的复杂性，要考虑并发安全和运行时行为，这个单元我使用了评测机来构造极端并发场景（如大量请求瞬间涌入、请求类型高度重复、临界点请求）来进行压力测试。</p>
+<h5 id="第三单元"><a href="#第三单元" class="headerlink" title="第三单元"></a>第三单元</h5><p>开始掌握规格驱动测试，严格依据JML定义设计单元测试和异常测试，并利用 <code>JUnit</code> 等工具实现自动化。</p>
+<h5 id="第四单元"><a href="#第四单元" class="headerlink" title="第四单元"></a>第四单元</h5><p>设计能触发复杂规则的数据，并通过日志分析等方法，确保系统在长期运行中的鲁棒性。</p>
+<h2 id="课程收获"><a href="#课程收获" class="headerlink" title="课程收获"></a>课程收获</h2><p>这个学期的面向对象课终于结束了……就我现在的感觉来说，只有深深的解脱。我认为oo绝对是我到现在以来花时间最长的一门课，我相信后面可能也不会再有来者了。</p>
+<p>回想我每周因为oo坐在电脑面前苦思冥想bug到底在哪里，一坐就是五六个小时，意识到的时候已经腰酸背痛的时光；<br>回想弱测的时候出现<code>WA</code>，点进去看具体样例，发现是一片空白，只能心里暗骂，却又无可奈何，对着代码干瞪眼，不知道从何入手的时光；<br>回想我第3次作业bug直到周六下午都没有找出来，坐在三号楼手足无措，只能一遍遍点着调试的“下一步”，时不时点开属性页面看能不能对上正确值的时光；<br>回想我每一次互测拿着评测机，苦思冥想造点造不出来，自己却被人刀了十多刀的时光……我绝对不会说这门课是一门很轻松很有趣的课。</p>
+<p>但是，每当我沉浸其中，一步步把要求从抽象的想法变成结构清晰的代码的时候；<br>每当我检查代码，发现bug，运行样例，惊喜的发现运行出来正确答案的时候；<br>每当我紧张地点击提交，页面里出现了十个<code>accept</code>的时候；<br>每当我周日清晨打开互测，不是“很抱歉，你未能成功入围本次互测。我们鼓励你先掌握基础内容，为下一次的互测做准备”，而是显示互测页面，而且看到自己在A房的时候；<br>每当研讨课上，我不再像以前一样跟别人讨论的时候没有观点，而是能自信的分享自己代码架构，集思广益的时候，我总是觉得，oo这门课也总会给人带来一些小确幸的。</p>
+<p>oo，实话说，你真的让我成长了很多，一次次迭代让我构建起面向对象的思想，让我有从容和信心从零开始面对一个项目，一次次研讨课让我也能敢于发表自己的观点，一次次<code>WA</code>磨平了我的锐气和棱角（bushi)。</p>
+<blockquote>
+<p>谢谢你们，oo课的老师们，谢谢你们，oo的助教们，谢谢你，oo。</p>
+</blockquote>
 
 		</div>
 
@@ -481,23 +508,11 @@
 		
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
-			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2025/05/14/oo-unit2/">
-					<span class="left arrow-icon flex justify-center items-center">
-						<i class="fa-solid fa-chevron-left"></i>
-					</span>
-					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item">oo-unit2</span>
-						<span class="post-nav-item">Prev posts</span>
-					</span>
-				</a>
-			</div>
-			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2025/02/28/make%E5%91%BD%E4%BB%A4%E6%95%99%E7%A8%8B/">
+				<a class="next" rel="next" href="/2025/05/14/oo-unit3/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item">make命令教程</span>
+						<span class="post-nav-title-item">oo-unit3</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -561,8 +576,8 @@
 		<div class="post-toc-wrap">
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
-		<div class="page-title">oo-unit1</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90"><span class="nav-text">程序结构分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%A6%E9%87%8F%E5%88%86%E6%9E%90"><span class="nav-text">度量分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#unit1%E4%BD%9C%E4%B8%9A%E7%B1%BB%E5%9B%BE%E5%B1%95%E7%A4%BA"><span class="nav-text">unit1作业类图展示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%BD%93%E9%AA%8C"><span class="nav-text">架构设计体验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hw1"><span class="nav-text">hw1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hw2"><span class="nav-text">hw2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hw3"><span class="nav-text">hw3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bug%E5%88%86%E6%9E%90"><span class="nav-text">Bug分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hw1-1"><span class="nav-text">hw1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hw2-1"><span class="nav-text">hw2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hw3-1"><span class="nav-text">hw3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E8%87%AA%E5%B7%B1%E8%BF%9B%E8%A1%8C%E7%9A%84%E4%BC%98%E5%8C%96"><span class="nav-text">分析自己进行的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%83%E5%BE%97%E4%BD%93%E4%BC%9A"><span class="nav-text">心得体会</span></a></li></ol>
+		<div class="page-title">oo-unit4</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E5%90%91%E5%BB%BA%E6%A8%A1%E4%B8%8E%E5%BC%80%E5%8F%91"><span class="nav-text">正向建模与开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E6%8A%BD%E8%B1%A1"><span class="nav-text">需求分析与抽象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UML%E5%BB%BA%E6%A8%A1"><span class="nav-text">UML建模</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%BB%A5%E5%8F%8A%E4%B8%80%E8%87%B4%E6%80%A7%E6%A3%80%E6%9F%A5"><span class="nav-text">代码实现以及一致性检查</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%BB%A5%E5%8F%8A%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1%E4%B8%8EUML%E8%AE%BE%E8%AE%A1%E7%9A%84%E8%BF%BD%E8%B8%AA%E5%85%B3%E7%B3%BB"><span class="nav-text">架构设计以及代码设计与UML设计的追踪关系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%80%BB%E7%BB%93"><span class="nav-text">架构设计总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1%E4%B8%8EUML%E6%A8%A1%E5%9E%8B%E8%AE%BE%E8%AE%A1%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BF%BD%E8%B8%AA%E5%85%B3%E7%B3%BB"><span class="nav-text">代码设计与UML模型设计之间的追踪关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%BE%85%E5%8A%A9%E6%AD%A3%E5%90%91%E5%BB%BA%E6%A8%A1"><span class="nav-text">大模型辅助正向建模</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E7%BB%B4%E6%BC%94%E8%BF%9B"><span class="nav-text">思维演进</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%80%9D%E7%BB%B4%E7%9A%84%E6%BC%94%E8%BF%9B"><span class="nav-text">架构设计思维的演进</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%80%9D%E7%BB%B4%E7%9A%84%E6%BC%94%E8%BF%9B"><span class="nav-text">测试思维的演进</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E6%94%B6%E8%8E%B7"><span class="nav-text">课程收获</span></a></li></ol>
 
 	</div>
 </div>
