@@ -828,4 +828,356 @@ Expr = \sum (coe_i * x_{i}^{exp_i} * \prod sin_j(Expr)^{exp_j} * \prod cos_j(Exp
         <tag>os</tag>
       </tags>
   </entry>
+  <entry>
+    <title>BUAA_Compiler 优化文章</title>
+    <url>/2025/12/27/compiler-optimization-report/</url>
+    <content><![CDATA[<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li><a href="#1-优化概述与整体架构">优化概述与整体架构</a></li>
+<li><a href="#2-控制流图构建-cfgbuilder">控制流图构建 (CfgBuilder)</a></li>
+<li><a href="#3-不可达代码消除-removeunreachcode">不可达代码消除 (RemoveUnReachCode)</a></li>
+<li><a href="#4-死代码消除-removedeadcode">死代码消除 (RemoveDeadCode)</a></li>
+<li><a href="#5-mem2reg-与-ssa-构造">Mem2Reg 与 SSA 构造</a></li>
+<li><a href="#6-phi-指令插入-insertphi">Phi 指令插入 (InsertPhi)</a></li>
+<li><a href="#7-phi-指令消除-removephi">Phi 指令消除 (RemovePhi)</a></li>
+<li><a href="#8-全局值编号与代数化简-lvngvn">全局值编号与代数化简 (Lvn/GVN)</a></li>
+<li><a href="#9-全局代码移动-gcm-与循环不变量外提-licm">全局代码移动 (GCM) 与循环不变量外提 (LICM)</a></li>
+<li><a href="#10-函数内联-funcinline">函数内联 (FuncInline)</a></li>
+<li><a href="#11-活跃变量分析-activeanalysis">活跃变量分析 (ActiveAnalysis)</a></li>
+<li><a href="#12-寄存器分配-registerallocator">寄存器分配 (RegisterAllocator)</a></li>
+<li><a href="#13-窥孔优化-peephole">窥孔优化 (PeepHole)</a></li>
+<li><a href="#14-后端强度削减">后端强度削减</a></li>
+</ol>
+<hr>
+<h2 id="1-优化概述与整体架构"><a href="#1-优化概述与整体架构" class="headerlink" title="1. 优化概述与整体架构"></a>1. 优化概述与整体架构</h2><h3 id="1-1-优化管理器-OptimizeManager"><a href="#1-1-优化管理器-OptimizeManager" class="headerlink" title="1.1 优化管理器 (OptimizeManager)"></a>1.1 优化管理器 (OptimizeManager)</h3><p>所有优化遍均由 <code>OptimizeManager</code> 统一管理和调度。优化执行顺序如下：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. RemoveUnReachCode + CfgBuilder + RemoveDeadCode + CfgBuilder (初始清理)</span><br><span class="line">2. FuncInline + 清理遍 (函数内联)</span><br><span class="line">3. MemToReg + CfgBuilder (栈变量提升至寄存器)</span><br><span class="line">4. 清理遍</span><br><span class="line">5. 循环 5 次:</span><br><span class="line">   - Lvn (GVN + 代数化简)</span><br><span class="line">   - Gcm (全局代码移动)</span><br><span class="line">   - 清理遍</span><br><span class="line">6. ActiveAnalysis + AllocateRegister (活跃分析与寄存器分配)</span><br><span class="line">7. RemovePhi (Phi 消除，在 MIPS 生成前)</span><br></pre></td></tr></table></figure></div>
+<h3 id="1-2-设计原则"><a href="#1-2-设计原则" class="headerlink" title="1.2 设计原则"></a>1.2 设计原则</h3><ul>
+<li><strong>迭代优化</strong>：许多优化会暴露新的优化机会，因此采用多轮迭代（如 Lvn + Gcm 循环 5 次）。</li>
+<li><strong>清理遍协同</strong>：每个主要优化后都跟随 <code>RemoveUnReachCode</code>、<code>CfgBuilder</code>、<code>RemoveDeadCode</code>，确保 CFG 和 IR 的健康状态。</li>
+<li><strong>Pass 解耦</strong>：每个优化遍只负责单一职责，通过 <code>Optimizer</code> 抽象基类统一接口。</li>
+</ul>
+<hr>
+<h2 id="2-控制流图构建-CfgBuilder"><a href="#2-控制流图构建-CfgBuilder" class="headerlink" title="2. 控制流图构建 (CfgBuilder)"></a>2. 控制流图构建 (CfgBuilder)</h2><h3 id="2-1-功能描述"><a href="#2-1-功能描述" class="headerlink" title="2.1 功能描述"></a>2.1 功能描述</h3><p><code>CfgBuilder</code> 负责根据基本块之间的跳转关系构建控制流图（CFG），主要维护以下信息：</p>
+<ul>
+<li><strong>前驱 (Predecessors)</strong> 和 <strong>后继 (Successors)</strong> 列表</li>
+<li><strong>支配关系 (Dominators)</strong>：直接支配者、支配边界</li>
+<li><strong>支配树 (Dominator Tree)</strong>：用于 GVN 按支配序遍历</li>
+</ul>
+<h3 id="2-2-实现要点"><a href="#2-2-实现要点" class="headerlink" title="2.2 实现要点"></a>2.2 实现要点</h3><ol>
+<li><p><strong>后继关系推导</strong>：遍历每个基本块的最后一条指令：</p>
+<ul>
+<li><code>JumpInstr</code>：单后继</li>
+<li><code>BranchInstr</code>：双后继（True/False 分支）</li>
+<li><code>ReturnInstr</code>：无后继</li>
+</ul>
+</li>
+<li><p><strong>支配关系计算</strong>：采用数据流迭代算法：</p>
+<ul>
+<li>初始化：每个块的支配者集合为所有块</li>
+<li>迭代：$\mathrm{Dom}(B) = \{B\} \cup \bigcap_{P \in \mathrm{Pred}(B)} \mathrm{Dom}(P)$</li>
+<li>收敛后确定直接支配者（Immediate Dominator）</li>
+</ul>
+</li>
+<li><p><strong>支配边界计算</strong>：</p>
+<p>$DF(X) = \{ Y \mid \exists P \in \mathit{Pred}(Y), \; X \ \mathrm{dom} \ P \land X \ !\mathrm{sdom} \ Y \}$</p>
+</li>
+</ol>
+<h3 id="2-3-遇到的困难"><a href="#2-3-遇到的困难" class="headerlink" title="2.3 遇到的困难"></a>2.3 遇到的困难</h3><ul>
+<li><strong>图不连通</strong>：某些基本块可能因优化变成孤立块，需在 CFG 构建后清理。</li>
+<li><strong>循环处理</strong>：回边的存在使得支配关系计算需要多轮迭代才能收敛。</li>
+</ul>
+<hr>
+<h2 id="3-不可达代码消除-RemoveUnReachCode"><a href="#3-不可达代码消除-RemoveUnReachCode" class="headerlink" title="3. 不可达代码消除 (RemoveUnReachCode)"></a>3. 不可达代码消除 (RemoveUnReachCode)</h2><h3 id="3-1-功能描述"><a href="#3-1-功能描述" class="headerlink" title="3.1 功能描述"></a>3.1 功能描述</h3><p>删除从函数入口无法到达的基本块以及跳转指令后的死指令。</p>
+<h3 id="3-2-实现细节"><a href="#3-2-实现细节" class="headerlink" title="3.2 实现细节"></a>3.2 实现细节</h3><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1. 删除跳转后的指令</span></span><br><span class="line"><span class="keyword">for</span> (IrBasicBlock block : function.getBasicBlocks()) &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">hasJump</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">    Iterator&lt;Instruction&gt; it = block.getInstructions().iterator();</span><br><span class="line">    <span class="keyword">while</span> (it.hasNext()) &#123;</span><br><span class="line">        <span class="type">Instruction</span> <span class="variable">instr</span> <span class="operator">=</span> it.next();</span><br><span class="line">        <span class="keyword">if</span> (hasJump) &#123;</span><br><span class="line">            instr.removeAllValueUse();</span><br><span class="line">            it.remove();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (instr <span class="keyword">instanceof</span> JumpInstr || instr <span class="keyword">instanceof</span> BranchInstr </span><br><span class="line">            || instr <span class="keyword">instanceof</span> ReturnInstr) &#123;</span><br><span class="line">            hasJump = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. DFS 标记可达块</span></span><br><span class="line"><span class="comment">// 3. 删除未标记的块</span></span><br></pre></td></tr></table></figure></div>
+<h3 id="3-3-遇到的困难"><a href="#3-3-遇到的困难" class="headerlink" title="3.3 遇到的困难"></a>3.3 遇到的困难</h3><ul>
+<li><strong>Use-Def 链维护</strong>：删除指令时必须调用 <code>removeAllValueUse()</code> 断开所有引用，否则后续优化会访问到悬空指针。</li>
+</ul>
+<hr>
+<h2 id="4-死代码消除-RemoveDeadCode"><a href="#4-死代码消除-RemoveDeadCode" class="headerlink" title="4. 死代码消除 (RemoveDeadCode)"></a>4. 死代码消除 (RemoveDeadCode)</h2><h3 id="4-1-功能描述"><a href="#4-1-功能描述" class="headerlink" title="4.1 功能描述"></a>4.1 功能描述</h3><p>基于活跃性分析，删除结果未被使用且无副作用的指令。</p>
+<h3 id="4-2-核心算法"><a href="#4-2-核心算法" class="headerlink" title="4.2 核心算法"></a>4.2 核心算法</h3><p>采用 Mark-Sweep 思想：</p>
+<ol>
+<li><p><strong>标记关键指令</strong>（Critical Instructions）：</p>
+<ul>
+<li><code>ReturnInstr</code>：函数必须返回</li>
+<li><code>CallInstr</code>：调用有副作用的函数（IO、修改全局变量）</li>
+<li><code>StoreInstr</code>：内存写入</li>
+<li><code>BranchInstr</code> / <code>JumpInstr</code>：控制流</li>
+</ul>
+</li>
+<li><p><strong>反向传播</strong>：从关键指令出发，将其操作数（若为指令）也标记为活跃。</p>
+</li>
+<li><p><strong>清扫</strong>：删除未标记的指令。</p>
+</li>
+</ol>
+<h3 id="4-3-副作用函数识别"><a href="#4-3-副作用函数识别" class="headerlink" title="4.3 副作用函数识别"></a>4.3 副作用函数识别</h3><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dfsSideFunction</span><span class="params">(IrFunction func, HashSet&lt;IrFunction&gt; visited)</span> &#123;</span><br><span class="line">    <span class="comment">// 递归分析调用链</span></span><br><span class="line">    <span class="keyword">if</span> (函数调用了 IO 函数或包含 Store) &#123;</span><br><span class="line">        sideEffectFunctions.add(func);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<h3 id="4-4-额外功能"><a href="#4-4-额外功能" class="headerlink" title="4.4 额外功能"></a>4.4 额外功能</h3><ul>
+<li><strong>无用 Phi 删除</strong>：若 Phi 只有一个入边值，直接替换为该值。</li>
+<li><strong>基本块合并</strong>：若块 A 只有一个后继 B，B 只有一个前驱 A，可合并。</li>
+<li><strong>无用函数删除</strong>：若函数从未被调用（除 main 外），直接删除。</li>
+</ul>
+<h3 id="4-5-遇到的困难"><a href="#4-5-遇到的困难" class="headerlink" title="4.5 遇到的困难"></a>4.5 遇到的困难</h3><ul>
+<li><strong>全局变量副作用传播</strong>：函数 A 调用 B，B 修改全局变量，则 A 也有副作用。需建立调用图进行传递闭包。</li>
+<li><strong>条件删除的正确性</strong>：即使 branch 条件可常量折叠为 true，也不能直接删除 branch 指令，应替换为 jump。</li>
+</ul>
+<hr>
+<h2 id="5-Mem2Reg-与-SSA-构造"><a href="#5-Mem2Reg-与-SSA-构造" class="headerlink" title="5. Mem2Reg 与 SSA 构造"></a>5. Mem2Reg 与 SSA 构造</h2><h3 id="5-1-功能描述"><a href="#5-1-功能描述" class="headerlink" title="5.1 功能描述"></a>5.1 功能描述</h3><p>将局部标量变量的 <code>alloca</code> + <code>load</code> + <code>store</code> 模式提升为虚拟寄存器操作，构造 SSA 形式。</p>
+<h3 id="5-2-适用条件"><a href="#5-2-适用条件" class="headerlink" title="5.2 适用条件"></a>5.2 适用条件</h3><p>仅处理 <strong>非数组</strong> 的 <code>AllocateInstr</code>：<br><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">isValueAllocate</span><span class="params">(Instruction instr)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (instr <span class="keyword">instanceof</span> AllocateInstr) &#123;</span><br><span class="line">        <span class="type">IrType</span> <span class="variable">targetType</span> <span class="operator">=</span> ((IrPointerType) instr.getType()).getTargetType();</span><br><span class="line">        <span class="keyword">return</span> !(targetType <span class="keyword">instanceof</span> IrArrayType);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="5-3-实现流程"><a href="#5-3-实现流程" class="headerlink" title="5.3 实现流程"></a>5.3 实现流程</h3><p>对于每个可提升的 <code>alloca</code>：</p>
+<ol>
+<li>调用 <code>InsertPhi</code> 在支配边界插入 Phi 指令</li>
+<li>按支配序重命名变量，替换 load/store</li>
+</ol>
+<hr>
+<h2 id="6-Phi-指令插入-InsertPhi"><a href="#6-Phi-指令插入-InsertPhi" class="headerlink" title="6. Phi 指令插入 (InsertPhi)"></a>6. Phi 指令插入 (InsertPhi)</h2><h3 id="6-1-功能描述"><a href="#6-1-功能描述" class="headerlink" title="6.1 功能描述"></a>6.1 功能描述</h3><p>为 Mem2Reg 服务，在控制流汇聚点插入 Phi 指令。</p>
+<h3 id="6-2-算法步骤"><a href="#6-2-算法步骤" class="headerlink" title="6.2 算法步骤"></a>6.2 算法步骤</h3><ol>
+<li><p><strong>收集定值点和使用点</strong>：遍历 <code>alloca</code> 的所有 user，分类为 Store（定值）和 Load（使用）。</p>
+</li>
+<li><p><strong>在支配边界插入 Phi</strong>：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> (!defineBlockStack.isEmpty()) &#123;</span><br><span class="line">    <span class="type">IrBasicBlock</span> <span class="variable">defBlock</span> <span class="operator">=</span> defineBlockStack.pop();</span><br><span class="line">    <span class="keyword">for</span> (IrBasicBlock frontier : defBlock.getDominateFrontiers()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!addedPhiBlocks.contains(frontier)) &#123;</span><br><span class="line">            insertPhiInstr(frontier);</span><br><span class="line">            addedPhiBlocks.add(frontier);</span><br><span class="line">            <span class="comment">// Phi 本身也是定值点，继续传播</span></span><br><span class="line">            <span class="keyword">if</span> (!defineBlocks.contains(frontier)) &#123;</span><br><span class="line">                defineBlockStack.push(frontier);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><strong>变量重命名</strong>：按支配树 DFS，维护值栈：</p>
+<ul>
+<li>遇到 Store：入栈</li>
+<li>遇到 Load：替换为栈顶值</li>
+<li>遇到 Phi（作为定值）：入栈</li>
+<li>离开块时恢复栈状态</li>
+</ul>
+</li>
+</ol>
+<h3 id="6-3-遇到的困难"><a href="#6-3-遇到的困难" class="headerlink" title="6.3 遇到的困难"></a>6.3 遇到的困难</h3><ul>
+<li><strong>Phi 操作数顺序</strong>：Phi 的入边值与前驱块的顺序必须严格对应。</li>
+<li><strong>未定义变量</strong>：若变量在某路径上未赋值就使用，栈为空，此时返回默认值 <code>0</code>。</li>
+</ul>
+<hr>
+<h2 id="7-Phi-指令消除-RemovePhi"><a href="#7-Phi-指令消除-RemovePhi" class="headerlink" title="7. Phi 指令消除 (RemovePhi)"></a>7. Phi 指令消除 (RemovePhi)</h2><h3 id="7-1-功能描述"><a href="#7-1-功能描述" class="headerlink" title="7.1 功能描述"></a>7.1 功能描述</h3><p>将 SSA 形式的 Phi 指令转换为并行复制（Parallel Copy），再转换为 Move 指令，以便后端生成 MIPS。</p>
+<h3 id="7-2-算法步骤"><a href="#7-2-算法步骤" class="headerlink" title="7.2 算法步骤"></a>7.2 算法步骤</h3><ol>
+<li><p><strong>Phi -&gt; Parallel Copy</strong>：</p>
+<ul>
+<li>若块只有一个前驱：在前驱块末尾插入 ParallelCopyInstr</li>
+<li>若块有多个前驱：插入中间块，避免关键边问题</li>
+</ul>
+</li>
+<li><p><strong>Parallel Copy -&gt; Move 序列</strong>：</p>
+<ul>
+<li>检测循环冲突（$a \gets b, \quad b \gets a$）：引入临时变量打破循环</li>
+<li>检测寄存器冲突：若 src 被后续 dst 覆盖，提前备份</li>
+</ul>
+</li>
+</ol>
+<h3 id="7-3-实现代码片段"><a href="#7-3-实现代码片段" class="headerlink" title="7.3 实现代码片段"></a>7.3 实现代码片段</h3><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 检测循环冲突</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">haveCircleConflict</span><span class="params">(ParallelCopyInstr copy, <span class="type">int</span> index)</span> &#123;</span><br><span class="line">    <span class="type">IrValue</span> <span class="variable">dstValue</span> <span class="operator">=</span> copy.getDstList().get(index);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> index + <span class="number">1</span>; i &lt; srcList.size(); i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (srcList.get(i).equals(dstValue)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// 后续有 move 使用当前 dst 作为 src</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<h3 id="7-4-遇到的困难"><a href="#7-4-遇到的困难" class="headerlink" title="7.4 遇到的困难"></a>7.4 遇到的困难</h3><ul>
+<li><strong>关键边</strong>：当一个块有多个前驱，且某前驱有多个后继时，不能直接在前驱块末尾插入 copy，需插入中间块。</li>
+<li><strong>MIPS 生成时机</strong>：<code>RemovePhi</code> 必须在 LLVM IR 输出后、MIPS 生成前执行，否则 Move 指令会污染 IR。</li>
+</ul>
+<hr>
+<h2 id="8-全局值编号与代数化简-Lvn-GVN"><a href="#8-全局值编号与代数化简-Lvn-GVN" class="headerlink" title="8. 全局值编号与代数化简 (Lvn/GVN)"></a>8. 全局值编号与代数化简 (Lvn/GVN)</h2><h3 id="8-1-功能描述"><a href="#8-1-功能描述" class="headerlink" title="8.1 功能描述"></a>8.1 功能描述</h3><p><code>Lvn</code> 实现了两个核心功能：</p>
+<ol>
+<li><strong>全局值编号 (GVN)</strong>：消除冗余计算</li>
+<li><strong>代数化简</strong>：常量折叠、恒等式化简</li>
+</ol>
+<h3 id="8-2-GVN-实现"><a href="#8-2-GVN-实现" class="headerlink" title="8.2 GVN 实现"></a>8.2 GVN 实现</h3><p>按支配树 DFS 遍历，维护哈希表：<br><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">gvnVisit</span><span class="params">(IrBasicBlock block)</span> &#123;</span><br><span class="line">    foldValue(block);  <span class="comment">// 常量折叠</span></span><br><span class="line">    foldInstr(block, addedInstr);  <span class="comment">// GVN</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (IrBasicBlock child : block.getDirectDominateBlocks()) &#123;</span><br><span class="line">        gvnVisit(child);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 退出时移除本块加入的映射（作用域）</span></span><br><span class="line">    <span class="keyword">for</span> (Instruction instr : addedInstr) &#123;</span><br><span class="line">        gvnHashMap.remove(instr.getGvnHash());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="8-3-哈希冲突与交换律"><a href="#8-3-哈希冲突与交换律" class="headerlink" title="8.3 哈希冲突与交换律"></a>8.3 哈希冲突与交换律</h3><p>对于比较指令 <code>icmp eq %a, %b</code> 和 <code>icmp eq %b, %a</code>，必须生成相同哈希：<br><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// CompareInstr.java</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">getGvnHash</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">op1</span> <span class="operator">=</span> getHashForValue(getOp1());</span><br><span class="line">    <span class="type">String</span> <span class="variable">op2</span> <span class="operator">=</span> getHashForValue(getOp2());</span><br><span class="line">    <span class="keyword">if</span> (cond == EQ || cond == NE) &#123;</span><br><span class="line">        <span class="comment">// 对于交换律成立的比较，排序操作数</span></span><br><span class="line">        <span class="keyword">if</span> (op1.compareTo(op2) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> op2 + <span class="string">&quot; &quot;</span> + cond + <span class="string">&quot; &quot;</span> + op1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> op1 + <span class="string">&quot; &quot;</span> + cond + <span class="string">&quot; &quot;</span> + op2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="8-4-代数化简规则"><a href="#8-4-代数化简规则" class="headerlink" title="8.4 代数化简规则"></a>8.4 代数化简规则</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>化简结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x + 0</code></td>
+<td><code>x</code></td>
+</tr>
+<tr>
+<td><code>x - 0</code></td>
+<td><code>x</code></td>
+</tr>
+<tr>
+<td><code>x - x</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>x * 0</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>x * 1</code></td>
+<td><code>x</code></td>
+</tr>
+<tr>
+<td><code>x / 1</code></td>
+<td><code>x</code></td>
+</tr>
+<tr>
+<td><code>x / x</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>x % 1</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>0 &amp;&amp; x</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>1 &amp;&amp; x</code></td>
+<td><code>x</code></td>
+</tr>
+<tr>
+<td>`0</td>
+<td></td>
+<td>x`</td>
+<td><code>x</code></td>
+</tr>
+<tr>
+<td>`1</td>
+<td></td>
+<td>x`</td>
+<td><code>1</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="8-5-遇到的困难"><a href="#8-5-遇到的困难" class="headerlink" title="8.5 遇到的困难"></a>8.5 遇到的困难</h3><ol>
+<li><p><strong>逻辑运算误判</strong>：最初错误地将 <code>0 || x</code> 化简为 <code>1</code>，导致条件判断逻辑紊乱。正确结果应为 <code>x</code>。</p>
+</li>
+<li><p><strong>操作数缺失崩溃</strong>：函数内联可能产生”残疾”指令（操作数不完整），导致 <code>getOp2()</code> 抛出 <code>IndexOutOfBoundsException</code>。</p>
+<ul>
+<li><strong>解决方案</strong>：在 <code>foldAluInstr</code> 入口添加防御性检查：<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (aluInstr.getUseValueCount() &lt; <span class="number">2</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="9-全局代码移动-GCM-与循环不变量外提-LICM"><a href="#9-全局代码移动-GCM-与循环不变量外提-LICM" class="headerlink" title="9. 全局代码移动 (GCM) 与循环不变量外提 (LICM)"></a>9. 全局代码移动 (GCM) 与循环不变量外提 (LICM)</h2><h3 id="9-1-功能描述"><a href="#9-1-功能描述" class="headerlink" title="9.1 功能描述"></a>9.1 功能描述</h3><p>GCM 通过 Schedule Early + Schedule Late 算法，将指令移动到最优位置，自动实现：</p>
+<ul>
+<li><strong>循环不变量外提 (LICM)</strong>：将循环内不变计算移到循环外</li>
+<li><strong>代码下沉</strong>：将只在部分路径使用的计算下沉，减少寄存器压力</li>
+</ul>
+<h3 id="9-2-核心算法"><a href="#9-2-核心算法" class="headerlink" title="9.2 核心算法"></a>9.2 核心算法</h3><ol>
+<li><p><strong>Schedule Early</strong>：根据操作数定义位置，确定指令最早可放置的块（必须被所有操作数支配）。</p>
+</li>
+<li><p><strong>Schedule Late</strong>：根据使用点，确定指令最晚必须放置的块（必须支配所有使用者）。</p>
+</li>
+<li><p><strong>选择最优块</strong>：在 Early 和 Late 之间，选择 <strong>循环深度 (Loop Depth) 最小</strong> 的块。</p>
+</li>
+</ol>
+<h3 id="9-3-循环深度计算-LoopAnalysis"><a href="#9-3-循环深度计算-LoopAnalysis" class="headerlink" title="9.3 循环深度计算 (LoopAnalysis)"></a>9.3 循环深度计算 (LoopAnalysis)</h3><p>通过检测回边（back edge）识别循环：<br><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 回边定义：边 (u, v) 满足 v 支配 u</span></span><br><span class="line"><span class="keyword">for</span> (IrBasicBlock succ : block.getSuccessors()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (succ.getDominators().contains(block) </span><br><span class="line">        || succ == block) &#123; <span class="comment">// succ 支配 block，即 succ 是循环头</span></span><br><span class="line">        markLoopBlocks(block, succ);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="9-4-Pinned-指令"><a href="#9-4-Pinned-指令" class="headerlink" title="9.4 Pinned 指令"></a>9.4 Pinned 指令</h3><p>以下指令不能移动，必须”钉”在原位置：<br><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">isPinned</span><span class="params">(Instruction instr)</span> &#123;</span><br><span class="line">    <span class="comment">// 除法可能触发异常</span></span><br><span class="line">    <span class="keyword">if</span> (instr <span class="keyword">instanceof</span> AluInstr alu) &#123;</span><br><span class="line">        <span class="keyword">if</span> (alu.getAluOp() == SDIV || alu.getAluOp() == SREM) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> instr <span class="keyword">instanceof</span> BranchInstr ||</span><br><span class="line">           instr <span class="keyword">instanceof</span> JumpInstr ||</span><br><span class="line">           instr <span class="keyword">instanceof</span> ReturnInstr ||</span><br><span class="line">           instr <span class="keyword">instanceof</span> StoreInstr ||</span><br><span class="line">           instr <span class="keyword">instanceof</span> LoadInstr ||  <span class="comment">// 内存读取有依赖</span></span><br><span class="line">           instr <span class="keyword">instanceof</span> CallInstr ||  <span class="comment">// 函数调用有副作用</span></span><br><span class="line">           instr <span class="keyword">instanceof</span> AllocateInstr ||</span><br><span class="line">           instr <span class="keyword">instanceof</span> GepInstr ||</span><br><span class="line">           instr <span class="keyword">instanceof</span> PhiInstr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="9-5-遇到的困难"><a href="#9-5-遇到的困难" class="headerlink" title="9.5 遇到的困难"></a>9.5 遇到的困难</h3><ol>
+<li><p><strong>Load 被错误外提</strong>：最初未将 <code>LoadInstr</code> 设为 Pinned，导致全局变量的读取被提到循环外，使用旧值。</p>
+<ul>
+<li><strong>解决方案</strong>：将所有 <code>Load</code> 设为 Pinned。</li>
+</ul>
+</li>
+<li><p><strong>除法安全投机</strong>：<code>div</code> 指令可能除零，若被提出 <code>if (b != 0)</code> 块，会触发运行时异常。</p>
+<ul>
+<li><strong>解决方案</strong>：将 <code>SDIV</code> 和 <code>SREM</code> 设为 Pinned。</li>
+</ul>
+</li>
+<li><p><strong>Return 指令后插入</strong>：<code>addInstrBeforeJump</code> 方法最初未处理 <code>ReturnInstr</code>，导致移动的指令被插到 <code>ret</code> 之后成为死代码。</p>
+<ul>
+<li><strong>解决方案</strong>：<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (lastInstr <span class="keyword">instanceof</span> JumpInstr || </span><br><span class="line">    lastInstr <span class="keyword">instanceof</span> BranchInstr ||</span><br><span class="line">    lastInstr <span class="keyword">instanceof</span> ReturnInstr) &#123;</span><br><span class="line">    instructions.add(size - <span class="number">1</span>, instr); <span class="comment">// 插在终止指令前</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+</li>
+<li><p><strong>Phi 用户的前驱匹配</strong>：Phi 指令的使用点是 <strong>前驱块</strong>，而非 Phi 所在块：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (userInstr <span class="keyword">instanceof</span> PhiInstr phi) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; phi.getUseValueList().size(); i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (phi.getUseValueList().get(i) == instr) &#123;</span><br><span class="line">            <span class="type">IrBasicBlock</span> <span class="variable">phiPred</span> <span class="operator">=</span> phi.getParentBlock()</span><br><span class="line">                .getPredecessors().get(i);</span><br><span class="line">            lca = findLCA(lca, phiPred);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ol>
+<hr>
+<h2 id="10-函数内联-FuncInline"><a href="#10-函数内联-FuncInline" class="headerlink" title="10. 函数内联 (FuncInline)"></a>10. 函数内联 (FuncInline)</h2><h3 id="10-1-功能描述"><a href="#10-1-功能描述" class="headerlink" title="10.1 功能描述"></a>10.1 功能描述</h3><p>将被调用函数的代码体复制到调用点，消除函数调用开销，并暴露更多优化机会。</p>
+<h3 id="10-2-内联策略"><a href="#10-2-内联策略" class="headerlink" title="10.2 内联策略"></a>10.2 内联策略</h3><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">canInline</span><span class="params">(IrFunction function)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (function.isBuiltIn()) <span class="keyword">return</span> <span class="literal">false</span>;  <span class="comment">// 不内联库函数</span></span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> <span class="variable">instrCount</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (IrBasicBlock bb : function.getBasicBlocks()) &#123;</span><br><span class="line">        instrCount += bb.getInstructions().size();</span><br><span class="line">        <span class="keyword">for</span> (Instruction i : bb.getInstructions()) &#123;</span><br><span class="line">            <span class="comment">// 不内联递归函数</span></span><br><span class="line">            <span class="keyword">if</span> (i <span class="keyword">instanceof</span> CallInstr c &amp;&amp; c.getCalledFunction() == function) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> instrCount &lt; <span class="number">500</span>;  <span class="comment">// 指令数阈值</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<h3 id="10-3-内联步骤"><a href="#10-3-内联步骤" class="headerlink" title="10.3 内联步骤"></a>10.3 内联步骤</h3><ol>
+<li><p><strong>分割调用块</strong>：将 Call 指令后的代码移至新的 Split Block。</p>
+</li>
+<li><p><strong>克隆被调用函数</strong>：</p>
+<ul>
+<li>建立 <strong>Value Map</strong>（旧值 -&gt; 新值）和 <strong>Block Map</strong>（旧块 -&gt; 新块）</li>
+<li>形参映射到实参</li>
+<li>克隆所有基本块和指令</li>
+</ul>
+</li>
+<li><p><strong>缝合 CFG</strong>：</p>
+<ul>
+<li>调用块末尾添加 <code>jump</code> 到 Callee Entry</li>
+<li>Callee 的所有 <code>return</code> 替换为 <code>jump</code> 到 Split Block</li>
+</ul>
+</li>
+<li><p><strong>处理返回值</strong>：</p>
+<ul>
+<li>单返回点：直接替换</li>
+<li>多返回点：插入 Phi 节点汇聚返回值</li>
+</ul>
+</li>
+</ol>
+<h3 id="10-4-指令克隆"><a href="#10-4-指令克隆" class="headerlink" title="10.4 指令克隆"></a>10.4 指令克隆</h3><p>需为每种指令类型编写克隆逻辑：<br><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Instruction <span class="title function_">cloneInstruction</span><span class="params">(Instruction old, </span></span><br><span class="line"><span class="params">        Map&lt;IrValue, IrValue&gt; valMap, Map&lt;IrBasicBlock, IrBasicBlock&gt; blkMap)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (old <span class="keyword">instanceof</span> AluInstr alu) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">AluInstr</span>(alu.getAluOp(), </span><br><span class="line">            mapValue(alu.getOp1(), valMap), </span><br><span class="line">            mapValue(alu.getOp2(), valMap), <span class="string">&quot;&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (old <span class="keyword">instanceof</span> BranchInstr br) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">BranchInstr</span>(mapValue(br.getCondition(), valMap), </span><br><span class="line">            blkMap.get(br.getTrueBlock()),</span><br><span class="line">            blkMap.get(br.getFalseBlock()), <span class="string">&quot;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ... 其他指令类型</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="10-5-遇到的困难"><a href="#10-5-遇到的困难" class="headerlink" title="10.5 遇到的困难"></a>10.5 遇到的困难</h3><ol>
+<li><p><strong>Phi 指令克隆</strong>：Phi 的入边块列表需要先创建空 Phi，待 CFG 缝合完毕后再填充：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 第一遍：创建空 Phi</span></span><br><span class="line"><span class="keyword">if</span> (old <span class="keyword">instanceof</span> PhiInstr) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">PhiInstr</span>(old.getType(), <span class="literal">null</span>, <span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 第二遍：填充 Incoming</span></span><br><span class="line"><span class="keyword">for</span> (PhiInstr phi : clonedPhis) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; originPhi.size(); i++) &#123;</span><br><span class="line">        phi.addIncoming(mapValue(originVal[i]), blockMap.get(originBlk[i]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><strong>Value Map 空值</strong>：若 <code>mapValue</code> 返回 <code>null</code>，传给构造函数会导致操作数缺失。</p>
+<ul>
+<li><strong>解决方案</strong>：常量和全局值不需要映射，直接返回原值：<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (old <span class="keyword">instanceof</span> IrConstant || old <span class="keyword">instanceof</span> IrGlobalValue) &#123;</span><br><span class="line">    <span class="keyword">return</span> old;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="11-活跃变量分析-ActiveAnalysis"><a href="#11-活跃变量分析-ActiveAnalysis" class="headerlink" title="11. 活跃变量分析 (ActiveAnalysis)"></a>11. 活跃变量分析 (ActiveAnalysis)</h2><h3 id="11-1-功能描述"><a href="#11-1-功能描述" class="headerlink" title="11.1 功能描述"></a>11.1 功能描述</h3><p>分析每个基本块的入口和出口处哪些变量是活跃的（Live）。</p>
+<h3 id="11-2-数据流方程"><a href="#11-2-数据流方程" class="headerlink" title="11.2 数据流方程"></a>11.2 数据流方程</h3><ul>
+<li><strong>Use[B]</strong>：块 B 中使用的、在块内定义前就需要的变量</li>
+<li><strong>Def[B]</strong>：块 B 中定义的变量</li>
+<li><strong>In[B]</strong> = $\mathrm{Use}[B] \cup (\mathrm{Out}[B] - \mathrm{Def}[B])$</li>
+<li><strong>Out[B]</strong> = $\bigcup_{S \in \mathrm{Succ}(B)} \mathrm{In}[S]$</li>
+</ul>
+<h3 id="11-3-应用场景"><a href="#11-3-应用场景" class="headerlink" title="11.3 应用场景"></a>11.3 应用场景</h3><ul>
+<li>寄存器分配：判断变量生命周期</li>
+<li>死代码消除：未活跃的定值可删除</li>
+<li>RemovePhi：判断 Move 后变量是否还被使用</li>
+</ul>
+<hr>
+<h2 id="12-寄存器分配-RegisterAllocator"><a href="#12-寄存器分配-RegisterAllocator" class="headerlink" title="12. 寄存器分配 (RegisterAllocator)"></a>12. 寄存器分配 (RegisterAllocator)</h2><h3 id="12-1-功能描述"><a href="#12-1-功能描述" class="headerlink" title="12.1 功能描述"></a>12.1 功能描述</h3><p>将 IR 虚拟寄存器映射到 MIPS 物理寄存器。</p>
+<h3 id="12-2-分配策略"><a href="#12-2-分配策略" class="headerlink" title="12.2 分配策略"></a>12.2 分配策略</h3><p>按支配树遍历，采用线性扫描思想：</p>
+<ol>
+<li>对每条定值指令，分配一个空闲寄存器</li>
+<li>当变量最后一次使用后，释放其寄存器</li>
+<li>跨块变量通过 <code>InValueSet</code> 和 <code>OutValueSet</code> 传递</li>
+</ol>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">allocateInstruction</span><span class="params">(Instruction instr, HashSet&lt;IrValue&gt; defineSet)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!instr.defValue()) <span class="keyword">return</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (Register reg : registerSet) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!allocatedRegister.contains(reg)) &#123;</span><br><span class="line">            registerValueMap.put(reg, instr);</span><br><span class="line">            valueRegisterMap.put(instr, reg);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">checkAndFreeRegister</span><span class="params">(Instruction instr, ...)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (IrValue usedValue : instr.getUseValueList()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (lastUse(usedValue) == instr &amp;&amp; !isBlockOutValue(usedValue)) &#123;</span><br><span class="line">            registerValueMap.remove(valueRegisterMap.get(usedValue));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<h3 id="12-3-遇到的困难"><a href="#12-3-遇到的困难" class="headerlink" title="12.3 遇到的困难"></a>12.3 遇到的困难</h3><ul>
+<li><strong>跨块变量</strong>：进入子块时暂存当前寄存器状态，返回后恢复。</li>
+<li><strong>寄存器不足</strong>：当可用寄存器耗尽时，需溢出到栈上（通过 <code>$k0</code> 临时寄存器中转）。</li>
+</ul>
+<hr>
+<h2 id="13-窥孔优化-PeepHole"><a href="#13-窥孔优化-PeepHole" class="headerlink" title="13. 窥孔优化 (PeepHole)"></a>13. 窥孔优化 (PeepHole)</h2><h3 id="13-1-功能描述"><a href="#13-1-功能描述" class="headerlink" title="13.1 功能描述"></a>13.1 功能描述</h3><p>在 MIPS 汇编层面进行局部模式匹配和替换，消除冗余指令。</p>
+<h3 id="13-2-优化模式"><a href="#13-2-优化模式" class="headerlink" title="13.2 优化模式"></a>13.2 优化模式</h3><h4 id="13-2-1-连续-Store-优化"><a href="#13-2-1-连续-Store-优化" class="headerlink" title="13.2.1 连续 Store 优化"></a>13.2.1 连续 Store 优化</h4><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sw $t1, 0($sp)</span><br><span class="line">sw $t2, 0($sp)  -&gt;  删除第一条 sw</span><br></pre></td></tr></table></figure></div>
+<h4 id="13-2-2-连续-Move-优化"><a href="#13-2-2-连续-Move-优化" class="headerlink" title="13.2.2 连续 Move 优化"></a>13.2.2 连续 Move 优化</h4><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">move $a, $b</span><br><span class="line">move $c, $a  -&gt;  move $a, $b; move $c, $b</span><br></pre></td></tr></table></figure></div>
+<h4 id="13-2-3-Load-Store-优化"><a href="#13-2-3-Load-Store-优化" class="headerlink" title="13.2.3 Load-Store 优化"></a>13.2.3 Load-Store 优化</h4><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">lw $t, offset($base)</span><br><span class="line">sw $t, offset($base)  -&gt;  删除 sw</span><br></pre></td></tr></table></figure></div>
+<h4 id="13-2-4-Store-Load-优化"><a href="#13-2-4-Store-Load-优化" class="headerlink" title="13.2.4 Store-Load 优化"></a>13.2.4 Store-Load 优化</h4><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sw $t1, offset($base)</span><br><span class="line">lw $t2, offset($base)  -&gt;  move $t2, $t1</span><br></pre></td></tr></table></figure></div>
+<h4 id="13-2-5-冗余-Move-删除"><a href="#13-2-5-冗余-Move-删除" class="headerlink" title="13.2.5 冗余 Move 删除"></a>13.2.5 冗余 Move 删除</h4><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">move $t, $t  -&gt;  删除</span><br></pre></td></tr></table></figure></div>
+<h4 id="13-2-6-无用跳转删除"><a href="#13-2-6-无用跳转删除" class="headerlink" title="13.2.6 无用跳转删除"></a>13.2.6 无用跳转删除</h4><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">j label</span><br><span class="line">label:  -&gt;  删除 j</span><br></pre></td></tr></table></figure></div>
+<h3 id="13-3-实现框架"><a href="#13-3-实现框架" class="headerlink" title="13.3 实现框架"></a>13.3 实现框架</h3><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">peep</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">finished</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">while</span> (!finished) &#123;</span><br><span class="line">        finished = <span class="literal">true</span>;</span><br><span class="line">        finished &amp;= peepContinueSW();</span><br><span class="line">        finished &amp;= peepContinueMove();</span><br><span class="line">        finished &amp;= peepLoadStore();</span><br><span class="line">        finished &amp;= peepLoadAfterStore();</span><br><span class="line">        finished &amp;= peepRedundantMove();</span><br><span class="line">        finished &amp;= peepUselessJump();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<hr>
+<h2 id="14-后端强度削减"><a href="#14-后端强度削减" class="headerlink" title="14. 后端强度削减"></a>14. 后端强度削减</h2><h3 id="14-1-乘法优化"><a href="#14-1-乘法优化" class="headerlink" title="14.1 乘法优化"></a>14.1 乘法优化</h3><p>在 <code>AluInstr.toMips()</code> 中，将乘以 2 的幂次替换为左移：<br><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (FINE_TUNING &amp;&amp; aluOp == AluOp.MUL) &#123;</span><br><span class="line">    <span class="keyword">if</span> (op2 <span class="keyword">instanceof</span> IrConstantInt constant) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">value</span> <span class="operator">=</span> constant.getValue();</span><br><span class="line">        <span class="type">int</span> <span class="variable">power</span> <span class="operator">=</span> Integer.numberOfTrailingZeros(value);</span><br><span class="line">        <span class="keyword">if</span> (value &gt; <span class="number">0</span> &amp;&amp; (value &amp; (value - <span class="number">1</span>)) == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// x * 2^k -&gt; x &lt;&lt; k</span></span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">MipsAlu</span>(AluType.SLL, targetReg, srcReg, power);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></p>
+<h3 id="14-2-除法优化"><a href="#14-2-除法优化" class="headerlink" title="14.2 除法优化"></a>14.2 除法优化</h3><h4 id="14-2-1-2-的幂次除法优化"><a href="#14-2-1-2-的幂次除法优化" class="headerlink" title="14.2.1 2 的幂次除法优化"></a>14.2.1 2 的幂次除法优化</h4><p>有符号除法需特殊处理负数舍入（向零取整）：<br><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (FINE_TUNING &amp;&amp; aluOp == AluOp.SDIV) &#123;</span><br><span class="line">    <span class="comment">// x / 2^k (signed)</span></span><br><span class="line">    <span class="comment">// 算法：(x + (x &gt;&gt; 31 &gt;&gt;&gt; (32-k))) &gt;&gt; k</span></span><br><span class="line">    <span class="comment">// 即：若 x &lt; 0，加上 (2^k - 1) 的偏移再右移</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MipsAlu</span>(AluType.SRA, tempReg, srcReg, <span class="number">31</span>);     <span class="comment">// 符号扩展</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MipsAlu</span>(AluType.SRL, tempReg, tempReg, <span class="number">32</span> - k); <span class="comment">// 取低 k 位</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MipsAlu</span>(AluType.ADDU, tempReg, srcReg, tempReg);</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MipsAlu</span>(AluType.SRA, targetReg, tempReg, k);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></p>
+<h4 id="14-2-2-Magic-Number-算法（通用常数除法优化）"><a href="#14-2-2-Magic-Number-算法（通用常数除法优化）" class="headerlink" title="14.2.2 Magic Number 算法（通用常数除法优化）"></a>14.2.2 Magic Number 算法（通用常数除法优化）</h4><p>对于<strong>非 2 的幂次</strong>的常数除法（如 <code>x / 7</code>），采用论文 <em>“Division by Invariant Integers using Multiplication”</em> (Granlund &amp; Montgomery, 1994) 提出的 Magic Number 算法。</p>
+<p><strong>核心思想</strong>：将除法 <code>x / d</code> 转换为高位乘法 <code>(x * m) &gt;&gt; (32 + s)</code>，其中 <code>m</code> 是预先计算的”魔数”，<code>s</code> 是移位量。</p>
+<p><strong>MagicNumber 计算类</strong>：<br><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MagicNumber</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">long</span> m;  <span class="comment">// 魔数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> s;   <span class="comment">// 移位量</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> a;   <span class="comment">// 加法修正标志（当 m &gt;= 2^31 时需要）</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MagicNumber</span><span class="params">(<span class="type">int</span> d)</span> &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">ad</span> <span class="operator">=</span> Math.abs((<span class="type">long</span>) d);</span><br><span class="line">        <span class="type">int</span> <span class="variable">p</span> <span class="operator">=</span> <span class="number">31</span>;</span><br><span class="line">        <span class="type">long</span> <span class="variable">t</span> <span class="operator">=</span> <span class="number">1L</span> &lt;&lt; <span class="number">31</span>;</span><br><span class="line">        <span class="type">long</span> <span class="variable">anc</span> <span class="operator">=</span> t - <span class="number">1</span> - (t % ad);</span><br><span class="line">        <span class="type">long</span> <span class="variable">q1</span> <span class="operator">=</span> t / anc, r1 = t % anc;</span><br><span class="line">        <span class="type">long</span> <span class="variable">q2</span> <span class="operator">=</span> t / ad, r2 = t % ad;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            p++;</span><br><span class="line">            q1 = <span class="number">2</span> * q1; r1 = <span class="number">2</span> * r1;</span><br><span class="line">            <span class="keyword">if</span> (r1 &gt;= anc) &#123; q1++; r1 -= anc; &#125;</span><br><span class="line">            q2 = <span class="number">2</span> * q2; r2 = <span class="number">2</span> * r2;</span><br><span class="line">            <span class="keyword">if</span> (r2 &gt;= ad) &#123; q2++; r2 -= ad; &#125;</span><br><span class="line">            <span class="keyword">if</span> (q1 &gt; ad - r2 || (q1 == ad - r2 &amp;&amp; r1 == <span class="number">0</span>)) <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.m = q2 + <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">this</span>.s = p - <span class="number">32</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.m &gt;= (<span class="number">1L</span> &lt;&lt; <span class="number">31</span>)) &#123;</span><br><span class="line">            <span class="built_in">this</span>.a = <span class="number">1</span>;</span><br><span class="line">            <span class="built_in">this</span>.m -= (<span class="number">1L</span> &lt;&lt; <span class="number">32</span>);  <span class="comment">// 转为有符号表示</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.a = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></p>
+<p><strong>MIPS 代码生成</strong>：<br><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">optimizeConstDiv</span><span class="params">(Register regL, Register regResult, IrValue op1, <span class="type">int</span> d)</span> &#123;</span><br><span class="line">    <span class="type">MagicNumber</span> <span class="variable">magic</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MagicNumber</span>(Math.abs(d));</span><br><span class="line">    </span><br><span class="line">    loadValueToRegister(op1, regL);</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MarsLi</span>(Register.K1, (<span class="type">int</span>) magic.m);        <span class="comment">// 加载魔数</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MipsMdu</span>(MduType.MULT, regL, Register.K1);  <span class="comment">// 有符号乘法</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MipsMdu</span>(MduType.MFHI, Register.K1);        <span class="comment">// 取高 32 位</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (magic.a == <span class="number">1</span>) &#123;  <span class="comment">// 若魔数溢出，需加回被除数</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">MipsAlu</span>(AluType.ADDU, Register.K1, Register.K1, regL);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (magic.s &gt; <span class="number">0</span>) &#123;   <span class="comment">// 右移 s 位</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">MipsAlu</span>(AluType.SRA, Register.K1, Register.K1, magic.s);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 修正符号位（向零取整）</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MipsAlu</span>(AluType.SRA, Register.K0, regL, <span class="number">31</span>);</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MipsAlu</span>(AluType.SUBU, Register.K1, Register.K1, Register.K0);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (d &lt; <span class="number">0</span>) &#123;  <span class="comment">// 若除数为负，取反</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">MipsAlu</span>(AluType.SUBU, regResult, Register.ZERO, Register.K1);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">MarsMove</span>(regResult, Register.K1);</span><br><span class="line">    &#125;</span><br><span class="line">    saveResult(<span class="built_in">this</span>, regResult);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div></p>
+<p><strong>性能收益</strong>：</p>
+<ul>
+<li>原 <code>div</code> 指令：15 周期</li>
+<li>Magic Number 方案：约 8-10 条 OTHER 指令（约 8-10 周期）+ 1 条 <code>mult</code>（5 周期）</li>
+<li><strong>净节省约 5 周期/每次常数除法</strong></li>
+</ul>
+<h4 id="14-2-3-取模优化-SREM"><a href="#14-2-3-取模优化-SREM" class="headerlink" title="14.2.3 取模优化 (SREM)"></a>14.2.3 取模优化 (SREM)</h4><p>取模运算通过 <code>a % d = a - (a / d) * d</code> 复用除法优化结果：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">optimizeConstRem</span><span class="params">(Register regL, Register regResult, IrValue op1, <span class="type">int</span> d)</span> &#123;</span><br><span class="line">    <span class="type">Register</span> <span class="variable">regQ</span> <span class="operator">=</span> Register.K1;</span><br><span class="line">    optimizeConstDiv(regL, regQ, op1, d);  <span class="comment">// 复用除法优化</span></span><br><span class="line">    </span><br><span class="line">    loadValueToRegister(op1, regL);</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MarsLi</span>(Register.K0, d);</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MipsMdu</span>(MduType.MULT, regQ, Register.K0);</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MipsMdu</span>(MduType.MFLO, Register.K0);</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MipsAlu</span>(AluType.SUBU, regResult, regL, Register.K0);</span><br><span class="line">    saveResult(<span class="built_in">this</span>, regResult);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+]]></content>
+      <tags>
+        <tag>编译</tag>
+      </tags>
+  </entry>
 </search>
