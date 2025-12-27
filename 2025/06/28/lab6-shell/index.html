@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Zixuan Tang">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2025/06/28/lab6-shell/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lab6-shell">
+<meta property="og:url" content="http://example.com/2025/06/28/lab6-shell/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/redefine-og.webp">
+<meta property="article:published_time" content="2025-06-28T05:26:34.000Z">
+<meta property="article:modified_time" content="2025-06-28T05:27:03.540Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="os">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/favicon.jpg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.jpg">
+    <meta name="theme-color" content="#002FA7">
+    <link rel="shortcut icon" href="/images/favicon.jpg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            lab6-shell | Tanggger
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"ÍĆźöÔÄśÁ","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#002FA7","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"Tanggger's Blog","subtitle":{"text":["我惦着你","在时间里洄游"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"之外","artist":"陈奕迅","url":"music/eason_zhiwai.mp3","cover":"images/t018e6740ba46684c66.jpg","lrc":"music/eason_zhiwai.lrc"},{"name":"如果你也听说","artist":"张惠妹","url":"music/如果你也听说-张惠妹.mp3","cover":"images/t01bbdb98901103893e.jpg","lrc":"music/如果你也听说-张惠妹-歌词.lrc"},{"name":"回留","artist":"方大同","url":"music/回留-方大同.mp3","cover":"images/OIP-C.jpg","lrc":"music/回留-方大同-歌词.lrc"}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.2","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Tags":{"icon":"fa-solid fa-tags","path":"/tags/"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/2/13 22:21:00"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/favicon.jpg" class="w-full h-full rounded-sm">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Tanggger
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/tags/"
+                                        >
+                                    <i class="fa-solid fa-tags fa-fw"></i>
+                                    TAGS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/tags/"
+                        >
+                            <span>
+                                TAGS
+                            </span>
+                            
+                                <i class="fa-solid fa-tags fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">2</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">0</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">7</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">lab6-shell</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/favicon.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">Zixuan Tang</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv1</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2025-06-28 13:26:34</span>
+        <span class="mobile">2025-06-28 13:26:34</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-06-28 13:27:03</span>
+            <span class="mobile">2025-06-28 13:27:03</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/os/">os</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="任务内容"><a href="#任务内容" class="headerlink" title="任务内容"></a>任务内容</h2><h3 id="相对路径-新增指令"><a href="#相对路径-新增指令" class="headerlink" title="相对路径+新增指令"></a>相对路径+新增指令</h3><p><strong>实现思路</strong>：<br>内建指令，如 <code>cd</code> 和 <code>exit</code>，因其需要直接修改 Shell 进程自身的状态而被内建；外部指令，如 <code>touch</code>、<code>mkdir</code> 和 <code>rm</code>，则作为独立的可执行程序存在，由 Shell 创建子进程来运行。</p>
+<h4 id="1-内建指令-Built-in-Commands"><a href="#1-内建指令-Built-in-Commands" class="headerlink" title="1. 内建指令 (Built-in Commands)"></a>1. 内建指令 (Built-in Commands)</h4><p><strong><code>cd</code> 与 <code>pwd</code>：当前工作目录管理</strong></p>
+<p>这两个指令是相对路径功能的核心。其实现依赖于在内核中为每个进程（<code>struct Env</code>）增加一个指向当前目录文件结构（<code>struct File</code>）的指针 <code>env_cwd</code>。</p>
+<ul>
+<li><p><strong><code>cd</code> 的实现核心</strong>：<code>cd</code> 命令的主要工作是解析用户传入的路径参数，并调用一个特定的系统调用（如 <code>chdir</code>）来请求内核更新当前进程的 <code>env_cwd</code> 指针。</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">builtin_cd</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span> &#123;</span><br><span class="line">    <span class="comment">// ... (省略参数解析和路径处理的代码) ...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 核心：调用系统调用，请求内核改变当前工作目录</span></span><br><span class="line">    <span class="keyword">if</span> (chdir(resolved_path) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;cd: directory not found: %s\n&quot;</span>, path);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>; <span class="comment">// 失败，返回非零值</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><strong><code>pwd</code> 的实现核心</strong>：<code>pwd</code> 命令则通过一个系统调用（如 <code>getcwd</code>）来从内核获取当前进程 <code>env_cwd</code> 所对应的完整路径字符串，然后将其打印到标准输出。</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">builtin_pwd</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span> &#123;</span><br><span class="line">    <span class="type">char</span> current_path_buf[MAXPATHLEN];</span><br><span class="line">    <span class="keyword">if</span> (getcwd(current_path_buf, <span class="keyword">sizeof</span>(current_path_buf)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, current_path_buf);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<p><strong><code>exit</code>：退出 Shell</strong></p>
+<p><code>exit</code> 必须是内建指令，因为它需要终止的是 Shell 进程本身。其实现非常直接，就是调用 <code>exit()</code> 库函数，该函数会触发系统调用来销毁当前的进程环境。</p>
+<h4 id="2-外部命令-External-Commands"><a href="#2-外部命令-External-Commands" class="headerlink" title="2. 外部命令 (External Commands)"></a>2. 外部命令 (External Commands)</h4><p>这些命令作为独立的可执行文件存放在文件系统中。Shell 通过 <code>fork()</code> 和 <code>spawn()</code> 来创建子进程运行它们。这些命令实现的关键在于正确地使用文件系统相关的系统调用，并在执行失败时，从其 <code>main</code> 函数<strong>返回一个非零的退出码</strong>，以便 Shell 的 <code>&amp;&amp;</code> 和 <code>||</code> 能够正确工作。</p>
+<ul>
+<li><p><strong><code>touch</code> 的实现核心</strong>：使用 <code>open()</code> 系统调用，并组合使用 <code>O_CREAT</code>（不存在则创建）和 <code>O_EXCL</code>（已存在则报错）标志位，来实现“若文件不存在则创建”的逻辑。如果 <code>open</code> 因为文件已存在而失败（返回 <code>-E_FILE_EXISTS</code>），则将其视为成功（返回 <code>0</code>）。</p>
+</li>
+<li><p><strong><code>mkdir</code> 的实现核心</strong>：</p>
+<ul>
+<li>不带 <code>-p</code> 时，直接使用 <code>open()</code> 和 <code>O_MKDIR</code> 标志创建目录。</li>
+<li>带 <code>-p</code> 时，需要一个额外的辅助函数。该函数会逐级解析路径字符串（例如，将 <code>/a/b/c</code> 分解为 <code>/a</code>, <code>/a/b</code>, <code>/a/b/c</code>），并对每一级路径尝试调用 <code>open(path, O_MKDIR)</code>，同时忽略“文件已存在”（<code>-E_FILE_EXISTS</code>）的错误，从而实现递归创建。</li>
+</ul>
+</li>
+<li><p><strong><code>rm</code> 的实现核心</strong>：</p>
+<ul>
+<li>首先使用 <code>stat()</code> 系统调用来判断目标路径是一个文件还是一个目录。</li>
+<li>如果目标是文件，直接调用 <code>remove()</code> 系统调用删除。</li>
+<li>如果目标是目录，则检查是否提供了 <code>-r</code> 选项。若没有，则报错“Is a directory”；若有，则进入递归删除流程：打开目录，读取目录下的所有条目，并对每一个条目（除了 <code>.</code> 和 <code>..</code>）递归地调用 <code>rm -r</code>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="变量和注释"><a href="#变量和注释" class="headerlink" title="变量和注释"></a>变量和注释</h3><h4 id="1-变量的设置、展开与传递"><a href="#1-变量的设置、展开与传递" class="headerlink" title="1. 变量的设置、展开与传递"></a>1. 变量的设置、展开与传递</h4><p>这套机制能够区分对当前 Shell 生效的“局部变量”和能够被子进程继承的“环境变量”，并通过 <code>declare</code> 和 <code>unset</code> 指令进行管理。</p>
+<ul>
+<li><p><strong>变量的存储与管理</strong></p>
+<p>所有变量都存储在主 Shell 进程内存中的一个 <code>struct Variable</code> 数组里。这个结构体不仅记录了变量的键和值，还通过一个 <code>flags</code> 字段来标记其属性（环境变量或只读）。</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Variable</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> name[<span class="number">17</span>];</span><br><span class="line">    <span class="type">char</span> value[<span class="number">17</span>];</span><br><span class="line">    <span class="type">int</span> flags; <span class="comment">// 用位掩码来存储属性</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用宏定义来表示不同的属性</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> VAR_FLAG_EXPORT   0x1  <span class="comment">// 标志该变量是一个环境变量</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> VAR_FLAG_READONLY 0x2  <span class="comment">// 标志该变量是只读的</span></span></span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><strong><code>declare</code> 和 <code>unset</code> 指令的实现</strong></p>
+<p><code>declare</code> 指令用于创建和修改变量，它会解析 <code>-x</code> 和 <code>-r</code> 选项来设置变量的 <code>flags</code>。<code>unset</code> 指令则负责从内存数组中安全地（检查只读属性）移除变量。</p>
+</li>
+<li><p><strong><code>$</code> 变量展开与环境变量传递</strong></p>
+<p>在命令执行前，<code>expand_variables</code> 函数会负责将命令中的 <code>$VAR</code> 字符串替换为其实际的值。而在创建子进程时，<code>runcmd</code> 函数会精心挑选出所有被标记为环境变量的变量，并将它们传递给 <code>spawn</code> 系统调用，从而实现环境变量的继承。</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">runcmd</span><span class="params">(<span class="type">char</span> *s)</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">Variable</span> *<span class="title">exported_vars</span>[<span class="title">MAX_VARIABLES</span> + 1];</span></span><br><span class="line">    <span class="type">int</span> export_count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 遍历内存中的所有变量</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; num_variables; i++) &#123;</span><br><span class="line">        <span class="comment">// 2. 如果变量有 VAR_FLAG_EXPORT 标志</span></span><br><span class="line">        <span class="keyword">if</span> (variable_pool[i].flags &amp; VAR_FLAG_EXPORT) &#123;</span><br><span class="line">            <span class="comment">// 3. 将其加入到待传递的数组中</span></span><br><span class="line">            exported_vars[export_count++] = &amp;variable_pool[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    exported_vars[export_count] = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 将只包含环境变量的数组传递给 spawn</span></span><br><span class="line">    <span class="type">int</span> child = spawn(argv[<span class="number">0</span>], argv, (<span class="type">char</span> **)exported_vars);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<h4 id="2-注释功能"><a href="#2-注释功能" class="headerlink" title="2. 注释功能 (#)"></a>2. 注释功能 (<code>#</code>)</h4><p><strong>实现思路</strong>：<br>注释功能允许用户在命令后添加笔记，Shell 在执行时会自动忽略注释部分。我的实现非常直接，就是在命令执行前的最后一刻，对命令字符串进行处理。</p>
+<ul>
+<li><p><strong>注释的实现核心</strong>：<br>在 Shell 的主执行循环中，当获取到一条完整的、即将要被送去执行的命令字符串后（此时变量和反引号等已经处理完毕），我会使用 <code>strchr</code> 函数来查找字符串中第一次出现 <code>#</code> 的位置。</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ... (前续处理) ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 假设 &#x27;p&#x27; 是指向当前待执行命令的字符串指针</span></span><br><span class="line"><span class="type">char</span> *comment_start = <span class="built_in">strchr</span>(p, <span class="string">&#x27;#&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果找到了 &#x27;#&#x27;</span></span><br><span class="line"><span class="keyword">if</span> (comment_start != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="comment">// 直接在 &#x27;#&#x27; 的位置插入一个字符串结束符 &#x27;\0&#x27;</span></span><br><span class="line">    <span class="comment">// 这样，后续的所有函数都会认为字符串在这里就结束了，</span></span><br><span class="line">    <span class="comment">// # 后面的所有内容自然就被忽略了。</span></span><br><span class="line">    *comment_start = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行被截断后的命令 p</span></span><br><span class="line">exec_line(p);</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<h3 id="指令输入优化和历史指令"><a href="#指令输入优化和历史指令" class="headerlink" title="指令输入优化和历史指令"></a>指令输入优化和历史指令</h3><h4 id="1-指令自由输入与快捷键"><a href="#1-指令自由输入与快捷键" class="headerlink" title="1. 指令自由输入与快捷键"></a>1. 指令自由输入与快捷键</h4><p>这个功能的核心，是将 <code>readline</code> 函数从一个简单的字符读取器，改造成一个迷你的行编辑器。</p>
+<ul>
+<li><p><strong>实现原理</strong>：<br>我将 <code>readline</code> 设计成一个无限循环，在循环中通过 <code>read(0, &amp;ch, 1)</code> 一次只读取一个字符。我使用一个字符数组 <code>buf[]</code> 来存储当前正在编辑的命令行，一个整型变量 <code>len</code> 记录其长度，另一个整型变量 <code>pos</code> 则作为光标，追踪当前的编辑位置。</p>
+<p><code>readline</code> 内部通过一个大的 <code>switch (ch)</code> 结构，来判断用户的按键并执行相应操作：</p>
+<ul>
+<li><strong>普通字符</strong>：通过 <code>memmove</code> 将光标位置（<code>pos</code>）后的所有字符向后移动一位，为新字符腾出空间，然后将新字符插入，并更新 <code>len</code> 和 <code>pos</code>。</li>
+<li><strong>退格键 (<code>Backspace</code>)</strong>：同样使用 <code>memmove</code>，将光标位置前的字符覆盖掉，实现删除。</li>
+<li><strong>快捷键</strong>：对于 <code>Ctrl-A</code> (光标到行首) 或 <code>Ctrl-E</code> (光标到行尾) 等快捷键，实现起来相对简单，只需直接修改 <code>pos</code> 的值即可。对于 <code>Ctrl-K</code> (删除到行末) 或 <code>Ctrl-U</code> (删除到行首) 等，则通过字符串操作和 <code>memmove</code> 来实现。</li>
+<li><strong>光标移动 (方向键)</strong>：方向键会产生特殊的转义序列（如 <code>\x1b[C</code> 代表右箭头）。我的 <code>switch</code> 会先捕捉 <code>\x1b</code>，然后再继续读后续的字符来判断具体是哪个方向键，最终通过增减 <code>pos</code> 的值来实现光标的移动。</li>
+</ul>
+</li>
+<li><p><strong>屏幕刷新</strong>：<br>每次按键导致 <code>buf</code> 或 <code>pos</code> 发生变化后，都需要刷新屏幕上的显示。我是通过打印一系列 ANSI 转义序列来完成的：先用 <code>\r</code> 回到行首，用 <code>\x1b[J</code> 清除当前行，然后打印新的 <code>buf</code> 内容，最后再用 <code>\r</code> 和一系列 <code>\x1b[C</code> (光标右移) 将光标精确定位到 <code>pos</code> 所在的新位置。</p>
+</li>
+</ul>
+<h4 id="2-命令历史-history-与上下导航"><a href="#2-命令历史-history-与上下导航" class="headerlink" title="2. 命令历史 (history 与上下导航)"></a>2. 命令历史 (<code>history</code> 与上下导航)</h4><ul>
+<li><p><strong>实现原理</strong>：<br>命令历史的实现分为内存、文件和用户交互三个部分。</p>
+<ul>
+<li><p><strong>内存存储</strong>：我在 Shell 中设置了一个二维字符数组 <code>history_lines[MAX_HISTORY][MAX_CMD_LEN]</code> 作为一个环形缓冲区。<code>history_head</code> 指针用于标记下一次新命令应该插入的位置，<code>history_count</code> 则记录当前有效的历史数量。</p>
+</li>
+<li><p><strong>持久化存储</strong>：Shell 启动时，<code>history_load</code> 函数会尝试打开根目录下的 <code>.mos_history</code> 文件，读取其中的内容来预加载历史记录。当用户执行一条新命令后，<code>history_add</code> 函数会先将其存入内存的环形缓冲区，然后立即将内存中全部的有效历史记录覆盖写入到 <code>.mos_history</code> 文件中，从而实现历史记录的持久化。</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">history_add</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *cmd)</span> &#123;</span><br><span class="line">    <span class="comment">// ... (省略空命令和重复命令的判断) ...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 将新命令存入内存中的环形数组</span></span><br><span class="line">    <span class="built_in">strcpy</span>(history_lines[history_head], cmd);</span><br><span class="line">    history_head = (history_head + <span class="number">1</span>) % MAX_HISTORY;</span><br><span class="line">    <span class="keyword">if</span> (history_count &lt; MAX_HISTORY) &#123;</span><br><span class="line">        history_count++;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 将内存中全部的历史记录，覆盖写入到磁盘文件中</span></span><br><span class="line">    <span class="type">int</span> fd = open(<span class="string">&quot;/.mos_history&quot;</span>, O_WRONLY | O_CREAT | O_TRUNC);</span><br><span class="line">    <span class="comment">// ... (省略写入文件的循环代码) ...</span></span><br><span class="line">    close(fd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><strong>上下箭头导航</strong>：这部分逻辑实现在 <code>readline</code> 函数处理方向键的 <code>case</code> 中。当检测到上/下箭头时，程序会修改一个用于导航的索引 <code>history_nav_idx</code>，然后从环形缓冲区中取出对应的历史命令字符串，用它覆盖当前的输入缓冲区 <code>buf</code>，并将光标 <code>pos</code> 置于行末。我还特别处理了对用户当前正在输入、但尚未提交的命令的保存和恢复。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-不带-b-后缀执行指令"><a href="#3-不带-b-后缀执行指令" class="headerlink" title="3. 不带 .b 后缀执行指令"></a>3. 不带 <code>.b</code> 后缀执行指令</h4><ul>
+<li><p><strong>实现原理</strong>： 此功能的核心逻辑被直接实现在了<code>spawn</code> 中。这样一来，所有通过 <code>spawn</code> 启动的程序都能享受到此便利。<code>spawn</code> 的执行逻辑如下：</p>
+<ol>
+<li>首先，它会尝试按用户输入的原样（如 <code>&quot;ls&quot;</code>）去调用 <code>open</code> 打开程序文件。</li>
+<li>如果第一次 <code>open</code> 失败（很可能是因为文件不存在），它并不会立即放弃。</li>
+<li>而是会在一个临时缓冲区中，将原始的程序名和 <code>.b</code> 后缀拼接起来（得到 <code>&quot;ls.b&quot;</code>），然后再次尝试 <code>open</code> 这个新路径。</li>
+<li>如果第二次 <code>open</code> 成功，<code>spawn</code> 就会继续执行这个程序；如果两次尝试都失败了，<code>spawn</code> 才会向上层返回“文件未找到”的错误。</li>
+</ol>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">spawn</span><span class="params">(<span class="type">char</span> *prog, <span class="type">char</span> **argv)</span> &#123;</span><br><span class="line">    <span class="type">int</span> fd;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 尝试按原样打开程序</span></span><br><span class="line">    <span class="keyword">if</span> ((fd = open(prog, O_RDONLY)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 2. 如果失败，尝试拼接上 &quot;.b&quot; 后再次打开</span></span><br><span class="line">        <span class="type">char</span> prog_with_b[<span class="number">256</span>];</span><br><span class="line">        <span class="built_in">strcpy</span>(prog_with_b, prog);</span><br><span class="line">        <span class="built_in">strcat</span>(prog_with_b, <span class="string">&quot;.b&quot;</span>);</span><br><span class="line">        fd = open(prog_with_b, O_RDONLY);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 如果两次都失败，才真正返回错误</span></span><br><span class="line">    <span class="keyword">if</span> (fd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> fd;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... 后续创建子进程和加载程序代码的逻辑 ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<h3 id="追加重定向、条件执行和反引号"><a href="#追加重定向、条件执行和反引号" class="headerlink" title="追加重定向、条件执行和反引号"></a>追加重定向、条件执行和反引号</h3><h4 id="1-条件执行-amp-amp-与"><a href="#1-条件执行-amp-amp-与" class="headerlink" title="1. 条件执行 (&amp;&amp; 与 ||)"></a>1. 条件执行 (<code>&amp;&amp;</code> 与 <code>||</code>)</h4><p>此功能允许用户根据上一条命令的成功或失败，来决定是否执行下一条命令。</p>
+<ul>
+<li><p><strong>实现原理</strong>：<br>这个功能的实现，完全建立在<strong>“基于 IPC 的进程退出状态传递”</strong>这一核心机制之上。</p>
+<ol>
+<li><strong>解析</strong>：首先，<code>split_conditional</code> 函数会以 <code>&amp;&amp;</code> 和 <code>||</code> 为分隔符，将命令行切割成一个 <code>struct Cond</code> 的数组。数组的每个元素都包含一段命令和它后面的连接符类型 (<code>TOKEN_AND</code> 或 <code>TOKEN_OR</code>)。</li>
+<li><strong>循环与短路</strong>：在 <code>exec_line</code> 函数中，一个 <code>for</code> 循环负责遍历这个 <code>Cond</code> 数组。在每次循环的开始，它都会检查上一个命令的执行结果 <code>prev_res</code>，并根据连接符类型执行“短路”判断：<ul>
+<li>如果上一个连接符是 <code>||</code> 且上一条命令成功了 (<code>prev_res == 0</code>)，则 <code>continue</code> 跳过当前命令。</li>
+<li>如果上一个连接符是 <code>&amp;&amp;</code> 且上一条命令失败了 (<code>prev_res != 0</code>)，则 <code>continue</code> 跳过当前命令。</li>
+</ul>
+</li>
+<li><strong>获取结果</strong>：对于需要执行的外部命令，父进程（Shell）会 <code>fork</code> 一个子进程，然后通过 <code>syscall_ipc_recv()</code> 和 <code>wait()</code> 等待子进程结束，并从 <code>env-&gt;env_ipc_value</code> 中获取其退出状态，存入 <code>prev_res</code>，以供下一次循环判断使用。</li>
+</ol>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">exec_line</span><span class="params">(<span class="type">char</span> *cmd)</span> &#123;</span><br><span class="line">    <span class="comment">// ... (省略 split_conditional 解析部分) ...</span></span><br><span class="line">    <span class="type">int</span> prev_res = <span class="number">0</span>; <span class="comment">// 上一个命令的执行结果</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; cond_count; i++) &#123;</span><br><span class="line">        <span class="comment">// --- 短路逻辑判断 ---</span></span><br><span class="line">        <span class="keyword">if</span> (i &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (conds[i - <span class="number">1</span>].type == TOKEN_OR &amp;&amp; prev_res == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (conds[i - <span class="number">1</span>].type == TOKEN_AND &amp;&amp; prev_res != <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// ---------------------</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// ... (执行 conds[i].cmd 命令，并将其结果存入 prev_res) ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<h4 id="2-命令替换-反引号"><a href="#2-命令替换-反引号" class="headerlink" title="2. 命令替换 (反引号 `` )"></a>2. 命令替换 (反引号 <code>`` </code>)</h4><p>此功能允许将一个命令的输出，作为另一个命令的参数。</p>
+<ul>
+<li><strong>实现原理</strong>：<br>它的核心是利用了操作系统提供的管道（Pipe）和 <code>fork</code> 机制。在 <code>expand_backticks</code> 函数中调用的 <code>capture_command_output</code> 函数是实现此功能的关键，其步骤如下：<ol>
+<li><strong>创建管道</strong>：父进程（Shell）首先调用 <code>pipe()</code> 创建一个管道，得到一个读取端和写入端。</li>
+<li><strong>创建子进程</strong>：父进程 <code>fork()</code> 一个子进程来执行反引号中的命令。</li>
+<li><strong>子进程重定向输出</strong>：子进程通过 <code>dup()</code> 系统调用，将自己的标准输出（文件描述符 <code>1</code>）重定向到管道的写入端。然后，它正常执行命令，此时所有本应打印到屏幕的输出，都被写入了管道。</li>
+<li><strong>父进程读取结果</strong>：父进程则从管道的读取端不断地 <code>read()</code> 数据，直到管道被关闭，从而将子命令的输出捕获到一个缓冲区中。</li>
+<li><strong>清理</strong>：父进程最后还必须调用 <code>syscall_ipc_recv()</code> 和 <code>wait()</code> 来正确地回收子进程，并消费掉子进程附带的 IPC 退出消息，以避免干扰后续主命令的执行。</li>
+</ol>
+</li>
+</ul>
+<h4 id="3-追加重定向-gt-gt"><a href="#3-追加重定向-gt-gt" class="headerlink" title="3. 追加重定向 (&gt;&gt;)"></a>3. 追加重定向 (<code>&gt;&gt;</code>)</h4><p>此功能用于将命令的输出追加到文件末尾，而非覆盖。</p>
+<ul>
+<li><p><strong>实现原理</strong>：</p>
+<ol>
+<li><strong>识别符号</strong>：首先，我修改了 <code>_gettoken</code> 分词器，使其能够将 <code>&gt;&gt;</code> 识别为一个不同于 <code>&gt;</code> 的、独立的新 Token (<code>TOKEN_APPEND</code>)。</li>
+<li><strong>处理 Token</strong>：在 <code>parsecmd</code> 函数的 <code>switch</code> 语句中，我为 <code>TOKEN_APPEND</code> 增加了一个新的 <code>case</code>。</li>
+<li><strong>关键实现</strong>：其核心技巧分为两步：<ul>
+<li>调用 <code>open()</code> 打开文件时，使用的标志位是 <code>O_WRONLY | O_CREAT</code>，<strong>刻意不使用 <code>O_TRUNC</code></strong>。这保证了如果文件已存在，其内容不会被清空。</li>
+<li>文件打开后，在进行 <code>dup()</code> 重定向之前，<strong>手动修改文件描述符结构体中的 <code>fd_offset</code> 成员，将其值设置为文件的当前大小 <code>f_file.f_size</code></strong>。这就像手动将“写入光标”移动到了文件的末尾。</li>
+</ul>
+</li>
+</ol>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> TOKEN_APPEND:</span><br><span class="line">    <span class="keyword">if</span> (gettoken(<span class="number">0</span>, &amp;t) != <span class="string">&#x27;w&#x27;</span>) &#123; <span class="comment">/* 错误处理 */</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. open 时不使用 O_TRUNC</span></span><br><span class="line">    fd = open(t, O_WRONLY | O_CREAT);</span><br><span class="line">    <span class="keyword">if</span> (fd &lt; <span class="number">0</span>) &#123; <span class="comment">/* 错误处理 */</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 手动将写入指针移动到文件末尾</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Fd</span> *<span class="title">fd_struct</span>;</span></span><br><span class="line">    fd_lookup(fd, &amp;fd_struct);</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Filefd</span> *<span class="title">ffd</span> =</span> (<span class="keyword">struct</span> Filefd *)fd_struct;</span><br><span class="line">    fd_struct-&gt;fd_offset = ffd-&gt;f_file.f_size;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 重定向标准输出</span></span><br><span class="line">    dup(fd, <span class="number">1</span>);</span><br><span class="line">    close(fd);</span><br><span class="line">    <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<h2 id="挑战性任务难点"><a href="#挑战性任务难点" class="headerlink" title="挑战性任务难点"></a>挑战性任务难点</h2><p><strong>1. 复杂的状态管理</strong></p>
+<ul>
+<li><strong>进程级状态（CWD）</strong>：为实现相对路径，需要深入到内核，修改进程控制块 <code>struct Env</code>，为每个进程增加“当前工作目录”这一状态。这要求在内核与用户态之间建立清晰的界限和交互（通过 <code>cd</code> 和 <code>pwd</code> 的系统调用）。</li>
+<li><strong>Shell 级状态（变量）</strong>：为了实现环境变量和局部变量，需要在 Shell 进程的内存中设计一套完整的变量管理系统。难点在于区分不同变量的作用域（局部 vs 全局）和属性（只读），并设计将环境变量正确地“遗传”给子进程的机制。</li>
+<li><strong>持久化状态（历史记录）</strong>：<code>history</code> 功能不仅要在内存中实现一个高效的环形缓冲区来管理命令，还要处理与磁盘文件 <code>.mos_history</code> 的同步读写，以实现历史记录的持久化。</li>
+</ul>
+<p><strong>2. 底层系统交互与协议设计</strong></p>
+<ul>
+<li><strong>IPC 退出码协议</strong>：这是实现 <code>&amp;&amp;</code> 和 <code>||</code> 的基石。由于不能修改内核 <code>wait</code> 机制，我们从零设计了一套基于 IPC 的、可跨越多级进程的退出状态传递协议。难点在于设计 <code>runcmd</code> 作为“中继站”的角色，来保证状态码能从真正的执行者（孙子进程）可靠地传递回主 Shell。</li>
+<li><strong>文件描述符（FD）精细操作</strong>：实现 <code>&gt;&gt;</code> 追加重定向和 <code>`` </code> 命令替换，都要求对文件描述符有深刻的理解。前者需要通过直接修改 <code>fd_struct-&gt;fd_offset</code> 来实现对文件写入位置的精确控制；后者则需要熟练运用 <code>pipe()</code> 创建管道、<code>dup()</code> 复制文件描述符来实现 I/O 流的重定向。</li>
+</ul>
+<p><strong>3. 并发与时序问题调试</strong></p>
+<ul>
+<li><strong><code>wait()</code> 与 <code>recv()</code> 的竞态条件</strong>：这是导致反复死锁的罪魁祸首。我们最终发现，必须先调用 <code>recv()</code> 等待 IPC 消息，再调用 <code>wait()</code> 回收子进程，否则子进程被 <code>wait</code> 清理后，它发出的消息就可能被内核丢弃，导致父进程永久等待。</li>
+<li><strong>IPC 消息污染</strong>：在实现反引号功能时，其子进程发出的 IPC 消息如果没有被及时“消费”，就会残留在主 Shell 的消息队列里，被下一个完全不相关的命令错误地接收，导致后续的 <code>&amp;&amp;</code> <code>||</code> 逻辑全盘崩溃。</li>
+</ul>
+<h2 id="实验感想"><a href="#实验感想" class="headerlink" title="实验感想"></a>实验感想</h2><p>如果说之前的实验是让我们学会如何制造锤子、螺丝刀等“零件”，那么这次的 Shell 项目就是给了我们一张图纸，要求我们用所有这些零件组装出一台能正常运转的“机器”。这个过程让我对操作系统这门课的认识，从“学习理论知识”真正转向了“应用理论解决工程问题”。感谢挑战性任务，感谢os，本学期操作系统课程正式完结！</p>
+
+		</div>
+
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/os/">#os</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2025/06/11/oo-unit4/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">oo-unit4</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+          
+          
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">lab6-shell</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%E5%86%85%E5%AE%B9"><span class="nav-text">任务内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84-%E6%96%B0%E5%A2%9E%E6%8C%87%E4%BB%A4"><span class="nav-text">相对路径+新增指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E5%92%8C%E6%B3%A8%E9%87%8A"><span class="nav-text">变量和注释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E8%BE%93%E5%85%A5%E4%BC%98%E5%8C%96%E5%92%8C%E5%8E%86%E5%8F%B2%E6%8C%87%E4%BB%A4"><span class="nav-text">指令输入优化和历史指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%BD%E5%8A%A0%E9%87%8D%E5%AE%9A%E5%90%91%E3%80%81%E6%9D%A1%E4%BB%B6%E6%89%A7%E8%A1%8C%E5%92%8C%E5%8F%8D%E5%BC%95%E5%8F%B7"><span class="nav-text">追加重定向、条件执行和反引号</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%91%E6%88%98%E6%80%A7%E4%BB%BB%E5%8A%A1%E9%9A%BE%E7%82%B9"><span class="nav-text">挑战性任务难点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E6%84%9F%E6%83%B3"><span class="nav-text">实验感想</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2025</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Zixuan Tang</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        7 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.2</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+	<div id="aplayer"></div>
+
+<script src="/js/build/libs/APlayer.min.js"></script>
+
+
+<script src="/js/build/plugins/aplayer.js"></script>
+
+
+	
+</body>
+
+</html>

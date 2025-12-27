@@ -7,6 +7,219 @@
 ]]></content>
   </entry>
   <entry>
+    <title>make命令教程</title>
+    <url>/2025/02/28/make%E5%91%BD%E4%BB%A4%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<h2 id="make的概念"><a href="#make的概念" class="headerlink" title="make的概念"></a><code>make</code>的概念</h2><p><code>make</code>命令就是要做出某个文件。比如，要做出文件<code>a.txt</code>，就可以执行下面的指令：</p>
+<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ make a.txt</span><br></pre></td></tr></table></figure></div>
+<p>但是，如果我们真的输入这条指令，它并不会起作用，因为<code>make</code>命令并不知道如何应该做出这个文件，需要有人告诉它，如何调用其他命令完成这个目标。</p>
+<p>比如，假设文件<code>a.txt</code>依赖于<code>b.txt</code>和<code>c.txt</code>，是后面两个文件连接（<code>cat</code>命令）的产物。那么，<code>make</code>需要知道下面的规则。</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">a.txt: b.txt c.txt</span></span><br><span class="line">    cat b.txt c.txt &gt; a.txt</span><br></pre></td></tr></table></figure></div>
+<p>也即：<code>make a.txt</code>这条指令的背后，实际上分成两步：</p>
+<ul>
+<li>确认<code>b.txt</code>和<code>c.txt</code>必须已经存在；</li>
+<li>使用<code>cat</code>命令 将这个两个文件合并，输出为新文件。</li>
+</ul>
+<p>像这样的规则，都写在一个叫做<strong><code>makefile</code></strong>的文件中，<code>make</code>命令依赖这个文件进行构建。</p>
+<h2 id="Makefile文件的格式"><a href="#Makefile文件的格式" class="headerlink" title="Makefile文件的格式"></a><code>Makefile</code>文件的格式</h2><p>构建规则都写在<code>Makefile</code>文件里面，要学会如何<code>make</code>命令，就必须学会如何编写<code>Makefile</code>文件。</p>
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><code>Makefile</code>文件由一系列规则组成。每条规则的形式如下：</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line">&lt;target&gt; : &lt;prerequisites&gt; </span><br><span class="line">[tab]  &lt;commands&gt;</span><br></pre></td></tr></table></figure></div>
+<p>上面第一行冒号前面的部分，叫做”<strong>目标</strong>“（target），冒号后面的部分叫做”<strong>前置条件</strong>“（prerequisites）；第二行必须由一个<code>tab</code>键起首，后面跟着”<strong>命令</strong>“（commands）。</p>
+<h3 id="目标（target）"><a href="#目标（target）" class="headerlink" title="目标（target）"></a>目标（target）</h3><p>一个<strong>目标</strong>构成一条规则。目标通常是文件名，指明<code>make</code>指令苏要构建的对象，比如上文的<code>a.txt</code>。目标可以是一个文件名，也可以是多个文件名，之间用空格分隔。</p>
+<p>除了文件名，目标还可以是某个操作的名字，这称为”<strong>伪目标</strong>“（phony target）。</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm *.o</span><br></pre></td></tr></table></figure></div>
+<p>上面代码的目标是clean，它不是文件名，而是一个操作的名字，属于”伪目标 “，作用是删除对象文件。</p>
+<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ make clean</span><br></pre></td></tr></table></figure></div>
+<p>但是，如果当前目录中，正好有一个文件叫做<code>clean</code>，那么这个命令不会执行。因为<code>make</code>发现<code>clean</code>文件已经存在，就认为没有必要重新构建了，就不会执行指定的rm命令。</p>
+<p>为了避免这种情况，可以明确声明<code>clean</code>是”<strong>伪目标</strong>“，写法如下。</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="meta"><span class="keyword">.PHONY</span>: clean</span></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">        rm *.o temp</span><br></pre></td></tr></table></figure></div>
+<p>特别地，如果<code>make</code>指令运行时没有指定的目标，默认会执行<code>Makefile</code>文件的第一个目标。</p>
+<h3 id="前置条件（prerequisites）"><a href="#前置条件（prerequisites）" class="headerlink" title="前置条件（prerequisites）"></a>前置条件（prerequisites）</h3><p>前置条件通常是一组文件名，之间用空格分隔。它指定了”目标”是否重新构建的判断标准：只要有一个前置文件不存在，或者有过更新，”目标”就需要重新构建。</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">result.txt: source.txt</span></span><br><span class="line">    cp source.txt result.txt</span><br></pre></td></tr></table></figure></div>
+<p>上面代码中，构建 <code>result.txt</code> 的前置条件是 <code>source.txt</code> 。如果当前目录中，<code>source.txt</code> 已经存在，那么<code>make result.txt</code>可以正常运行，否则必须再写一条规则，来生成 <code>source.txt</code> 。</p>
+ <div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">source.txt:</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;this is the source&quot;</span> &gt; source.txt</span><br></pre></td></tr></table></figure></div>
+<p>上面代码中，source.txt后面没有前置条件，就意味着它跟其他文件都无关，只要这个文件还不存在，每次调用<code>make source.txt</code>，它都会生成。</p>
+<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ make result.txt</span><br><span class="line">$ make result.txt</span><br></pre></td></tr></table></figure></div>
+<p>上面命令连续执行两次<code>make result.txt</code>。第一次执行会先新建 source.txt，然后再新建 result.txt。第二次执行，Make发现 source.txt 没有变动（时间戳晚于 result.txt），就不会执行任何操作，result.txt 也不会重新生成。</p>
+<p>如果需要生成多个文件，往往采用下面的写法：</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">source: file1 file2 file3</span></span><br></pre></td></tr></table></figure></div>
+<p>执行<code>make source</code>命令后，就会一次性生成 file1，file2，file3 三个文件。这比执行三次<code>make</code>指令要方便得多。</p>
+<h3 id="命令（commands）"><a href="#命令（commands）" class="headerlink" title="命令（commands）"></a>命令（commands）</h3><p>命令（commands）表示如何更新目标文件，由一行或多行的<code>Shell</code>命令组成。它是构建”目标”的具体指令，它的运行结果通常就是生成目标文件。</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>每行命令之前必须有一个tab键。</p>
+</blockquote>
+<p>需要注意的是，每行命令在一个单独的shell中执行。这些Shell之间没有继承关系。</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">var-lost:</span></span><br><span class="line">    <span class="keyword">export</span> foo=bar</span><br><span class="line">    echo <span class="string">&quot;foo=[$$foo]&quot;</span></span><br></pre></td></tr></table></figure></div>
+<p>执行完<code>make var-lost</code>后取不到<code>foo</code>的值。因为两行命令在两个不同的进程执行。解决方法有三：</p>
+<ul>
+<li>两行命令写在一行，中间用分号分隔；</li>
+<li>在换行符前加反斜杠转义；</li>
+<li>加上<code>.ONESHELL:</code>命令。</li>
+</ul>
+<h2 id="Makefile文件的语法"><a href="#Makefile文件的语法" class="headerlink" title="Makefile文件的语法"></a><code>Makefile</code>文件的语法</h2><h3 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h3><p><code>#</code>在 <code>Makefile</code> 中表示注释。</p>
+<h3 id="回声（echoing）"><a href="#回声（echoing）" class="headerlink" title="回声（echoing）"></a>回声（echoing）</h3><p>正常情况下，<code>make</code>会打印每条命令，然后再执行。</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">test:</span></span><br><span class="line">    <span class="comment"># 这是测试</span></span><br></pre></td></tr></table></figure></div>
+<p>执行上面的规则,就会进行输出 <code># 这是测试</code>：</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line">$ make test</span><br><span class="line"><span class="comment"># 这是测试</span></span><br></pre></td></tr></table></figure></div>
+<blockquote>
+<p>[!NOTE]</p>
+<p>在命令的前面加上@，就可以关闭回声。</p>
+</blockquote>
+<h3 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h3><p>通配符（wildcard）用来指定一组符合条件的文件名。· 的通配符与 · 一致，主要有<strong>星号</strong>（<em>）、<strong>问号</strong>（？）和 <strong>[…]</strong> 。比如， `</em>.o<code>表示所有后缀名为</code>.o`的文件。</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">clean:</span></span><br><span class="line">        rm -f *.o</span><br></pre></td></tr></table></figure></div>
+<h3 id="模式匹配"><a href="#模式匹配" class="headerlink" title="模式匹配"></a>模式匹配</h3><p><code>make</code>命令允许对文件名，进行类似正则运算的匹配，主要用到的匹配符是<code>%</code>。比如，假定当前目录下有 <code>f1.c</code> 和 <code>f2.c</code> 两个源码文件，需要将它们编译为对应的对象文件。</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">%.o: %.c</span></span><br></pre></td></tr></table></figure></div>
+<p>等同于下面的写法</p>
+<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">f1.o: f1.c</span></span><br><span class="line"><span class="section">f2.o: f2.c</span></span><br></pre></td></tr></table></figure></div>
+<p>使用匹配符<code>%</code>，可以将大量同类型的文件，只用一条规则就完成构建。</p>
+]]></content>
+      <tags>
+        <tag>os</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>oo-unit2</title>
+    <url>/2025/05/14/oo-unit2/</url>
+    <content><![CDATA[<h2 id="同步块设置与锁选择分析"><a href="#同步块设置与锁选择分析" class="headerlink" title="同步块设置与锁选择分析"></a>同步块设置与锁选择分析</h2><h3 id="Elevator-java-中的同步："><a href="#Elevator-java-中的同步：" class="headerlink" title="Elevator.java 中的同步："></a><strong><code>Elevator.java</code></strong> 中的同步：</h3><ul>
+<li><p><strong>同步块</strong>：</p>
+<ul>
+<li><p>在 <code>Elevator.java</code> 类中，使用了 <code>synchronized</code> 关键字来同步对共享资源的访问，特别是在对 <code>requestTable</code> 进行操作时，这个资源在多个电梯实例间共享。</p>
+</li>
+<li><p>例如：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (requestTable) &#123;</span><br><span class="line">    requestTable.notifyAll();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>这确保了多个线程访问 <code>requestTable</code> 时不会发生并发问题（例如多个电梯同时尝试修改或检查 <code>requestTable</code>）。</p>
+</li>
+<li><p>同步机制主要用于处理共享资源的访问，确保同一时刻只有一个线程能够执行某个特定操作，避免数据竞争。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>锁的选择</strong>：</p>
+<ul>
+<li><code>synLock</code> 作为一个静态锁对象，用于同步整个电梯实例的关键操作。它确保在某些操作期间，例如电梯调度（<code>handleSche</code>）时，不会发生多个线程对电梯对象的并发修改。</li>
+<li>同时，在电梯的双重模式下（<code>DuplexMode</code>），每个电梯会等待与配对电梯的同步操作。这些同步操作通过 <code>synchronized</code> 和 <code>wait</code>/<code>notify</code> 方法实现线程间的协调，保证两个电梯在执行更新操作时能够互相等待和通知。</li>
+</ul>
+</li>
+</ul>
+<h3 id="InputThread-java-中的同步："><a href="#InputThread-java-中的同步：" class="headerlink" title="InputThread.java 中的同步："></a><strong><code>InputThread.java</code></strong> 中的同步：</h3><ul>
+<li><p>在 <code>InputThread</code> 中，同样使用了 <code>synchronized</code> 来确保多个线程对 <code>mainRequestTable</code> 的修改是线程安全的。例如：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">    mainRequestTable.setEnd();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>这种同步确保了当请求输入线程结束时，不会发生并发访问 <code>mainRequestTable</code> 的问题。</p>
+</li>
+</ul>
+<h3 id="RequestTable-java-中的同步："><a href="#RequestTable-java-中的同步：" class="headerlink" title="RequestTable.java 中的同步："></a><strong><code>RequestTable.java</code></strong> 中的同步：</h3><ul>
+<li><strong>同步块</strong>：<ul>
+<li><code>RequestTable</code> 中的大部分方法（如 <code>addRequest</code>、<code>takeRequest</code> 等）都使用了 <code>synchronized</code>，确保多个线程对请求表的操作（添加、删除请求等）是互斥的。</li>
+<li>例如，在 <code>takeRequest</code> 方法中，电梯在取出请求时会等待请求表中的内容，如果没有请求，线程会在 <code>wait()</code> 调用上阻塞，直到有新的请求加入或操作结束。</li>
+<li>这通过 <code>wait</code> 和 <code>notifyAll</code> 方法协调线程间的通知和等待，避免了死锁问题。</li>
+</ul>
+</li>
+<li><strong>锁的选择</strong>：<ul>
+<li>使用 <code>synchronized</code> 来同步方法，确保在访问或修改 <code>requestTable</code> 时，只有一个线程可以执行相应的代码块。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Schedule-java-中的同步："><a href="#Schedule-java-中的同步：" class="headerlink" title="Schedule.java 中的同步："></a><strong><code>Schedule.java</code></strong> 中的同步：</h3><ul>
+<li><p><strong>同步块</strong>：</p>
+<ul>
+<li><p><code>Schedule</code> 线程在检查和处理 <code>mainRequestTable</code> 时，同样使用了 <code>synchronized</code> 来确保在多个线程操作 <code>requestTable</code> 时，避免并发修改的问题。特别是在检查请求是否结束时：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (mainRequestTable) &#123;</span><br><span class="line">    <span class="keyword">if</span> (mainRequestTable.isEnd() &amp;&amp; !isAllEmpty()) &#123;</span><br><span class="line">        mainRequestTable.wait();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><code>wait</code> 和 <code>notifyAll</code> 用于通知其他线程 <code>mainRequestTable</code> 状态的变化，并确保电梯调度任务能够继续执行。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="锁与同步块中处理语句之间的关系："><a href="#锁与同步块中处理语句之间的关系：" class="headerlink" title="锁与同步块中处理语句之间的关系："></a><strong>锁与同步块中处理语句之间的关系</strong>：</h3><ul>
+<li>锁和同步块的选择是为了保证在多线程环境下对共享资源的安全访问。在上述代码中，所有共享资源（如 <code>requestTable</code>、电梯状态、配对电梯等）都通过 <code>synchronized</code> 关键字确保了同一时刻只有一个线程可以修改它们。</li>
+<li><code>wait</code> 和 <code>notify</code> 方法在这些同步块中被用来处理线程间的协调。<code>wait</code> 会让线程在条件不满足时阻塞，直到其他线程通过 <code>notify</code> 或 <code>notifyAll</code> 通知其继续执行。例如，在电梯到达请求楼层并准备继续移动时，通过 <code>notifyAll</code> 来唤醒等待的线程。</li>
+<li>通过精确控制线程的执行顺序，避免了由于并发访问共享资源而引发的数据一致性问题。</li>
+</ul>
+<h2 id="调度器与调度策略设计"><a href="#调度器与调度策略设计" class="headerlink" title="调度器与调度策略设计"></a>调度器与调度策略设计</h2><h3 id="1-调度器设计总结分析"><a href="#1-调度器设计总结分析" class="headerlink" title="1. 调度器设计总结分析"></a>1. <strong>调度器设计总结分析</strong></h3><p>在这次作业中，调度器（<code>Schedule</code> 类）主要负责调度电梯的运行，确保电梯按请求表中的顺序执行任务，并通过合理的调度策略分配任务。调度器的设计关注以下几个方面：</p>
+<h4 id="1-1-调度器的职责："><a href="#1-1-调度器的职责：" class="headerlink" title="1.1 调度器的职责："></a>1.1 <strong>调度器的职责</strong>：</h4><ul>
+<li><p><strong>任务调度</strong>：调度器从 <code>mainRequestTable</code> 中获取请求，并根据请求的优先级和楼层，决定哪个电梯处理该请求。调度器根据请求的类型（如乘客请求、调度请求等），通知合适的电梯进行处理。</p>
+</li>
+<li><p><strong>线程协调</strong>：调度器与多个电梯线程（<code>Elevator</code> 类）协同工作。通过 <code>wait</code> 和 <code>notifyAll</code> 等同步机制，确保各个线程之间的协调与数据一致性。例如，当调度器发现 <code>mainRequestTable</code> 为空时，它会调用 <code>wait</code> 让当前线程等待，直到有新请求进入。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (mainRequestTable) &#123;</span><br><span class="line">    <span class="keyword">if</span> (mainRequestTable.isEmpty() &amp;&amp; !mainRequestTable.isEnd()) &#123;</span><br><span class="line">        mainRequestTable.wait(); <span class="comment">// 等待直到有请求</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><strong>调度结束控制</strong>：调度器负责检测是否所有电梯的任务都已完成（如 <code>isEnd()</code> 方法判断请求表是否为空）。当所有任务完成时，调度器会结束整个调度过程。</p>
+</li>
+</ul>
+<h4 id="1-2-与线程的交互："><a href="#1-2-与线程的交互：" class="headerlink" title="1.2 与线程的交互："></a>1.2 <strong>与线程的交互</strong>：</h4><ul>
+<li><p><strong>电梯线程和调度器的协作</strong>：调度器通过 <code>mainRequestTable</code> 与多个电梯线程进行协作。调度器定期检查请求表，并将任务分配给电梯。电梯线程则从请求表中取出任务，并在完成后向调度器报告其状态。</p>
+<p>例如：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (mainRequestTable) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!mainRequestTable.isEnd()) &#123;</span><br><span class="line">        mainRequestTable.wait();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><strong>通知机制</strong>：当调度器处理完一个任务后，会通过 <code>notifyAll</code> 通知相关电梯线程开始处理任务。同时，如果电梯需要等待新的请求，调度器会确保电梯线程在请求到来前不会被过早唤醒，避免浪费资源。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (mainRequestTable) &#123;</span><br><span class="line">    mainRequestTable.notifyAll(); <span class="comment">// 通知电梯线程继续执行</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<h3 id="2-调度策略总结分析"><a href="#2-调度策略总结分析" class="headerlink" title="2. 调度策略总结分析"></a>2. <strong>调度策略总结分析</strong></h3><p>调度策略的核心目的是合理分配电梯的任务，考虑多个因素（如时间、电量、优先级等），确保系统整体效率。以下是对当前调度策略的分析：</p>
+<h4 id="2-1-调度策略的设计："><a href="#2-1-调度策略的设计：" class="headerlink" title="2.1 调度策略的设计："></a>2.1 <strong>调度策略的设计</strong>：</h4><p>调度策略主要通过 <code>Strategy</code> 类进行实现，并根据不同的条件（如电梯的当前楼层、方向、是否处于双电梯模式等）决定电梯的行为。<code>Strategy</code> 类使用了不同的策略来控制电梯的行动，如：</p>
+<ul>
+<li><p><strong>常规模式（<code>normal</code>）</strong>：该模式根据<code>Look</code>算法来决定电梯是移动、等待还是开门。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Advice <span class="title function_">normal</span><span class="params">(<span class="type">int</span> nowFloor, <span class="type">int</span> nowNum, <span class="type">int</span> direction, HashMap&lt;Integer, PriorityBlockingQueue&lt;Person&gt;&gt; destMap, RequestTable requestTable)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (canOpenForOut(nowFloor, destMap) || canOpenForIn(nowFloor, nowNum, direction, requestTable)) &#123;</span><br><span class="line">        <span class="keyword">return</span> Advice.OPEN; <span class="comment">// 开门</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 其他决策（如移动、等待等）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><strong>双电梯模式（<code>DuplexMode</code>）</strong>：当电梯处于双重模式时，会考虑与配对电梯的协作，避免电梯之间的冲突。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Advice <span class="title function_">DuplexMode</span><span class="params">(<span class="type">int</span> nowFloor, <span class="type">int</span> nowNum, <span class="type">int</span> direction, HashMap&lt;Integer, PriorityBlockingQueue&lt;Person&gt;&gt; destMap, RequestTable requestTable, Elevator thisElevator, Elevator pairElevator)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (willCollide(thisElevator, pairElevator)) &#123;</span><br><span class="line">        <span class="keyword">return</span> Advice.SLEEP; <span class="comment">// 如果发生冲突，休眠</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Advice.MOVE; <span class="comment">// 否则继续移动</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<h2 id="整体架构分析"><a href="#整体架构分析" class="headerlink" title="整体架构分析"></a>整体架构分析</h2><h3 id="UML类图"><a href="#UML类图" class="headerlink" title="UML类图"></a>UML类图</h3><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/$%7Bfiilename%7D/image-20250417163058473.png"
+                      alt="image-20250417163058473"
+                ></p>
+<h4 id="三次作业架构设计迭代"><a href="#三次作业架构设计迭代" class="headerlink" title="三次作业架构设计迭代"></a>三次作业架构设计迭代</h4><h5 id="第五次作业"><a href="#第五次作业" class="headerlink" title="第五次作业"></a>第五次作业</h5><p>第五次作业作为多线程单元的开始，要求我们模拟一个多线程实时电梯系统，涉及到对乘客进行输入的接收，分配以及电梯对乘客的运输。本次作业我参考往届学长学姐的博客，设计了<code>InputThread</code>、<code>Schedule</code>、<code>ElevatorThread</code>三个种类的线程，分别对应着上述的三个功能。由于本次作业强行固定了乘客乘坐的电梯序号，因此在本次作业中<code>Schedule</code>线程其实没有太大作用，主要是为了给后续迭代中需要手动给乘客分配电梯做铺垫。</p>
+<p>具体到电梯的调度策略，我采用了<code>Look</code>算法，并建立了<code>Strategy</code>类，为每一个电梯线程提供策略：</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Strategy</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> RequestTable requestTable;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Advice <span class="title function_">getAdvice</span><span class="params">(<span class="type">int</span> nowFloor, <span class="type">int</span> nowNum, <span class="type">int</span> direction,</span></span><br><span class="line"><span class="params">                            HashMap&lt;Integer, ArrayList&lt;Person&gt;&gt; destMap)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (canOpenForOut(nowFloor, destMap) </span><br><span class="line">            || canOpenForIn(nowFloor, nowNum, direction)) &#123; </span><br><span class="line">            <span class="keyword">return</span> Advice.OPEN;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (nowNum != <span class="number">0</span>) &#123; </span><br><span class="line">            <span class="keyword">return</span> Advice.MOVE;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;  </span><br><span class="line">            <span class="keyword">if</span> (requestTable.isEmpty()) &#123; </span><br><span class="line">                <span class="keyword">if</span> (requestTable.isEnd()) &#123; </span><br><span class="line">                    <span class="keyword">return</span> Advice.OVER; </span><br><span class="line">                &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">                    <span class="keyword">return</span> Advice.WAIT; </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (hasReqInOriginDirection(nowFloor, direction)) &#123;</span><br><span class="line">                <span class="keyword">return</span> Advice.MOVE; </span><br><span class="line">            &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">                <span class="keyword">return</span> Advice.REVERSE; </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<h5 id="第六次作业"><a href="#第六次作业" class="headerlink" title="第六次作业"></a>第六次作业</h5><p>第六次作业与第五次作业相比，取消了乘客请求指定电梯的约束，需要自行设计电梯分配策略；新增了“临时调度”的请求；新增“RECEIVE”约束；修改乘客输出指令格式等。</p>
+<p>针对取消乘客请求指定电梯的约束，自行设计电梯分配策略这个问题，我采用的是简单的随机分配的策略，即采用随机的方式将每一个乘客请求分配到电梯等待队列中。经过验证，随机分配的策略与其他的分配策略相比，似乎并没有对性能产生太大的差距，因此我将随机分配的策略沿用到第七次作业。但是有一个明显的缺陷就是在<code>debug</code>的时候很难对<code>bug</code>造成复现</p>
+<h5 id="第七次作业"><a href="#第七次作业" class="headerlink" title="第七次作业"></a>第七次作业</h5><p>第七次作业与第六次作业相比，增加了双轿厢电梯的改造，因此本次作业的重点在于双轿厢改造的设计。</p>
+<h6 id="实现双轿厢电梯的同步开始改造"><a href="#实现双轿厢电梯的同步开始改造" class="headerlink" title="实现双轿厢电梯的同步开始改造"></a>实现双轿厢电梯的同步开始改造</h6><p>根据题意，在改造开始之前，需要让<strong>两部电梯都停下后</strong>输出<code>UPDATE-BEGIN</code>才能开始改造动作。这个部分的将两个电梯停下之后在开始改造是一个小难点。根据这个问题，我的解决思路是：设置一个<code>isStop</code>的信号，若对检测到对方已经停止了，则将对方线程唤醒，否则将自己的线程进入睡眠态，从而达到使两个电梯达到同步。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line">isStop = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">if</span> (pairElevator.getIsStop()) &#123;</span><br><span class="line">	<span class="keyword">synchronized</span> (pairElevator) &#123;</span><br><span class="line">    	pairElevator.notify();</span><br><span class="line">	&#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">    	<span class="built_in">this</span>.wait();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<h6 id="防撞机制"><a href="#防撞机制" class="headerlink" title="防撞机制"></a>防撞机制</h6><p>对于轿厢运行到换乘楼层的问题，我使用的解决方案是：<code>Strategy</code>类会检查当前电梯与配对电梯的以下状态：</p>
+<ul>
+<li>当前楼层（<code>nowFloor</code>）</li>
+<li>运行方向（<code>direction</code>）</li>
+<li>当前指令（<code>advice</code>）</li>
+</ul>
+<p>然后对两个电梯进行判断，若两个轿厢的运行方向，当前楼层以及当前指令符合特定的判断条件，则让本电梯睡眠一定时长，等待另外一个电梯安全地离开中转楼层再进行移动操作，依据这种躲避策略达到防撞的目的。</p>
+<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="variable">judge1</span> <span class="operator">=</span> (thisNowFloor == transFloor + <span class="number">1</span> &amp;&amp; transFloor != -<span class="number">1</span>)</span><br><span class="line">	|| (thisNowFloor == transFloor + <span class="number">2</span> &amp;&amp; transFloor == -<span class="number">1</span>);</span><br><span class="line"><span class="type">boolean</span> <span class="variable">judge2</span> <span class="operator">=</span> (pairNowFloor == transFloor - <span class="number">1</span> &amp;&amp; transFloor != <span class="number">1</span>)</span><br><span class="line">	|| (pairNowFloor == transFloor - <span class="number">2</span> &amp;&amp; transFloor == <span class="number">1</span>);</span><br><span class="line"><span class="type">boolean</span> <span class="variable">judge3</span> <span class="operator">=</span> (pairNowFloor == transFloor - <span class="number">2</span> &amp;&amp; transFloor != <span class="number">2</span>)</span><br><span class="line">    || (pairNowFloor == transFloor - <span class="number">3</span> &amp;&amp; transFloor == <span class="number">2</span>);</span><br><span class="line"><span class="keyword">if</span> (judge1 &amp;&amp; judge3 &amp;&amp;</span><br><span class="line">    thisDirection == -<span class="number">1</span> &amp;&amp; pairDirection == <span class="number">1</span> &amp;&amp; pairAdvice == Advice.MOVE) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (judge1 &amp;&amp; (pairNowFloor == transFloor ||(judge2 &amp;&amp; pairAdvice == Advice.MOVE)) &amp;&amp; thisDirection == -<span class="number">1</span>) &#123;</span><br><span class="line">     <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> (pairNowFloor == transFloor || judge2) &amp;&amp;pairDirection == -<span class="number">1</span> &amp;&amp; pairAdvice == Advice.MOVE;</span><br></pre></td></tr></table></figure></div>
+<p>此设计确保了两部电梯在共享电梯井的时候，通过严格的路劲估测和状态同步，避免物理碰撞。</p>
+<h3 id="UML协作图"><a href="#UML协作图" class="headerlink" title="UML协作图"></a>UML协作图</h3><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/images/$%7Bfiilename%7D/image-20250418093116560.png"
+                      alt="image-20250418093116560"
+                ></p>
+<h3 id="稳定以及易变内容分析"><a href="#稳定以及易变内容分析" class="headerlink" title="稳定以及易变内容分析"></a>稳定以及易变内容分析</h3><h4 id="稳定内容"><a href="#稳定内容" class="headerlink" title="稳定内容"></a>稳定内容</h4><p>主要的结构是稳定的。三次作业中，我的架构始终是<code>InputThread</code>、<code>Schedule</code>、<code>ElevatorThread</code>三个部分，分别对应着乘客的接收、分配以及电梯对乘客的运输。针对临时调度以及电梯双轿厢部分，我采用的是特殊处理的方式，并没有将临时调度请求和双轿厢请求放入<code>requestTable</code>中，因此我的架构的整体设计并没有做很大改变。</p>
+<h4 id="易变内容"><a href="#易变内容" class="headerlink" title="易变内容"></a>易变内容</h4><p>对输入的请求的处理和电梯运动策略是易变的：</p>
+<ul>
+<li>由于在历次迭代中，逐渐添加了一些特殊的请求，比如说临时调度请求以及双轿厢电梯请求，因此在<code>InputThread</code>接收到请求之后，需要对请求的种类进行辨别，如果是临时调度请求或者双轿厢电梯请求，则对其进行特殊处理。</li>
+<li>由于正常情况、临时调度以及双轿厢三种情况电梯调度的策略都不尽相同，因此需要在<code>Strategy</code>中进行修改</li>
+<li>另外，还有<code>InputThread</code>线程的终止条件的判断在迭代中也产生了变化。在第五次作业的时候，判断<code>Schedule</code>线程终止的条件是<code>mainRequestTable</code>的输入已经终止了，但是在后面迭代中，由于临时调度和双轿厢要求在改造时将本电梯中所有<code>receive</code>了的乘客重新放回主请求表，因此判断<code>Schedule</code>线程终止的时候需要将电梯线程中打回的乘客请求纳入处理。</li>
+</ul>
+<h2 id="bug和debug"><a href="#bug和debug" class="headerlink" title="bug和debug"></a><code>bug</code>和<code>debug</code></h2><h3 id="出现过的bug"><a href="#出现过的bug" class="headerlink" title="出现过的bug"></a>出现过的<code>bug</code></h3><h4 id="第五次作业-1"><a href="#第五次作业-1" class="headerlink" title="第五次作业"></a>第五次作业</h4><p>第五次作业强测没有出现问题，但是在<code>hack</code>部分出现问题了，主要是当输入请求中暂时没有请求，但是程序仍然没有结束时，我没有将线程进入等待，导致我线程中一直处于轮询的状态，导致了<code>ctle</code>的问题。</p>
+<h4 id="第六次作业-1"><a href="#第六次作业-1" class="headerlink" title="第六次作业"></a>第六次作业</h4><p>第六次作业主要碰到的问题是电梯在<code>SCHE-BEGIN</code>之后，几乎在同时输出了<code>RECEIVE</code>操作。这个是线程不安全的原因，因为不能确定在同一时间内线程中的指令执行的先后，针对这个问题，我设置了一个缓冲池，将乘客请求先放在缓冲池中，再在<code>Elevator</code>线程中从缓冲池中进行提取请求，这样，乘客的<code>RECEIVE</code>与<code>SCHE-BEGIN</code>属于串行的指令，也就自然消除了输出先后的问题。</p>
+<h4 id="第七次问题"><a href="#第七次问题" class="headerlink" title="第七次问题"></a>第七次问题</h4><p>第七次问题主要问题是电梯防撞功能的优化和改进。由于在线程中访问其他线程的属性是不安全的，会产生刚读取完属性值就产生改变的情况。针对这个问题，我对双轿厢电梯的策略的获取加了锁，即每一次只能有一个轿厢取得策略，这样能很好地避免防撞判断时状态获取不准确的问题发生。</p>
+<p>多线程程序的<code>debug</code>方法</p>
+<h3 id="debug方法"><a href="#debug方法" class="headerlink" title="debug方法"></a><code>debug</code>方法</h3><h4 id="断点-线程监视器"><a href="#断点-线程监视器" class="headerlink" title="断点 + 线程监视器"></a>断点 + 线程监视器</h4><ul>
+<li>使用 IntelliJ IDEA 的 <code>Thread Debugger</code>，在可疑代码处设置断点，右键选择 <code>Suspend: Thread</code>。<ul>
+<li>这种方法只能在程序里面步进，只能简单的检查自己是否有逻辑上的错误，并不能清楚的看出进程之间的关系，可能不能找出线程之间的潜在的问题。所以这个<code>debug</code>方法只能进行初步的检测。</li>
+</ul>
+</li>
+</ul>
+<h4 id="Print大法"><a href="#Print大法" class="headerlink" title="Print大法"></a><code>Print</code>大法</h4><p>在关键路径处插入需要监测的属性，并以 <code>TimableOutput.println</code>的形式输出，这样可以很好的找出线程中的问题，但是有缺陷就是便利性不足，程序流程透明。</p>
+<h2 id="心得体会"><a href="#心得体会" class="headerlink" title="心得体会"></a>心得体会</h2><h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p>由于电梯系统天然是一个多线程协同调度的问题，需要多个电梯线程与输入、调度线程并发运行，如何避免竞态条件和线程阻塞成为核心挑战。例如在 <code>RequestTable</code> 中通过 <code>synchronized</code> 同步方法与 <code>wait/notifyAll()</code> 实现线程安全的生产者-消费者模型，确保请求的有序添加与处理。而在 <code>Elevator</code> 类中，对于共享资源如电梯当前楼层、请求队列、状态标志等，也通过细粒度的锁保证状态更新的一致性与原子性，避免了调度混乱与死锁风险。此外，<code>InputThread</code> 与 <code>Schedule</code> 的解耦设计，也体现了对输入处理与请求调度之间同步性的合理控制。</p>
+<h3 id="层次化设计"><a href="#层次化设计" class="headerlink" title="层次化设计"></a>层次化设计</h3><p>在<strong>层次化设计</strong>方面，系统采用了清晰的职责划分架构。例如，<code>MainClass</code> 负责系统初始化，<code>InputThread</code> 负责请求接收与解析，<code>Schedule</code> 统一管理调度策略，而每个 <code>Elevator</code> 实例则自主管理自身状态与行为响应。各模块之间通过 <code>RequestTable</code> 和 <code>Person</code> 类传递数据，确保了数据逻辑的模块内封装、模块间低耦合。在电梯运行策略层面，进一步引入了 <code>Strategy</code> 模块封装调度决策逻辑，通过 <code>Advice</code> 枚举类实现电梯行为控制流的抽象，增强了代码的可维护性与可拓展性。</p>
+]]></content>
+      <tags>
+        <tag>oo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>oo-unit1</title>
     <url>/2025/03/19/oo-unit1/</url>
     <content><![CDATA[<h2 id="程序结构分析"><a href="#程序结构分析" class="headerlink" title="程序结构分析"></a>程序结构分析</h2><h3 id="度量分析"><a href="#度量分析" class="headerlink" title="度量分析"></a>度量分析</h3><h4 id="基于statistic插件进行代码规模分析"><a href="#基于statistic插件进行代码规模分析" class="headerlink" title="基于statistic插件进行代码规模分析"></a>基于<code>statistic</code>插件进行代码规模分析</h4><p><img  
@@ -72,10 +285,8 @@
                       alt="bcbee409445ba3e263ff9e3fbbb7c4f"
                 ></p>
 <h4 id="类图介绍"><a href="#类图介绍" class="headerlink" title="类图介绍"></a>类图介绍</h4><ul>
-<li><p><code>MainClass</code>：主类作用主要是接收自定义普通表达式、自定义递归表达式以及最后的计算表达式输入，以及调用一系列处理输入的核心方法。</p>
-</li>
-<li><p><code>Token</code>：<code>Token</code>类主要负责将输入的每一个字符对应成特定的词元，以便后续的词法分析以及语法分析。</p>
-</li>
+<li><code>MainClass</code>：主类作用主要是接收自定义普通表达式、自定义递归表达式以及最后的计算表达式输入，以及调用一系列处理输入的核心方法。</li>
+<li><code>Token</code>：<code>Token</code>类主要负责将输入的每一个字符对应成特定的词元，以便后续的词法分析以及语法分析。</li>
 <li><p><code>Lexer</code>：<code>Lexer</code>类是词法分析器，它实现了词法分析功能，并且将分析得到的信息存储到<code>token</code>流中。在<code>hw1</code>的开发中，<code>Lexer</code>的功能仅限于遍历输入，将每一个元素转换成<code>token</code>；但是在后续<code>hw2</code>和<code>hw3</code>的迭代中，<code>Lexer</code>还承担了替换自定义函数递归表达式、自定义函数普通表达式、以及求导算子结果的功能，因此在我的架构中，<code>Lexer</code>类应该属于核心部分之一。</p>
 </li>
 <li><p><code>Func</code>：<code>Func</code>类定义的是自定义递归函数，主要功能是存储自定义递归函数的关键要素，如序号，形参因子，函数<code>Lexer</code>等，以及一个核心功能，即得出自定义递归表达式的最终结果。</p>
@@ -91,8 +302,8 @@
 <li><p><code>Mono</code>：<code>unit1</code>中，最终输出的表达式其实是一个</p>
 </li>
 </ul>
-<p>$$<br>Expr &#x3D; \sum (coe_i * x_{i}^{exp_i} * \prod sin_j(Expr)^{exp_j} * \prod cos_j(Expr)^{exp_j})<br>$$</p>
-<p>的形式。因此我们定义了一个<code>Mono</code>类来存储一个最小单元的内容，包括系数、<code>x</code>指数以及三角函数项。</p>
+<script type="math/tex; mode=display">
+Expr = \sum (coe_i * x_{i}^{exp_i} * \prod sin_j(Expr)^{exp_j} * \prod cos_j(Expr)^{exp_j})</script><p>的形式。因此我们定义了一个<code>Mono</code>类来存储一个最小单元的内容，包括系数、<code>x</code>指数以及三角函数项。</p>
 <ul>
 <li><code>Poly</code>：<code>Poly</code>类其实就是一个<code>Mono</code>的列表，就是表达式的最终形态。</li>
 </ul>
@@ -123,93 +334,6 @@
 ]]></content>
       <tags>
         <tag>oo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>make命令教程</title>
-    <url>/2025/02/28/make%E5%91%BD%E4%BB%A4%E6%95%99%E7%A8%8B/</url>
-    <content><![CDATA[<h2 id="make的概念"><a href="#make的概念" class="headerlink" title="make的概念"></a><code>make</code>的概念</h2><p><code>make</code>命令就是要做出某个文件。比如，要做出文件<code>a.txt</code>，就可以执行下面的指令：</p>
-<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ make a.txt</span><br></pre></td></tr></table></figure></div>
-
-<p>但是，如果我们真的输入这条指令，它并不会起作用，因为<code>make</code>命令并不知道如何应该做出这个文件，需要有人告诉它，如何调用其他命令完成这个目标。</p>
-<p>比如，假设文件<code>a.txt</code>依赖于<code>b.txt</code>和<code>c.txt</code>，是后面两个文件连接（<code>cat</code>命令）的产物。那么，<code>make</code>需要知道下面的规则。</p>
-<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">a.txt: b.txt c.txt</span></span><br><span class="line">    cat b.txt c.txt &gt; a.txt</span><br></pre></td></tr></table></figure></div>
-
-<p>也即：<code>make a.txt</code>这条指令的背后，实际上分成两步：</p>
-<ul>
-<li>确认<code>b.txt</code>和<code>c.txt</code>必须已经存在；</li>
-<li>使用<code>cat</code>命令 将这个两个文件合并，输出为新文件。</li>
-</ul>
-<p>像这样的规则，都写在一个叫做**<code>makefile</code>**的文件中，<code>make</code>命令依赖这个文件进行构建。</p>
-<h2 id="Makefile文件的格式"><a href="#Makefile文件的格式" class="headerlink" title="Makefile文件的格式"></a><code>Makefile</code>文件的格式</h2><p>构建规则都写在<code>Makefile</code>文件里面，要学会如何<code>make</code>命令，就必须学会如何编写<code>Makefile</code>文件。</p>
-<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><code>Makefile</code>文件由一系列规则组成。每条规则的形式如下：</p>
-<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line">&lt;target&gt; : &lt;prerequisites&gt; </span><br><span class="line">[tab]  &lt;commands&gt;</span><br></pre></td></tr></table></figure></div>
-
-<p>上面第一行冒号前面的部分，叫做”<strong>目标</strong>“（target），冒号后面的部分叫做”<strong>前置条件</strong>“（prerequisites）；第二行必须由一个<code>tab</code>键起首，后面跟着”<strong>命令</strong>“（commands）。</p>
-<h3 id="目标（target）"><a href="#目标（target）" class="headerlink" title="目标（target）"></a>目标（target）</h3><p>一个<strong>目标</strong>构成一条规则。目标通常是文件名，指明<code>make</code>指令苏要构建的对象，比如上文的<code>a.txt</code>。目标可以是一个文件名，也可以是多个文件名，之间用空格分隔。</p>
-<p>除了文件名，目标还可以是某个操作的名字，这称为”<strong>伪目标</strong>“（phony target）。</p>
-<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm *.o</span><br></pre></td></tr></table></figure></div>
-
-<p>上面代码的目标是clean，它不是文件名，而是一个操作的名字，属于”伪目标 “，作用是删除对象文件。</p>
-<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ make clean</span><br></pre></td></tr></table></figure></div>
-
-<p>但是，如果当前目录中，正好有一个文件叫做<code>clean</code>，那么这个命令不会执行。因为<code>make</code>发现<code>clean</code>文件已经存在，就认为没有必要重新构建了，就不会执行指定的rm命令。</p>
-<p>为了避免这种情况，可以明确声明<code>clean</code>是”<strong>伪目标</strong>“，写法如下。</p>
-<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="meta"><span class="keyword">.PHONY</span>: clean</span></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">        rm *.o temp</span><br></pre></td></tr></table></figure></div>
-
-<p>特别地，如果<code>make</code>指令运行时没有指定的目标，默认会执行<code>Makefile</code>文件的第一个目标。</p>
-<h3 id="前置条件（prerequisites）"><a href="#前置条件（prerequisites）" class="headerlink" title="前置条件（prerequisites）"></a>前置条件（prerequisites）</h3><p>前置条件通常是一组文件名，之间用空格分隔。它指定了”目标”是否重新构建的判断标准：只要有一个前置文件不存在，或者有过更新，”目标”就需要重新构建。</p>
-<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">result.txt: source.txt</span></span><br><span class="line">    cp source.txt result.txt</span><br></pre></td></tr></table></figure></div>
-
-<p>上面代码中，构建 <code>result.txt</code> 的前置条件是 <code>source.txt</code> 。如果当前目录中，<code>source.txt</code> 已经存在，那么<code>make result.txt</code>可以正常运行，否则必须再写一条规则，来生成 <code>source.txt</code> 。</p>
- <div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">source.txt:</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;this is the source&quot;</span> &gt; source.txt</span><br></pre></td></tr></table></figure></div>
-
-<p>上面代码中，source.txt后面没有前置条件，就意味着它跟其他文件都无关，只要这个文件还不存在，每次调用<code>make source.txt</code>，它都会生成。</p>
-<div class="code-container" data-rel="Bash"><figure class="iseeu highlight bash"><table><tr><td class="code"><pre><span class="line">$ make result.txt</span><br><span class="line">$ make result.txt</span><br></pre></td></tr></table></figure></div>
-
-<p>上面命令连续执行两次<code>make result.txt</code>。第一次执行会先新建 source.txt，然后再新建 result.txt。第二次执行，Make发现 source.txt 没有变动（时间戳晚于 result.txt），就不会执行任何操作，result.txt 也不会重新生成。</p>
-<p>如果需要生成多个文件，往往采用下面的写法：</p>
-<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">source: file1 file2 file3</span></span><br></pre></td></tr></table></figure></div>
-
-<p>执行<code>make source</code>命令后，就会一次性生成 file1，file2，file3 三个文件。这比执行三次<code>make</code>指令要方便得多。</p>
-<h3 id="命令（commands）"><a href="#命令（commands）" class="headerlink" title="命令（commands）"></a>命令（commands）</h3><p>命令（commands）表示如何更新目标文件，由一行或多行的<code>Shell</code>命令组成。它是构建”目标”的具体指令，它的运行结果通常就是生成目标文件。</p>
-<blockquote>
-<p>[!NOTE]</p>
-<p>每行命令之前必须有一个tab键。</p>
-</blockquote>
-<p>需要注意的是，每行命令在一个单独的shell中执行。这些Shell之间没有继承关系。</p>
-<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">var-lost:</span></span><br><span class="line">    <span class="keyword">export</span> foo=bar</span><br><span class="line">    echo <span class="string">&quot;foo=[$$foo]&quot;</span></span><br></pre></td></tr></table></figure></div>
-
-<p>执行完<code>make var-lost</code>后取不到<code>foo</code>的值。因为两行命令在两个不同的进程执行。解决方法有三：</p>
-<ul>
-<li>两行命令写在一行，中间用分号分隔；</li>
-<li>在换行符前加反斜杠转义；</li>
-<li>加上<code>.ONESHELL:</code>命令。</li>
-</ul>
-<h2 id="Makefile文件的语法"><a href="#Makefile文件的语法" class="headerlink" title="Makefile文件的语法"></a><code>Makefile</code>文件的语法</h2><h3 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h3><p><code>#</code>在 <code>Makefile</code> 中表示注释。</p>
-<h3 id="回声（echoing）"><a href="#回声（echoing）" class="headerlink" title="回声（echoing）"></a>回声（echoing）</h3><p>正常情况下，<code>make</code>会打印每条命令，然后再执行。</p>
-<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">test:</span></span><br><span class="line">    <span class="comment"># 这是测试</span></span><br></pre></td></tr></table></figure></div>
-
-<p>执行上面的规则,就会进行输出 <code># 这是测试</code>：</p>
-<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line">$ make test</span><br><span class="line"><span class="comment"># 这是测试</span></span><br></pre></td></tr></table></figure></div>
-
-<blockquote>
-<p>[!NOTE]</p>
-<p>在命令的前面加上@，就可以关闭回声。</p>
-</blockquote>
-<h3 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h3><p>通配符（wildcard）用来指定一组符合条件的文件名。· 的通配符与 · 一致，主要有<strong>星号</strong>（*）、<strong>问号</strong>（？）和 <strong>[…]</strong> 。比如， <code>*.o</code> 表示所有后缀名为<code>.o</code>的文件。</p>
-<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">clean:</span></span><br><span class="line">        rm -f *.o</span><br></pre></td></tr></table></figure></div>
-
-<h3 id="模式匹配"><a href="#模式匹配" class="headerlink" title="模式匹配"></a>模式匹配</h3><p><code>make</code>命令允许对文件名，进行类似正则运算的匹配，主要用到的匹配符是<code>%</code>。比如，假定当前目录下有 <code>f1.c</code> 和 <code>f2.c</code> 两个源码文件，需要将它们编译为对应的对象文件。</p>
-<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">%.o: %.c</span></span><br></pre></td></tr></table></figure></div>
-
-<p>等同于下面的写法</p>
-<div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">f1.o: f1.c</span></span><br><span class="line"><span class="section">f2.o: f2.c</span></span><br></pre></td></tr></table></figure></div>
-
-<p>使用匹配符<code>%</code>，可以将大量同类型的文件，只用一条规则就完成构建。</p>
-]]></content>
-      <tags>
-        <tag>os</tag>
       </tags>
   </entry>
   <entry>
@@ -404,148 +528,6 @@
       </tags>
   </entry>
   <entry>
-    <title>oo-unit2</title>
-    <url>/2025/05/14/oo-unit2/</url>
-    <content><![CDATA[<h2 id="同步块设置与锁选择分析"><a href="#同步块设置与锁选择分析" class="headerlink" title="同步块设置与锁选择分析"></a>同步块设置与锁选择分析</h2><h3 id="Elevator-java-中的同步："><a href="#Elevator-java-中的同步：" class="headerlink" title="Elevator.java 中的同步："></a><strong><code>Elevator.java</code></strong> 中的同步：</h3><ul>
-<li><p><strong>同步块</strong>：</p>
-<ul>
-<li><p>在 <code>Elevator.java</code> 类中，使用了 <code>synchronized</code> 关键字来同步对共享资源的访问，特别是在对 <code>requestTable</code> 进行操作时，这个资源在多个电梯实例间共享。</p>
-</li>
-<li><p>例如：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (requestTable) &#123;</span><br><span class="line">    requestTable.notifyAll();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-</li>
-<li><p>这确保了多个线程访问 <code>requestTable</code> 时不会发生并发问题（例如多个电梯同时尝试修改或检查 <code>requestTable</code>）。</p>
-</li>
-<li><p>同步机制主要用于处理共享资源的访问，确保同一时刻只有一个线程能够执行某个特定操作，避免数据竞争。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>锁的选择</strong>：</p>
-<ul>
-<li><code>synLock</code> 作为一个静态锁对象，用于同步整个电梯实例的关键操作。它确保在某些操作期间，例如电梯调度（<code>handleSche</code>）时，不会发生多个线程对电梯对象的并发修改。</li>
-<li>同时，在电梯的双重模式下（<code>DuplexMode</code>），每个电梯会等待与配对电梯的同步操作。这些同步操作通过 <code>synchronized</code> 和 <code>wait</code>/<code>notify</code> 方法实现线程间的协调，保证两个电梯在执行更新操作时能够互相等待和通知。</li>
-</ul>
-</li>
-</ul>
-<h3 id="InputThread-java-中的同步："><a href="#InputThread-java-中的同步：" class="headerlink" title="InputThread.java 中的同步："></a><strong><code>InputThread.java</code></strong> 中的同步：</h3><ul>
-<li><p>在 <code>InputThread</code> 中，同样使用了 <code>synchronized</code> 来确保多个线程对 <code>mainRequestTable</code> 的修改是线程安全的。例如：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">    mainRequestTable.setEnd();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-</li>
-<li><p>这种同步确保了当请求输入线程结束时，不会发生并发访问 <code>mainRequestTable</code> 的问题。</p>
-</li>
-</ul>
-<h3 id="RequestTable-java-中的同步："><a href="#RequestTable-java-中的同步：" class="headerlink" title="RequestTable.java 中的同步："></a><strong><code>RequestTable.java</code></strong> 中的同步：</h3><ul>
-<li><strong>同步块</strong>：<ul>
-<li><code>RequestTable</code> 中的大部分方法（如 <code>addRequest</code>、<code>takeRequest</code> 等）都使用了 <code>synchronized</code>，确保多个线程对请求表的操作（添加、删除请求等）是互斥的。</li>
-<li>例如，在 <code>takeRequest</code> 方法中，电梯在取出请求时会等待请求表中的内容，如果没有请求，线程会在 <code>wait()</code> 调用上阻塞，直到有新的请求加入或操作结束。</li>
-<li>这通过 <code>wait</code> 和 <code>notifyAll</code> 方法协调线程间的通知和等待，避免了死锁问题。</li>
-</ul>
-</li>
-<li><strong>锁的选择</strong>：<ul>
-<li>使用 <code>synchronized</code> 来同步方法，确保在访问或修改 <code>requestTable</code> 时，只有一个线程可以执行相应的代码块。</li>
-</ul>
-</li>
-</ul>
-<h3 id="Schedule-java-中的同步："><a href="#Schedule-java-中的同步：" class="headerlink" title="Schedule.java 中的同步："></a><strong><code>Schedule.java</code></strong> 中的同步：</h3><ul>
-<li><p><strong>同步块</strong>：</p>
-<ul>
-<li><p><code>Schedule</code> 线程在检查和处理 <code>mainRequestTable</code> 时，同样使用了 <code>synchronized</code> 来确保在多个线程操作 <code>requestTable</code> 时，避免并发修改的问题。特别是在检查请求是否结束时：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (mainRequestTable) &#123;</span><br><span class="line">    <span class="keyword">if</span> (mainRequestTable.isEnd() &amp;&amp; !isAllEmpty()) &#123;</span><br><span class="line">        mainRequestTable.wait();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-</li>
-<li><p><code>wait</code> 和 <code>notifyAll</code> 用于通知其他线程 <code>mainRequestTable</code> 状态的变化，并确保电梯调度任务能够继续执行。</p>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="锁与同步块中处理语句之间的关系："><a href="#锁与同步块中处理语句之间的关系：" class="headerlink" title="锁与同步块中处理语句之间的关系："></a><strong>锁与同步块中处理语句之间的关系</strong>：</h3><ul>
-<li>锁和同步块的选择是为了保证在多线程环境下对共享资源的安全访问。在上述代码中，所有共享资源（如 <code>requestTable</code>、电梯状态、配对电梯等）都通过 <code>synchronized</code> 关键字确保了同一时刻只有一个线程可以修改它们。</li>
-<li><code>wait</code> 和 <code>notify</code> 方法在这些同步块中被用来处理线程间的协调。<code>wait</code> 会让线程在条件不满足时阻塞，直到其他线程通过 <code>notify</code> 或 <code>notifyAll</code> 通知其继续执行。例如，在电梯到达请求楼层并准备继续移动时，通过 <code>notifyAll</code> 来唤醒等待的线程。</li>
-<li>通过精确控制线程的执行顺序，避免了由于并发访问共享资源而引发的数据一致性问题。</li>
-</ul>
-<h2 id="调度器与调度策略设计"><a href="#调度器与调度策略设计" class="headerlink" title="调度器与调度策略设计"></a>调度器与调度策略设计</h2><h3 id="1-调度器设计总结分析"><a href="#1-调度器设计总结分析" class="headerlink" title="1. 调度器设计总结分析"></a>1. <strong>调度器设计总结分析</strong></h3><p>在这次作业中，调度器（<code>Schedule</code> 类）主要负责调度电梯的运行，确保电梯按请求表中的顺序执行任务，并通过合理的调度策略分配任务。调度器的设计关注以下几个方面：</p>
-<h4 id="1-1-调度器的职责："><a href="#1-1-调度器的职责：" class="headerlink" title="1.1 调度器的职责："></a>1.1 <strong>调度器的职责</strong>：</h4><ul>
-<li><p><strong>任务调度</strong>：调度器从 <code>mainRequestTable</code> 中获取请求，并根据请求的优先级和楼层，决定哪个电梯处理该请求。调度器根据请求的类型（如乘客请求、调度请求等），通知合适的电梯进行处理。</p>
-</li>
-<li><p><strong>线程协调</strong>：调度器与多个电梯线程（<code>Elevator</code> 类）协同工作。通过 <code>wait</code> 和 <code>notifyAll</code> 等同步机制，确保各个线程之间的协调与数据一致性。例如，当调度器发现 <code>mainRequestTable</code> 为空时，它会调用 <code>wait</code> 让当前线程等待，直到有新请求进入。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (mainRequestTable) &#123;</span><br><span class="line">    <span class="keyword">if</span> (mainRequestTable.isEmpty() &amp;&amp; !mainRequestTable.isEnd()) &#123;</span><br><span class="line">        mainRequestTable.wait(); <span class="comment">// 等待直到有请求</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-</li>
-<li><p><strong>调度结束控制</strong>：调度器负责检测是否所有电梯的任务都已完成（如 <code>isEnd()</code> 方法判断请求表是否为空）。当所有任务完成时，调度器会结束整个调度过程。</p>
-</li>
-</ul>
-<h4 id="1-2-与线程的交互："><a href="#1-2-与线程的交互：" class="headerlink" title="1.2 与线程的交互："></a>1.2 <strong>与线程的交互</strong>：</h4><ul>
-<li><p><strong>电梯线程和调度器的协作</strong>：调度器通过 <code>mainRequestTable</code> 与多个电梯线程进行协作。调度器定期检查请求表，并将任务分配给电梯。电梯线程则从请求表中取出任务，并在完成后向调度器报告其状态。</p>
-<p>例如：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (mainRequestTable) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!mainRequestTable.isEnd()) &#123;</span><br><span class="line">        mainRequestTable.wait();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-</li>
-<li><p><strong>通知机制</strong>：当调度器处理完一个任务后，会通过 <code>notifyAll</code> 通知相关电梯线程开始处理任务。同时，如果电梯需要等待新的请求，调度器会确保电梯线程在请求到来前不会被过早唤醒，避免浪费资源。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (mainRequestTable) &#123;</span><br><span class="line">    mainRequestTable.notifyAll(); <span class="comment">// 通知电梯线程继续执行</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-</li>
-</ul>
-<h3 id="2-调度策略总结分析"><a href="#2-调度策略总结分析" class="headerlink" title="2. 调度策略总结分析"></a>2. <strong>调度策略总结分析</strong></h3><p>调度策略的核心目的是合理分配电梯的任务，考虑多个因素（如时间、电量、优先级等），确保系统整体效率。以下是对当前调度策略的分析：</p>
-<h4 id="2-1-调度策略的设计："><a href="#2-1-调度策略的设计：" class="headerlink" title="2.1 调度策略的设计："></a>2.1 <strong>调度策略的设计</strong>：</h4><p>调度策略主要通过 <code>Strategy</code> 类进行实现，并根据不同的条件（如电梯的当前楼层、方向、是否处于双电梯模式等）决定电梯的行为。<code>Strategy</code> 类使用了不同的策略来控制电梯的行动，如：</p>
-<ul>
-<li><p><strong>常规模式（<code>normal</code>）</strong>：该模式根据<code>Look</code>算法来决定电梯是移动、等待还是开门。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Advice <span class="title function_">normal</span><span class="params">(<span class="type">int</span> nowFloor, <span class="type">int</span> nowNum, <span class="type">int</span> direction, HashMap&lt;Integer, PriorityBlockingQueue&lt;Person&gt;&gt; destMap, RequestTable requestTable)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (canOpenForOut(nowFloor, destMap) || canOpenForIn(nowFloor, nowNum, direction, requestTable)) &#123;</span><br><span class="line">        <span class="keyword">return</span> Advice.OPEN; <span class="comment">// 开门</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 其他决策（如移动、等待等）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-</li>
-<li><p><strong>双电梯模式（<code>DuplexMode</code>）</strong>：当电梯处于双重模式时，会考虑与配对电梯的协作，避免电梯之间的冲突。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> Advice <span class="title function_">DuplexMode</span><span class="params">(<span class="type">int</span> nowFloor, <span class="type">int</span> nowNum, <span class="type">int</span> direction, HashMap&lt;Integer, PriorityBlockingQueue&lt;Person&gt;&gt; destMap, RequestTable requestTable, Elevator thisElevator, Elevator pairElevator)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (willCollide(thisElevator, pairElevator)) &#123;</span><br><span class="line">        <span class="keyword">return</span> Advice.SLEEP; <span class="comment">// 如果发生冲突，休眠</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Advice.MOVE; <span class="comment">// 否则继续移动</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-</li>
-</ul>
-<h2 id="整体架构分析"><a href="#整体架构分析" class="headerlink" title="整体架构分析"></a>整体架构分析</h2><h3 id="UML类图"><a href="#UML类图" class="headerlink" title="UML类图"></a>UML类图</h3><p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/$%7Bfiilename%7D/image-20250417163058473.png"
-                      alt="image-20250417163058473"
-                ></p>
-<h4 id="三次作业架构设计迭代"><a href="#三次作业架构设计迭代" class="headerlink" title="三次作业架构设计迭代"></a>三次作业架构设计迭代</h4><h5 id="第五次作业"><a href="#第五次作业" class="headerlink" title="第五次作业"></a>第五次作业</h5><p>第五次作业作为多线程单元的开始，要求我们模拟一个多线程实时电梯系统，涉及到对乘客进行输入的接收，分配以及电梯对乘客的运输。本次作业我参考往届学长学姐的博客，设计了<code>InputThread</code>、<code>Schedule</code>、<code>ElevatorThread</code>三个种类的线程，分别对应着上述的三个功能。由于本次作业强行固定了乘客乘坐的电梯序号，因此在本次作业中<code>Schedule</code>线程其实没有太大作用，主要是为了给后续迭代中需要手动给乘客分配电梯做铺垫。</p>
-<p>具体到电梯的调度策略，我采用了<code>Look</code>算法，并建立了<code>Strategy</code>类，为每一个电梯线程提供策略：</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Strategy</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> RequestTable requestTable;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Advice <span class="title function_">getAdvice</span><span class="params">(<span class="type">int</span> nowFloor, <span class="type">int</span> nowNum, <span class="type">int</span> direction,</span></span><br><span class="line"><span class="params">                            HashMap&lt;Integer, ArrayList&lt;Person&gt;&gt; destMap)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (canOpenForOut(nowFloor, destMap) </span><br><span class="line">            || canOpenForIn(nowFloor, nowNum, direction)) &#123; </span><br><span class="line">            <span class="keyword">return</span> Advice.OPEN;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (nowNum != <span class="number">0</span>) &#123; </span><br><span class="line">            <span class="keyword">return</span> Advice.MOVE;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;  </span><br><span class="line">            <span class="keyword">if</span> (requestTable.isEmpty()) &#123; </span><br><span class="line">                <span class="keyword">if</span> (requestTable.isEnd()) &#123; </span><br><span class="line">                    <span class="keyword">return</span> Advice.OVER; </span><br><span class="line">                &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">                    <span class="keyword">return</span> Advice.WAIT; </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (hasReqInOriginDirection(nowFloor, direction)) &#123;</span><br><span class="line">                <span class="keyword">return</span> Advice.MOVE; </span><br><span class="line">            &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">                <span class="keyword">return</span> Advice.REVERSE; </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-<h5 id="第六次作业"><a href="#第六次作业" class="headerlink" title="第六次作业"></a>第六次作业</h5><p>第六次作业与第五次作业相比，取消了乘客请求指定电梯的约束，需要自行设计电梯分配策略；新增了“临时调度”的请求；新增“RECEIVE”约束；修改乘客输出指令格式等。</p>
-<p>针对取消乘客请求指定电梯的约束，自行设计电梯分配策略这个问题，我采用的是简单的随机分配的策略，即采用随机的方式将每一个乘客请求分配到电梯等待队列中。经过验证，随机分配的策略与其他的分配策略相比，似乎并没有对性能产生太大的差距，因此我将随机分配的策略沿用到第七次作业。但是有一个明显的缺陷就是在<code>debug</code>的时候很难对<code>bug</code>造成复现</p>
-<h5 id="第七次作业"><a href="#第七次作业" class="headerlink" title="第七次作业"></a>第七次作业</h5><p>第七次作业与第六次作业相比，增加了双轿厢电梯的改造，因此本次作业的重点在于双轿厢改造的设计。</p>
-<h6 id="实现双轿厢电梯的同步开始改造"><a href="#实现双轿厢电梯的同步开始改造" class="headerlink" title="实现双轿厢电梯的同步开始改造"></a>实现双轿厢电梯的同步开始改造</h6><p>根据题意，在改造开始之前，需要让<strong>两部电梯都停下后</strong>输出<code>UPDATE-BEGIN</code>才能开始改造动作。这个部分的将两个电梯停下之后在开始改造是一个小难点。根据这个问题，我的解决思路是：设置一个<code>isStop</code>的信号，若对检测到对方已经停止了，则将对方线程唤醒，否则将自己的线程进入睡眠态，从而达到使两个电梯达到同步。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line">isStop = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">if</span> (pairElevator.getIsStop()) &#123;</span><br><span class="line">	<span class="keyword">synchronized</span> (pairElevator) &#123;</span><br><span class="line">    	pairElevator.notify();</span><br><span class="line">	&#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">    	<span class="built_in">this</span>.wait();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-<h6 id="防撞机制"><a href="#防撞机制" class="headerlink" title="防撞机制"></a>防撞机制</h6><p>对于轿厢运行到换乘楼层的问题，我使用的解决方案是：<code>Strategy</code>类会检查当前电梯与配对电梯的以下状态：</p>
-<ul>
-<li>当前楼层（<code>nowFloor</code>）</li>
-<li>运行方向（<code>direction</code>）</li>
-<li>当前指令（<code>advice</code>）</li>
-</ul>
-<p>然后对两个电梯进行判断，若两个轿厢的运行方向，当前楼层以及当前指令符合特定的判断条件，则让本电梯睡眠一定时长，等待另外一个电梯安全地离开中转楼层再进行移动操作，依据这种躲避策略达到防撞的目的。</p>
-<div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="variable">judge1</span> <span class="operator">=</span> (thisNowFloor == transFloor + <span class="number">1</span> &amp;&amp; transFloor != -<span class="number">1</span>)</span><br><span class="line">	|| (thisNowFloor == transFloor + <span class="number">2</span> &amp;&amp; transFloor == -<span class="number">1</span>);</span><br><span class="line"><span class="type">boolean</span> <span class="variable">judge2</span> <span class="operator">=</span> (pairNowFloor == transFloor - <span class="number">1</span> &amp;&amp; transFloor != <span class="number">1</span>)</span><br><span class="line">	|| (pairNowFloor == transFloor - <span class="number">2</span> &amp;&amp; transFloor == <span class="number">1</span>);</span><br><span class="line"><span class="type">boolean</span> <span class="variable">judge3</span> <span class="operator">=</span> (pairNowFloor == transFloor - <span class="number">2</span> &amp;&amp; transFloor != <span class="number">2</span>)</span><br><span class="line">    || (pairNowFloor == transFloor - <span class="number">3</span> &amp;&amp; transFloor == <span class="number">2</span>);</span><br><span class="line"><span class="keyword">if</span> (judge1 &amp;&amp; judge3 &amp;&amp;</span><br><span class="line">    thisDirection == -<span class="number">1</span> &amp;&amp; pairDirection == <span class="number">1</span> &amp;&amp; pairAdvice == Advice.MOVE) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (judge1 &amp;&amp; (pairNowFloor == transFloor ||(judge2 &amp;&amp; pairAdvice == Advice.MOVE)) &amp;&amp; thisDirection == -<span class="number">1</span>) &#123;</span><br><span class="line">     <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> (pairNowFloor == transFloor || judge2) &amp;&amp;pairDirection == -<span class="number">1</span> &amp;&amp; pairAdvice == Advice.MOVE;</span><br></pre></td></tr></table></figure></div>
-<p>此设计确保了两部电梯在共享电梯井的时候，通过严格的路劲估测和状态同步，避免物理碰撞。</p>
-<h3 id="UML协作图"><a href="#UML协作图" class="headerlink" title="UML协作图"></a>UML协作图</h3><p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="/images/$%7Bfiilename%7D/image-20250418093116560.png"
-                      alt="image-20250418093116560"
-                ></p>
-<h3 id="稳定以及易变内容分析"><a href="#稳定以及易变内容分析" class="headerlink" title="稳定以及易变内容分析"></a>稳定以及易变内容分析</h3><h4 id="稳定内容"><a href="#稳定内容" class="headerlink" title="稳定内容"></a>稳定内容</h4><p>主要的结构是稳定的。三次作业中，我的架构始终是<code>InputThread</code>、<code>Schedule</code>、<code>ElevatorThread</code>三个部分，分别对应着乘客的接收、分配以及电梯对乘客的运输。针对临时调度以及电梯双轿厢部分，我采用的是特殊处理的方式，并没有将临时调度请求和双轿厢请求放入<code>requestTable</code>中，因此我的架构的整体设计并没有做很大改变。</p>
-<h4 id="易变内容"><a href="#易变内容" class="headerlink" title="易变内容"></a>易变内容</h4><p>对输入的请求的处理和电梯运动策略是易变的：</p>
-<ul>
-<li>由于在历次迭代中，逐渐添加了一些特殊的请求，比如说临时调度请求以及双轿厢电梯请求，因此在<code>InputThread</code>接收到请求之后，需要对请求的种类进行辨别，如果是临时调度请求或者双轿厢电梯请求，则对其进行特殊处理。</li>
-<li>由于正常情况、临时调度以及双轿厢三种情况电梯调度的策略都不尽相同，因此需要在<code>Strategy</code>中进行修改</li>
-<li>另外，还有<code>InputThread</code>线程的终止条件的判断在迭代中也产生了变化。在第五次作业的时候，判断<code>Schedule</code>线程终止的条件是<code>mainRequestTable</code>的输入已经终止了，但是在后面迭代中，由于临时调度和双轿厢要求在改造时将本电梯中所有<code>receive</code>了的乘客重新放回主请求表，因此判断<code>Schedule</code>线程终止的时候需要将电梯线程中打回的乘客请求纳入处理。</li>
-</ul>
-<h2 id="bug和debug"><a href="#bug和debug" class="headerlink" title="bug和debug"></a><code>bug</code>和<code>debug</code></h2><h3 id="出现过的bug"><a href="#出现过的bug" class="headerlink" title="出现过的bug"></a>出现过的<code>bug</code></h3><h4 id="第五次作业-1"><a href="#第五次作业-1" class="headerlink" title="第五次作业"></a>第五次作业</h4><p>第五次作业强测没有出现问题，但是在<code>hack</code>部分出现问题了，主要是当输入请求中暂时没有请求，但是程序仍然没有结束时，我没有将线程进入等待，导致我线程中一直处于轮询的状态，导致了<code>ctle</code>的问题。</p>
-<h4 id="第六次作业-1"><a href="#第六次作业-1" class="headerlink" title="第六次作业"></a>第六次作业</h4><p>第六次作业主要碰到的问题是电梯在<code>SCHE-BEGIN</code>之后，几乎在同时输出了<code>RECEIVE</code>操作。这个是线程不安全的原因，因为不能确定在同一时间内线程中的指令执行的先后，针对这个问题，我设置了一个缓冲池，将乘客请求先放在缓冲池中，再在<code>Elevator</code>线程中从缓冲池中进行提取请求，这样，乘客的<code>RECEIVE</code>与<code>SCHE-BEGIN</code>属于串行的指令，也就自然消除了输出先后的问题。</p>
-<h4 id="第七次问题"><a href="#第七次问题" class="headerlink" title="第七次问题"></a>第七次问题</h4><p>第七次问题主要问题是电梯防撞功能的优化和改进。由于在线程中访问其他线程的属性是不安全的，会产生刚读取完属性值就产生改变的情况。针对这个问题，我对双轿厢电梯的策略的获取加了锁，即每一次只能有一个轿厢取得策略，这样能很好地避免防撞判断时状态获取不准确的问题发生。</p>
-<p>多线程程序的<code>debug</code>方法</p>
-<h3 id="debug方法"><a href="#debug方法" class="headerlink" title="debug方法"></a><code>debug</code>方法</h3><h4 id="断点-线程监视器"><a href="#断点-线程监视器" class="headerlink" title="断点 + 线程监视器"></a>断点 + 线程监视器</h4><ul>
-<li>使用 IntelliJ IDEA 的 <code>Thread Debugger</code>，在可疑代码处设置断点，右键选择 <code>Suspend: Thread</code>。<ul>
-<li>这种方法只能在程序里面步进，只能简单的检查自己是否有逻辑上的错误，并不能清楚的看出进程之间的关系，可能不能找出线程之间的潜在的问题。所以这个<code>debug</code>方法只能进行初步的检测。</li>
-</ul>
-</li>
-</ul>
-<h4 id="Print大法"><a href="#Print大法" class="headerlink" title="Print大法"></a><code>Print</code>大法</h4><p>在关键路径处插入需要监测的属性，并以 <code>TimableOutput.println</code>的形式输出，这样可以很好的找出线程中的问题，但是有缺陷就是便利性不足，程序流程透明。</p>
-<h2 id="心得体会"><a href="#心得体会" class="headerlink" title="心得体会"></a>心得体会</h2><h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p>由于电梯系统天然是一个多线程协同调度的问题，需要多个电梯线程与输入、调度线程并发运行，如何避免竞态条件和线程阻塞成为核心挑战。例如在 <code>RequestTable</code> 中通过 <code>synchronized</code> 同步方法与 <code>wait/notifyAll()</code> 实现线程安全的生产者-消费者模型，确保请求的有序添加与处理。而在 <code>Elevator</code> 类中，对于共享资源如电梯当前楼层、请求队列、状态标志等，也通过细粒度的锁保证状态更新的一致性与原子性，避免了调度混乱与死锁风险。此外，<code>InputThread</code> 与 <code>Schedule</code> 的解耦设计，也体现了对输入处理与请求调度之间同步性的合理控制。</p>
-<h3 id="层次化设计"><a href="#层次化设计" class="headerlink" title="层次化设计"></a>层次化设计</h3><p>在<strong>层次化设计</strong>方面，系统采用了清晰的职责划分架构。例如，<code>MainClass</code> 负责系统初始化，<code>InputThread</code> 负责请求接收与解析，<code>Schedule</code> 统一管理调度策略，而每个 <code>Elevator</code> 实例则自主管理自身状态与行为响应。各模块之间通过 <code>RequestTable</code> 和 <code>Person</code> 类传递数据，确保了数据逻辑的模块内封装、模块间低耦合。在电梯运行策略层面，进一步引入了 <code>Strategy</code> 模块封装调度决策逻辑，通过 <code>Advice</code> 枚举类实现电梯行为控制流的抽象，增强了代码的可维护性与可拓展性。</p>
-]]></content>
-      <tags>
-        <tag>oo</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>oo-unit4</title>
     <url>/2025/06/11/oo-unit4/</url>
     <content><![CDATA[<h2 id="正向建模与开发"><a href="#正向建模与开发" class="headerlink" title="正向建模与开发"></a>正向建模与开发</h2><blockquote>
@@ -689,6 +671,161 @@
 ]]></content>
       <tags>
         <tag>oo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>lab6-shell</title>
+    <url>/2025/06/28/lab6-shell/</url>
+    <content><![CDATA[<h2 id="任务内容"><a href="#任务内容" class="headerlink" title="任务内容"></a>任务内容</h2><h3 id="相对路径-新增指令"><a href="#相对路径-新增指令" class="headerlink" title="相对路径+新增指令"></a>相对路径+新增指令</h3><p><strong>实现思路</strong>：<br>内建指令，如 <code>cd</code> 和 <code>exit</code>，因其需要直接修改 Shell 进程自身的状态而被内建；外部指令，如 <code>touch</code>、<code>mkdir</code> 和 <code>rm</code>，则作为独立的可执行程序存在，由 Shell 创建子进程来运行。</p>
+<h4 id="1-内建指令-Built-in-Commands"><a href="#1-内建指令-Built-in-Commands" class="headerlink" title="1. 内建指令 (Built-in Commands)"></a>1. 内建指令 (Built-in Commands)</h4><p><strong><code>cd</code> 与 <code>pwd</code>：当前工作目录管理</strong></p>
+<p>这两个指令是相对路径功能的核心。其实现依赖于在内核中为每个进程（<code>struct Env</code>）增加一个指向当前目录文件结构（<code>struct File</code>）的指针 <code>env_cwd</code>。</p>
+<ul>
+<li><p><strong><code>cd</code> 的实现核心</strong>：<code>cd</code> 命令的主要工作是解析用户传入的路径参数，并调用一个特定的系统调用（如 <code>chdir</code>）来请求内核更新当前进程的 <code>env_cwd</code> 指针。</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">builtin_cd</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span> &#123;</span><br><span class="line">    <span class="comment">// ... (省略参数解析和路径处理的代码) ...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 核心：调用系统调用，请求内核改变当前工作目录</span></span><br><span class="line">    <span class="keyword">if</span> (chdir(resolved_path) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;cd: directory not found: %s\n&quot;</span>, path);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>; <span class="comment">// 失败，返回非零值</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><strong><code>pwd</code> 的实现核心</strong>：<code>pwd</code> 命令则通过一个系统调用（如 <code>getcwd</code>）来从内核获取当前进程 <code>env_cwd</code> 所对应的完整路径字符串，然后将其打印到标准输出。</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">builtin_pwd</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span> &#123;</span><br><span class="line">    <span class="type">char</span> current_path_buf[MAXPATHLEN];</span><br><span class="line">    <span class="keyword">if</span> (getcwd(current_path_buf, <span class="keyword">sizeof</span>(current_path_buf)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, current_path_buf);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<p><strong><code>exit</code>：退出 Shell</strong></p>
+<p><code>exit</code> 必须是内建指令，因为它需要终止的是 Shell 进程本身。其实现非常直接，就是调用 <code>exit()</code> 库函数，该函数会触发系统调用来销毁当前的进程环境。</p>
+<h4 id="2-外部命令-External-Commands"><a href="#2-外部命令-External-Commands" class="headerlink" title="2. 外部命令 (External Commands)"></a>2. 外部命令 (External Commands)</h4><p>这些命令作为独立的可执行文件存放在文件系统中。Shell 通过 <code>fork()</code> 和 <code>spawn()</code> 来创建子进程运行它们。这些命令实现的关键在于正确地使用文件系统相关的系统调用，并在执行失败时，从其 <code>main</code> 函数<strong>返回一个非零的退出码</strong>，以便 Shell 的 <code>&amp;&amp;</code> 和 <code>||</code> 能够正确工作。</p>
+<ul>
+<li><p><strong><code>touch</code> 的实现核心</strong>：使用 <code>open()</code> 系统调用，并组合使用 <code>O_CREAT</code>（不存在则创建）和 <code>O_EXCL</code>（已存在则报错）标志位，来实现“若文件不存在则创建”的逻辑。如果 <code>open</code> 因为文件已存在而失败（返回 <code>-E_FILE_EXISTS</code>），则将其视为成功（返回 <code>0</code>）。</p>
+</li>
+<li><p><strong><code>mkdir</code> 的实现核心</strong>：</p>
+<ul>
+<li>不带 <code>-p</code> 时，直接使用 <code>open()</code> 和 <code>O_MKDIR</code> 标志创建目录。</li>
+<li>带 <code>-p</code> 时，需要一个额外的辅助函数。该函数会逐级解析路径字符串（例如，将 <code>/a/b/c</code> 分解为 <code>/a</code>, <code>/a/b</code>, <code>/a/b/c</code>），并对每一级路径尝试调用 <code>open(path, O_MKDIR)</code>，同时忽略“文件已存在”（<code>-E_FILE_EXISTS</code>）的错误，从而实现递归创建。</li>
+</ul>
+</li>
+<li><p><strong><code>rm</code> 的实现核心</strong>：</p>
+<ul>
+<li>首先使用 <code>stat()</code> 系统调用来判断目标路径是一个文件还是一个目录。</li>
+<li>如果目标是文件，直接调用 <code>remove()</code> 系统调用删除。</li>
+<li>如果目标是目录，则检查是否提供了 <code>-r</code> 选项。若没有，则报错“Is a directory”；若有，则进入递归删除流程：打开目录，读取目录下的所有条目，并对每一个条目（除了 <code>.</code> 和 <code>..</code>）递归地调用 <code>rm -r</code>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="变量和注释"><a href="#变量和注释" class="headerlink" title="变量和注释"></a>变量和注释</h3><h4 id="1-变量的设置、展开与传递"><a href="#1-变量的设置、展开与传递" class="headerlink" title="1. 变量的设置、展开与传递"></a>1. 变量的设置、展开与传递</h4><p>这套机制能够区分对当前 Shell 生效的“局部变量”和能够被子进程继承的“环境变量”，并通过 <code>declare</code> 和 <code>unset</code> 指令进行管理。</p>
+<ul>
+<li><p><strong>变量的存储与管理</strong></p>
+<p>所有变量都存储在主 Shell 进程内存中的一个 <code>struct Variable</code> 数组里。这个结构体不仅记录了变量的键和值，还通过一个 <code>flags</code> 字段来标记其属性（环境变量或只读）。</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Variable</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> name[<span class="number">17</span>];</span><br><span class="line">    <span class="type">char</span> value[<span class="number">17</span>];</span><br><span class="line">    <span class="type">int</span> flags; <span class="comment">// 用位掩码来存储属性</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用宏定义来表示不同的属性</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> VAR_FLAG_EXPORT   0x1  <span class="comment">// 标志该变量是一个环境变量</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> VAR_FLAG_READONLY 0x2  <span class="comment">// 标志该变量是只读的</span></span></span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><strong><code>declare</code> 和 <code>unset</code> 指令的实现</strong></p>
+<p><code>declare</code> 指令用于创建和修改变量，它会解析 <code>-x</code> 和 <code>-r</code> 选项来设置变量的 <code>flags</code>。<code>unset</code> 指令则负责从内存数组中安全地（检查只读属性）移除变量。</p>
+</li>
+<li><p><strong><code>$</code> 变量展开与环境变量传递</strong></p>
+<p>在命令执行前，<code>expand_variables</code> 函数会负责将命令中的 <code>$VAR</code> 字符串替换为其实际的值。而在创建子进程时，<code>runcmd</code> 函数会精心挑选出所有被标记为环境变量的变量，并将它们传递给 <code>spawn</code> 系统调用，从而实现环境变量的继承。</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">runcmd</span><span class="params">(<span class="type">char</span> *s)</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">Variable</span> *<span class="title">exported_vars</span>[<span class="title">MAX_VARIABLES</span> + 1];</span></span><br><span class="line">    <span class="type">int</span> export_count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 遍历内存中的所有变量</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; num_variables; i++) &#123;</span><br><span class="line">        <span class="comment">// 2. 如果变量有 VAR_FLAG_EXPORT 标志</span></span><br><span class="line">        <span class="keyword">if</span> (variable_pool[i].flags &amp; VAR_FLAG_EXPORT) &#123;</span><br><span class="line">            <span class="comment">// 3. 将其加入到待传递的数组中</span></span><br><span class="line">            exported_vars[export_count++] = &amp;variable_pool[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    exported_vars[export_count] = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 将只包含环境变量的数组传递给 spawn</span></span><br><span class="line">    <span class="type">int</span> child = spawn(argv[<span class="number">0</span>], argv, (<span class="type">char</span> **)exported_vars);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<h4 id="2-注释功能"><a href="#2-注释功能" class="headerlink" title="2. 注释功能 (#)"></a>2. 注释功能 (<code>#</code>)</h4><p><strong>实现思路</strong>：<br>注释功能允许用户在命令后添加笔记，Shell 在执行时会自动忽略注释部分。我的实现非常直接，就是在命令执行前的最后一刻，对命令字符串进行处理。</p>
+<ul>
+<li><p><strong>注释的实现核心</strong>：<br>在 Shell 的主执行循环中，当获取到一条完整的、即将要被送去执行的命令字符串后（此时变量和反引号等已经处理完毕），我会使用 <code>strchr</code> 函数来查找字符串中第一次出现 <code>#</code> 的位置。</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ... (前续处理) ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 假设 &#x27;p&#x27; 是指向当前待执行命令的字符串指针</span></span><br><span class="line"><span class="type">char</span> *comment_start = <span class="built_in">strchr</span>(p, <span class="string">&#x27;#&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果找到了 &#x27;#&#x27;</span></span><br><span class="line"><span class="keyword">if</span> (comment_start != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="comment">// 直接在 &#x27;#&#x27; 的位置插入一个字符串结束符 &#x27;\0&#x27;</span></span><br><span class="line">    <span class="comment">// 这样，后续的所有函数都会认为字符串在这里就结束了，</span></span><br><span class="line">    <span class="comment">// # 后面的所有内容自然就被忽略了。</span></span><br><span class="line">    *comment_start = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行被截断后的命令 p</span></span><br><span class="line">exec_line(p);</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<h3 id="指令输入优化和历史指令"><a href="#指令输入优化和历史指令" class="headerlink" title="指令输入优化和历史指令"></a>指令输入优化和历史指令</h3><h4 id="1-指令自由输入与快捷键"><a href="#1-指令自由输入与快捷键" class="headerlink" title="1. 指令自由输入与快捷键"></a>1. 指令自由输入与快捷键</h4><p>这个功能的核心，是将 <code>readline</code> 函数从一个简单的字符读取器，改造成一个迷你的行编辑器。</p>
+<ul>
+<li><p><strong>实现原理</strong>：<br>我将 <code>readline</code> 设计成一个无限循环，在循环中通过 <code>read(0, &amp;ch, 1)</code> 一次只读取一个字符。我使用一个字符数组 <code>buf[]</code> 来存储当前正在编辑的命令行，一个整型变量 <code>len</code> 记录其长度，另一个整型变量 <code>pos</code> 则作为光标，追踪当前的编辑位置。</p>
+<p><code>readline</code> 内部通过一个大的 <code>switch (ch)</code> 结构，来判断用户的按键并执行相应操作：</p>
+<ul>
+<li><strong>普通字符</strong>：通过 <code>memmove</code> 将光标位置（<code>pos</code>）后的所有字符向后移动一位，为新字符腾出空间，然后将新字符插入，并更新 <code>len</code> 和 <code>pos</code>。</li>
+<li><strong>退格键 (<code>Backspace</code>)</strong>：同样使用 <code>memmove</code>，将光标位置前的字符覆盖掉，实现删除。</li>
+<li><strong>快捷键</strong>：对于 <code>Ctrl-A</code> (光标到行首) 或 <code>Ctrl-E</code> (光标到行尾) 等快捷键，实现起来相对简单，只需直接修改 <code>pos</code> 的值即可。对于 <code>Ctrl-K</code> (删除到行末) 或 <code>Ctrl-U</code> (删除到行首) 等，则通过字符串操作和 <code>memmove</code> 来实现。</li>
+<li><strong>光标移动 (方向键)</strong>：方向键会产生特殊的转义序列（如 <code>\x1b[C</code> 代表右箭头）。我的 <code>switch</code> 会先捕捉 <code>\x1b</code>，然后再继续读后续的字符来判断具体是哪个方向键，最终通过增减 <code>pos</code> 的值来实现光标的移动。</li>
+</ul>
+</li>
+<li><p><strong>屏幕刷新</strong>：<br>每次按键导致 <code>buf</code> 或 <code>pos</code> 发生变化后，都需要刷新屏幕上的显示。我是通过打印一系列 ANSI 转义序列来完成的：先用 <code>\r</code> 回到行首，用 <code>\x1b[J</code> 清除当前行，然后打印新的 <code>buf</code> 内容，最后再用 <code>\r</code> 和一系列 <code>\x1b[C</code> (光标右移) 将光标精确定位到 <code>pos</code> 所在的新位置。</p>
+</li>
+</ul>
+<h4 id="2-命令历史-history-与上下导航"><a href="#2-命令历史-history-与上下导航" class="headerlink" title="2. 命令历史 (history 与上下导航)"></a>2. 命令历史 (<code>history</code> 与上下导航)</h4><ul>
+<li><p><strong>实现原理</strong>：<br>命令历史的实现分为内存、文件和用户交互三个部分。</p>
+<ul>
+<li><p><strong>内存存储</strong>：我在 Shell 中设置了一个二维字符数组 <code>history_lines[MAX_HISTORY][MAX_CMD_LEN]</code> 作为一个环形缓冲区。<code>history_head</code> 指针用于标记下一次新命令应该插入的位置，<code>history_count</code> 则记录当前有效的历史数量。</p>
+</li>
+<li><p><strong>持久化存储</strong>：Shell 启动时，<code>history_load</code> 函数会尝试打开根目录下的 <code>.mos_history</code> 文件，读取其中的内容来预加载历史记录。当用户执行一条新命令后，<code>history_add</code> 函数会先将其存入内存的环形缓冲区，然后立即将内存中全部的有效历史记录覆盖写入到 <code>.mos_history</code> 文件中，从而实现历史记录的持久化。</p>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">history_add</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *cmd)</span> &#123;</span><br><span class="line">    <span class="comment">// ... (省略空命令和重复命令的判断) ...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 将新命令存入内存中的环形数组</span></span><br><span class="line">    <span class="built_in">strcpy</span>(history_lines[history_head], cmd);</span><br><span class="line">    history_head = (history_head + <span class="number">1</span>) % MAX_HISTORY;</span><br><span class="line">    <span class="keyword">if</span> (history_count &lt; MAX_HISTORY) &#123;</span><br><span class="line">        history_count++;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 将内存中全部的历史记录，覆盖写入到磁盘文件中</span></span><br><span class="line">    <span class="type">int</span> fd = open(<span class="string">&quot;/.mos_history&quot;</span>, O_WRONLY | O_CREAT | O_TRUNC);</span><br><span class="line">    <span class="comment">// ... (省略写入文件的循环代码) ...</span></span><br><span class="line">    close(fd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p><strong>上下箭头导航</strong>：这部分逻辑实现在 <code>readline</code> 函数处理方向键的 <code>case</code> 中。当检测到上/下箭头时，程序会修改一个用于导航的索引 <code>history_nav_idx</code>，然后从环形缓冲区中取出对应的历史命令字符串，用它覆盖当前的输入缓冲区 <code>buf</code>，并将光标 <code>pos</code> 置于行末。我还特别处理了对用户当前正在输入、但尚未提交的命令的保存和恢复。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-不带-b-后缀执行指令"><a href="#3-不带-b-后缀执行指令" class="headerlink" title="3. 不带 .b 后缀执行指令"></a>3. 不带 <code>.b</code> 后缀执行指令</h4><ul>
+<li><p><strong>实现原理</strong>： 此功能的核心逻辑被直接实现在了<code>spawn</code> 中。这样一来，所有通过 <code>spawn</code> 启动的程序都能享受到此便利。<code>spawn</code> 的执行逻辑如下：</p>
+<ol>
+<li>首先，它会尝试按用户输入的原样（如 <code>&quot;ls&quot;</code>）去调用 <code>open</code> 打开程序文件。</li>
+<li>如果第一次 <code>open</code> 失败（很可能是因为文件不存在），它并不会立即放弃。</li>
+<li>而是会在一个临时缓冲区中，将原始的程序名和 <code>.b</code> 后缀拼接起来（得到 <code>&quot;ls.b&quot;</code>），然后再次尝试 <code>open</code> 这个新路径。</li>
+<li>如果第二次 <code>open</code> 成功，<code>spawn</code> 就会继续执行这个程序；如果两次尝试都失败了，<code>spawn</code> 才会向上层返回“文件未找到”的错误。</li>
+</ol>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">spawn</span><span class="params">(<span class="type">char</span> *prog, <span class="type">char</span> **argv)</span> &#123;</span><br><span class="line">    <span class="type">int</span> fd;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 尝试按原样打开程序</span></span><br><span class="line">    <span class="keyword">if</span> ((fd = open(prog, O_RDONLY)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 2. 如果失败，尝试拼接上 &quot;.b&quot; 后再次打开</span></span><br><span class="line">        <span class="type">char</span> prog_with_b[<span class="number">256</span>];</span><br><span class="line">        <span class="built_in">strcpy</span>(prog_with_b, prog);</span><br><span class="line">        <span class="built_in">strcat</span>(prog_with_b, <span class="string">&quot;.b&quot;</span>);</span><br><span class="line">        fd = open(prog_with_b, O_RDONLY);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 如果两次都失败，才真正返回错误</span></span><br><span class="line">    <span class="keyword">if</span> (fd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> fd;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... 后续创建子进程和加载程序代码的逻辑 ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<h3 id="追加重定向、条件执行和反引号"><a href="#追加重定向、条件执行和反引号" class="headerlink" title="追加重定向、条件执行和反引号"></a>追加重定向、条件执行和反引号</h3><h4 id="1-条件执行-amp-amp-与"><a href="#1-条件执行-amp-amp-与" class="headerlink" title="1. 条件执行 (&amp;&amp; 与 ||)"></a>1. 条件执行 (<code>&amp;&amp;</code> 与 <code>||</code>)</h4><p>此功能允许用户根据上一条命令的成功或失败，来决定是否执行下一条命令。</p>
+<ul>
+<li><p><strong>实现原理</strong>：<br>这个功能的实现，完全建立在<strong>“基于 IPC 的进程退出状态传递”</strong>这一核心机制之上。</p>
+<ol>
+<li><strong>解析</strong>：首先，<code>split_conditional</code> 函数会以 <code>&amp;&amp;</code> 和 <code>||</code> 为分隔符，将命令行切割成一个 <code>struct Cond</code> 的数组。数组的每个元素都包含一段命令和它后面的连接符类型 (<code>TOKEN_AND</code> 或 <code>TOKEN_OR</code>)。</li>
+<li><strong>循环与短路</strong>：在 <code>exec_line</code> 函数中，一个 <code>for</code> 循环负责遍历这个 <code>Cond</code> 数组。在每次循环的开始，它都会检查上一个命令的执行结果 <code>prev_res</code>，并根据连接符类型执行“短路”判断：<ul>
+<li>如果上一个连接符是 <code>||</code> 且上一条命令成功了 (<code>prev_res == 0</code>)，则 <code>continue</code> 跳过当前命令。</li>
+<li>如果上一个连接符是 <code>&amp;&amp;</code> 且上一条命令失败了 (<code>prev_res != 0</code>)，则 <code>continue</code> 跳过当前命令。</li>
+</ul>
+</li>
+<li><strong>获取结果</strong>：对于需要执行的外部命令，父进程（Shell）会 <code>fork</code> 一个子进程，然后通过 <code>syscall_ipc_recv()</code> 和 <code>wait()</code> 等待子进程结束，并从 <code>env-&gt;env_ipc_value</code> 中获取其退出状态，存入 <code>prev_res</code>，以供下一次循环判断使用。</li>
+</ol>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">exec_line</span><span class="params">(<span class="type">char</span> *cmd)</span> &#123;</span><br><span class="line">    <span class="comment">// ... (省略 split_conditional 解析部分) ...</span></span><br><span class="line">    <span class="type">int</span> prev_res = <span class="number">0</span>; <span class="comment">// 上一个命令的执行结果</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; cond_count; i++) &#123;</span><br><span class="line">        <span class="comment">// --- 短路逻辑判断 ---</span></span><br><span class="line">        <span class="keyword">if</span> (i &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (conds[i - <span class="number">1</span>].type == TOKEN_OR &amp;&amp; prev_res == <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (conds[i - <span class="number">1</span>].type == TOKEN_AND &amp;&amp; prev_res != <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// ---------------------</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// ... (执行 conds[i].cmd 命令，并将其结果存入 prev_res) ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<h4 id="2-命令替换-反引号"><a href="#2-命令替换-反引号" class="headerlink" title="2. 命令替换 (反引号 `` )"></a>2. 命令替换 (反引号 <code>`` </code>)</h4><p>此功能允许将一个命令的输出，作为另一个命令的参数。</p>
+<ul>
+<li><strong>实现原理</strong>：<br>它的核心是利用了操作系统提供的管道（Pipe）和 <code>fork</code> 机制。在 <code>expand_backticks</code> 函数中调用的 <code>capture_command_output</code> 函数是实现此功能的关键，其步骤如下：<ol>
+<li><strong>创建管道</strong>：父进程（Shell）首先调用 <code>pipe()</code> 创建一个管道，得到一个读取端和写入端。</li>
+<li><strong>创建子进程</strong>：父进程 <code>fork()</code> 一个子进程来执行反引号中的命令。</li>
+<li><strong>子进程重定向输出</strong>：子进程通过 <code>dup()</code> 系统调用，将自己的标准输出（文件描述符 <code>1</code>）重定向到管道的写入端。然后，它正常执行命令，此时所有本应打印到屏幕的输出，都被写入了管道。</li>
+<li><strong>父进程读取结果</strong>：父进程则从管道的读取端不断地 <code>read()</code> 数据，直到管道被关闭，从而将子命令的输出捕获到一个缓冲区中。</li>
+<li><strong>清理</strong>：父进程最后还必须调用 <code>syscall_ipc_recv()</code> 和 <code>wait()</code> 来正确地回收子进程，并消费掉子进程附带的 IPC 退出消息，以避免干扰后续主命令的执行。</li>
+</ol>
+</li>
+</ul>
+<h4 id="3-追加重定向-gt-gt"><a href="#3-追加重定向-gt-gt" class="headerlink" title="3. 追加重定向 (&gt;&gt;)"></a>3. 追加重定向 (<code>&gt;&gt;</code>)</h4><p>此功能用于将命令的输出追加到文件末尾，而非覆盖。</p>
+<ul>
+<li><p><strong>实现原理</strong>：</p>
+<ol>
+<li><strong>识别符号</strong>：首先，我修改了 <code>_gettoken</code> 分词器，使其能够将 <code>&gt;&gt;</code> 识别为一个不同于 <code>&gt;</code> 的、独立的新 Token (<code>TOKEN_APPEND</code>)。</li>
+<li><strong>处理 Token</strong>：在 <code>parsecmd</code> 函数的 <code>switch</code> 语句中，我为 <code>TOKEN_APPEND</code> 增加了一个新的 <code>case</code>。</li>
+<li><strong>关键实现</strong>：其核心技巧分为两步：<ul>
+<li>调用 <code>open()</code> 打开文件时，使用的标志位是 <code>O_WRONLY | O_CREAT</code>，<strong>刻意不使用 <code>O_TRUNC</code></strong>。这保证了如果文件已存在，其内容不会被清空。</li>
+<li>文件打开后，在进行 <code>dup()</code> 重定向之前，<strong>手动修改文件描述符结构体中的 <code>fd_offset</code> 成员，将其值设置为文件的当前大小 <code>f_file.f_size</code></strong>。这就像手动将“写入光标”移动到了文件的末尾。</li>
+</ul>
+</li>
+</ol>
+<div class="code-container" data-rel="C"><figure class="iseeu highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">case</span> TOKEN_APPEND:</span><br><span class="line">    <span class="keyword">if</span> (gettoken(<span class="number">0</span>, &amp;t) != <span class="string">&#x27;w&#x27;</span>) &#123; <span class="comment">/* 错误处理 */</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. open 时不使用 O_TRUNC</span></span><br><span class="line">    fd = open(t, O_WRONLY | O_CREAT);</span><br><span class="line">    <span class="keyword">if</span> (fd &lt; <span class="number">0</span>) &#123; <span class="comment">/* 错误处理 */</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 手动将写入指针移动到文件末尾</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Fd</span> *<span class="title">fd_struct</span>;</span></span><br><span class="line">    fd_lookup(fd, &amp;fd_struct);</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Filefd</span> *<span class="title">ffd</span> =</span> (<span class="keyword">struct</span> Filefd *)fd_struct;</span><br><span class="line">    fd_struct-&gt;fd_offset = ffd-&gt;f_file.f_size;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 重定向标准输出</span></span><br><span class="line">    dup(fd, <span class="number">1</span>);</span><br><span class="line">    close(fd);</span><br><span class="line">    <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure></div>
+</li>
+</ul>
+<h2 id="挑战性任务难点"><a href="#挑战性任务难点" class="headerlink" title="挑战性任务难点"></a>挑战性任务难点</h2><p><strong>1. 复杂的状态管理</strong></p>
+<ul>
+<li><strong>进程级状态（CWD）</strong>：为实现相对路径，需要深入到内核，修改进程控制块 <code>struct Env</code>，为每个进程增加“当前工作目录”这一状态。这要求在内核与用户态之间建立清晰的界限和交互（通过 <code>cd</code> 和 <code>pwd</code> 的系统调用）。</li>
+<li><strong>Shell 级状态（变量）</strong>：为了实现环境变量和局部变量，需要在 Shell 进程的内存中设计一套完整的变量管理系统。难点在于区分不同变量的作用域（局部 vs 全局）和属性（只读），并设计将环境变量正确地“遗传”给子进程的机制。</li>
+<li><strong>持久化状态（历史记录）</strong>：<code>history</code> 功能不仅要在内存中实现一个高效的环形缓冲区来管理命令，还要处理与磁盘文件 <code>.mos_history</code> 的同步读写，以实现历史记录的持久化。</li>
+</ul>
+<p><strong>2. 底层系统交互与协议设计</strong></p>
+<ul>
+<li><strong>IPC 退出码协议</strong>：这是实现 <code>&amp;&amp;</code> 和 <code>||</code> 的基石。由于不能修改内核 <code>wait</code> 机制，我们从零设计了一套基于 IPC 的、可跨越多级进程的退出状态传递协议。难点在于设计 <code>runcmd</code> 作为“中继站”的角色，来保证状态码能从真正的执行者（孙子进程）可靠地传递回主 Shell。</li>
+<li><strong>文件描述符（FD）精细操作</strong>：实现 <code>&gt;&gt;</code> 追加重定向和 <code>`` </code> 命令替换，都要求对文件描述符有深刻的理解。前者需要通过直接修改 <code>fd_struct-&gt;fd_offset</code> 来实现对文件写入位置的精确控制；后者则需要熟练运用 <code>pipe()</code> 创建管道、<code>dup()</code> 复制文件描述符来实现 I/O 流的重定向。</li>
+</ul>
+<p><strong>3. 并发与时序问题调试</strong></p>
+<ul>
+<li><strong><code>wait()</code> 与 <code>recv()</code> 的竞态条件</strong>：这是导致反复死锁的罪魁祸首。我们最终发现，必须先调用 <code>recv()</code> 等待 IPC 消息，再调用 <code>wait()</code> 回收子进程，否则子进程被 <code>wait</code> 清理后，它发出的消息就可能被内核丢弃，导致父进程永久等待。</li>
+<li><strong>IPC 消息污染</strong>：在实现反引号功能时，其子进程发出的 IPC 消息如果没有被及时“消费”，就会残留在主 Shell 的消息队列里，被下一个完全不相关的命令错误地接收，导致后续的 <code>&amp;&amp;</code> <code>||</code> 逻辑全盘崩溃。</li>
+</ul>
+<h2 id="实验感想"><a href="#实验感想" class="headerlink" title="实验感想"></a>实验感想</h2><p>如果说之前的实验是让我们学会如何制造锤子、螺丝刀等“零件”，那么这次的 Shell 项目就是给了我们一张图纸，要求我们用所有这些零件组装出一台能正常运转的“机器”。这个过程让我对操作系统这门课的认识，从“学习理论知识”真正转向了“应用理论解决工程问题”。感谢挑战性任务，感谢os，本学期操作系统课程正式完结！</p>
+]]></content>
+      <tags>
+        <tag>os</tag>
       </tags>
   </entry>
 </search>

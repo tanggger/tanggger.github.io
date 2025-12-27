@@ -260,7 +260,7 @@
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">6</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">7</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -413,10 +413,8 @@
                       alt="bcbee409445ba3e263ff9e3fbbb7c4f"
                 ></p>
 <h4 id="类图介绍"><a href="#类图介绍" class="headerlink" title="类图介绍"></a>类图介绍</h4><ul>
-<li><p><code>MainClass</code>：主类作用主要是接收自定义普通表达式、自定义递归表达式以及最后的计算表达式输入，以及调用一系列处理输入的核心方法。</p>
-</li>
-<li><p><code>Token</code>：<code>Token</code>类主要负责将输入的每一个字符对应成特定的词元，以便后续的词法分析以及语法分析。</p>
-</li>
+<li><code>MainClass</code>：主类作用主要是接收自定义普通表达式、自定义递归表达式以及最后的计算表达式输入，以及调用一系列处理输入的核心方法。</li>
+<li><code>Token</code>：<code>Token</code>类主要负责将输入的每一个字符对应成特定的词元，以便后续的词法分析以及语法分析。</li>
 <li><p><code>Lexer</code>：<code>Lexer</code>类是词法分析器，它实现了词法分析功能，并且将分析得到的信息存储到<code>token</code>流中。在<code>hw1</code>的开发中，<code>Lexer</code>的功能仅限于遍历输入，将每一个元素转换成<code>token</code>；但是在后续<code>hw2</code>和<code>hw3</code>的迭代中，<code>Lexer</code>还承担了替换自定义函数递归表达式、自定义函数普通表达式、以及求导算子结果的功能，因此在我的架构中，<code>Lexer</code>类应该属于核心部分之一。</p>
 </li>
 <li><p><code>Func</code>：<code>Func</code>类定义的是自定义递归函数，主要功能是存储自定义递归函数的关键要素，如序号，形参因子，函数<code>Lexer</code>等，以及一个核心功能，即得出自定义递归表达式的最终结果。</p>
@@ -432,8 +430,8 @@
 <li><p><code>Mono</code>：<code>unit1</code>中，最终输出的表达式其实是一个</p>
 </li>
 </ul>
-<p>$$<br>Expr &#x3D; \sum (coe_i * x_{i}^{exp_i} * \prod sin_j(Expr)^{exp_j} * \prod cos_j(Expr)^{exp_j})<br>$$</p>
-<p>的形式。因此我们定义了一个<code>Mono</code>类来存储一个最小单元的内容，包括系数、<code>x</code>指数以及三角函数项。</p>
+<script type="math/tex; mode=display">
+Expr = \sum (coe_i * x_{i}^{exp_i} * \prod sin_j(Expr)^{exp_j} * \prod cos_j(Expr)^{exp_j})</script><p>的形式。因此我们定义了一个<code>Mono</code>类来存储一个最小单元的内容，包括系数、<code>x</code>指数以及三角函数项。</p>
 <ul>
 <li><code>Poly</code>：<code>Poly</code>类其实就是一个<code>Mono</code>的列表，就是表达式的最终形态。</li>
 </ul>
@@ -589,7 +587,7 @@
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        6 posts in total
+                        7 posts in total
                     </span>
                     
                 </p>
