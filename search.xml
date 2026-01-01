@@ -5,6 +5,9 @@
     <url>/2025/02/06/My-First-Blog/</url>
     <content><![CDATA[<p>Welcome to My Blog!</p>
 ]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
   </entry>
   <entry>
     <title>make命令教程</title>
@@ -73,8 +76,12 @@
 <div class="code-container" data-rel="Makefile"><figure class="iseeu highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">f1.o: f1.c</span></span><br><span class="line"><span class="section">f2.o: f2.c</span></span><br></pre></td></tr></table></figure></div>
 <p>使用匹配符<code>%</code>，可以将大量同类型的文件，只用一条规则就完成构建。</p>
 ]]></content>
+      <categories>
+        <category>开发工具</category>
+      </categories>
       <tags>
-        <tag>os</tag>
+        <tag>操作系统</tag>
+        <tag>开发工具</tag>
       </tags>
   </entry>
   <entry>
@@ -215,8 +222,11 @@
 <h2 id="心得体会"><a href="#心得体会" class="headerlink" title="心得体会"></a>心得体会</h2><h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p>由于电梯系统天然是一个多线程协同调度的问题，需要多个电梯线程与输入、调度线程并发运行，如何避免竞态条件和线程阻塞成为核心挑战。例如在 <code>RequestTable</code> 中通过 <code>synchronized</code> 同步方法与 <code>wait/notifyAll()</code> 实现线程安全的生产者-消费者模型，确保请求的有序添加与处理。而在 <code>Elevator</code> 类中，对于共享资源如电梯当前楼层、请求队列、状态标志等，也通过细粒度的锁保证状态更新的一致性与原子性，避免了调度混乱与死锁风险。此外，<code>InputThread</code> 与 <code>Schedule</code> 的解耦设计，也体现了对输入处理与请求调度之间同步性的合理控制。</p>
 <h3 id="层次化设计"><a href="#层次化设计" class="headerlink" title="层次化设计"></a>层次化设计</h3><p>在<strong>层次化设计</strong>方面，系统采用了清晰的职责划分架构。例如，<code>MainClass</code> 负责系统初始化，<code>InputThread</code> 负责请求接收与解析，<code>Schedule</code> 统一管理调度策略，而每个 <code>Elevator</code> 实例则自主管理自身状态与行为响应。各模块之间通过 <code>RequestTable</code> 和 <code>Person</code> 类传递数据，确保了数据逻辑的模块内封装、模块间低耦合。在电梯运行策略层面，进一步引入了 <code>Strategy</code> 模块封装调度决策逻辑，通过 <code>Advice</code> 枚举类实现电梯行为控制流的抽象，增强了代码的可维护性与可拓展性。</p>
 ]]></content>
+      <categories>
+        <category>面向对象</category>
+      </categories>
       <tags>
-        <tag>oo</tag>
+        <tag>面向对象</tag>
       </tags>
   </entry>
   <entry>
@@ -332,8 +342,11 @@ Expr = \sum (coe_i * x_{i}^{exp_i} * \prod sin_j(Expr)^{exp_j} * \prod cos_j(Exp
 <p>另外一个重要的体会就是我对代码的简洁性和可扩展性有了比较深刻的认识。在<code>hw1</code>写的时候，我其实并没有考虑到可扩展性，想到只是把这一次的要求完成即可，但是这样的结果就是我在<code>hw2</code>和<code>hw3</code>的时候对很多方法进行了重写和改进。在真正的实践过程中，新增的要求可能是自己无法想象的，因此代码在最开始的时候就需要对其的可扩展性进行深刻地考虑。还有代码的简洁性，代码构建过程中需要尽量增强代码的复用性，减少<code>debug</code>难度。</p>
 <p>还有极其重要的就是本次作业我的代码中需要着重注意深浅拷贝问题。由于我的核心思想是<code>Lexer</code>的替换，因此在替换的过程中会时常出现更改参数的操作，而有些时候在退出递归的时候我并不需要这些参数进行改变，因此在深浅拷贝上我出现了比较多的<code>bug</code>，也进行了很多考虑，我认为这个部分也是我的架构在具体实现上的难点。</p>
 ]]></content>
+      <categories>
+        <category>面向对象</category>
+      </categories>
       <tags>
-        <tag>oo</tag>
+        <tag>面向对象</tag>
       </tags>
   </entry>
   <entry>
@@ -523,8 +536,11 @@ Expr = \sum (coe_i * x_{i}^{exp_i} * \prod sin_j(Expr)^{exp_j} * \prod cos_j(Exp
 <h2 id="学习体会"><a href="#学习体会" class="headerlink" title="学习体会"></a>学习体会</h2><p>本单元的学习让我深刻体会到JML规格在软件开发中的重要性。通过精确的形式化语言定义接口行为，JML为代码实现提供了清晰的“契约”，减少了理解偏差。初期，阅读和理解复杂的JML表达式，如<code>\forall</code>和<code>\old</code>，确有挑战，但一旦掌握，便能准确把握方法的功能边界和状态变化。</p>
 <p>最大的收获在于理解“规格与实现分离”。JML仅定义“做什么”，给予实现“如何做”的极大自由。这促使我不仅要保证功能正确，更要思考数据结构和算法选择以优化性能，如通过增量维护<code>tripleSum</code>和<code>valueSumCache</code>来避免超时。同时，JML也直接指导了JUnit测试用例的设计，特别是针对边界条件和异常情况的测试，有效提升了代码的健壮性。这次经历让我认识到，<strong>严谨的规格是构建高质量、可维护软件系统的坚实基础</strong>。</p>
 ]]></content>
+      <categories>
+        <category>面向对象</category>
+      </categories>
       <tags>
-        <tag>oo</tag>
+        <tag>面向对象</tag>
       </tags>
   </entry>
   <entry>
@@ -669,8 +685,11 @@ Expr = \sum (coe_i * x_{i}^{exp_i} * \prod sin_j(Expr)^{exp_j} * \prod cos_j(Exp
 <p>谢谢你们，oo课的老师们，谢谢你们，oo的助教们，谢谢你，oo。</p>
 </blockquote>
 ]]></content>
+      <categories>
+        <category>面向对象</category>
+      </categories>
       <tags>
-        <tag>oo</tag>
+        <tag>面向对象</tag>
       </tags>
   </entry>
   <entry>
@@ -824,8 +843,11 @@ Expr = \sum (coe_i * x_{i}^{exp_i} * \prod sin_j(Expr)^{exp_j} * \prod cos_j(Exp
 </ul>
 <h2 id="实验感想"><a href="#实验感想" class="headerlink" title="实验感想"></a>实验感想</h2><p>如果说之前的实验是让我们学会如何制造锤子、螺丝刀等“零件”，那么这次的 Shell 项目就是给了我们一张图纸，要求我们用所有这些零件组装出一台能正常运转的“机器”。这个过程让我对操作系统这门课的认识，从“学习理论知识”真正转向了“应用理论解决工程问题”。感谢挑战性任务，感谢os，本学期操作系统课程正式完结！</p>
 ]]></content>
+      <categories>
+        <category>操作系统</category>
+      </categories>
       <tags>
-        <tag>os</tag>
+        <tag>操作系统</tag>
       </tags>
   </entry>
   <entry>
@@ -1176,8 +1198,11 @@ Expr = \sum (coe_i * x_{i}^{exp_i} * \prod sin_j(Expr)^{exp_j} * \prod cos_j(Exp
 <h4 id="14-2-3-取模优化-SREM"><a href="#14-2-3-取模优化-SREM" class="headerlink" title="14.2.3 取模优化 (SREM)"></a>14.2.3 取模优化 (SREM)</h4><p>取模运算通过 <code>a % d = a - (a / d) * d</code> 复用除法优化结果：</p>
 <div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">optimizeConstRem</span><span class="params">(Register regL, Register regResult, IrValue op1, <span class="type">int</span> d)</span> {</span><br><span class="line">    <span class="type">Register</span> <span class="variable">regQ</span> <span class="operator">=</span> Register.K1;</span><br><span class="line">    optimizeConstDiv(regL, regQ, op1, d);  <span class="comment">// 复用除法优化</span></span><br><span class="line">    </span><br><span class="line">    loadValueToRegister(op1, regL);</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MarsLi</span>(Register.K0, d);</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MipsMdu</span>(MduType.MULT, regQ, Register.K0);</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MipsMdu</span>(MduType.MFLO, Register.K0);</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">MipsAlu</span>(AluType.SUBU, regResult, regL, Register.K0);</span><br><span class="line">    saveResult(<span class="built_in">this</span>, regResult);</span><br><span class="line">}</span><br></pre></td></tr></table></figure></div>
 ]]></content>
+      <categories>
+        <category>编译原理</category>
+      </categories>
       <tags>
-        <tag>编译</tag>
+        <tag>编译原理</tag>
       </tags>
   </entry>
   <entry>
@@ -1413,8 +1438,11 @@ Expr = \sum (coe_i * x_{i}^{exp_i} * \prod sin_j(Expr)^{exp_j} * \prod cos_j(Exp
 <h4 id="8-2-4-全局变量和字符串常量"><a href="#8-2-4-全局变量和字符串常量" class="headerlink" title="8.2.4 全局变量和字符串常量"></a>8.2.4 全局变量和字符串常量</h4><div class="code-container" data-rel="Java"><figure class="iseeu highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> <span class="number">10</span>;    → a: .word <span class="number">10</span></span><br><span class="line"><span class="type">int</span> arr[<span class="number">3</span>];    → arr: .word <span class="number">0</span>， <span class="number">0</span>， <span class="number">0</span></span><br><span class="line"><span class="string">"hello"</span>        → str_0: .asciiz <span class="string">"hello"</span></span><br></pre></td></tr></table></figure></div>
 <p>程序结构：<br><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">jal main</span><br><span class="line">j end</span><br><span class="line">...(函数定义)</span><br><span class="line">end: li $v0， 10; syscall</span><br></pre></td></tr></table></figure></div></p>
 ]]></content>
+      <categories>
+        <category>编译原理</category>
+      </categories>
       <tags>
-        <tag>编译</tag>
+        <tag>编译原理</tag>
       </tags>
   </entry>
 </search>
