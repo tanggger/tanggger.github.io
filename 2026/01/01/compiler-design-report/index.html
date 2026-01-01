@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords" content="Hexo Theme Redefine">
+    <meta name="keywords" content="编译原理, 操作系统, 面向对象, SysY, 软件工程, 技术分享, 博客">
     
     <meta name="author" content="Zixuan Tang">
     <!-- preconnect -->
@@ -13,7 +13,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/2026/01/01/compiler-design-report/"/>
+    <link rel="canonical" href="https://tanggger.github.io/2026/01/01/compiler-design-report/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -24,17 +24,17 @@
         <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BUAA_Compiler 设计文档">
-<meta property="og:url" content="http://example.com/2026/01/01/compiler-design-report/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:url" content="https://tanggger.github.io/2026/01/01/compiler-design-report/index.html">
+<meta property="og:site_name" content="Tanggger&#39;s Blog">
 <meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/images/redefine-og.webp">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tanggger.github.io/images/redefine-og.webp">
 <meta property="article:published_time" content="2026-01-01T08:12:50.000Z">
 <meta property="article:modified_time" content="2026-01-01T08:27:54.684Z">
-<meta property="article:author" content="John Doe">
+<meta property="article:author" content="Zixuan Tang">
 <meta property="article:tag" content="编译原理">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/redefine-og.webp">
+<meta name="twitter:image" content="https://tanggger.github.io/images/redefine-og.webp">
     
     
     <!--- Icon Part-->
@@ -82,9 +82,9 @@
     
 
     <script id="hexo-configurations">
-    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.xml"};
+    window.config = {"hostname":"tanggger.github.io","root":"/","language":"zh-CN","path":"search.xml"};
     window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":false,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"ÍĆźöÔÄśÁ","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#002FA7","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallhaven-wqery6-light.webp","dark":"/images/wallhaven-wqery6-dark.webp"},"title":"Tanggger's Blog","subtitle":{"text":["我惦着你","在时间里洄游"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"之外","artist":"陈奕迅","url":"/music/eason_zhiwai.mp3","cover":"/images/t018e6740ba46684c66.jpg","lrc":"/music/eason_zhiwai.lrc"},{"name":"如果你也听说","artist":"张惠妹","url":"/music/如果你也听说-张惠妹.mp3","cover":"/images/t01bbdb98901103893e.jpg","lrc":"/music/如果你也听说-张惠妹-歌词.lrc"},{"name":"回留","artist":"方大同","url":"/music/回留-方大同.mp3","cover":"/images/OIP-C.jpg","lrc":"/music/回留-方大同-歌词.lrc"}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.2","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Tags":{"icon":"fa-solid fa-tags","path":"/tags/"},"Categories":{"icon":"fa-solid fa-folder","path":"/categories/"},"Essays":{"icon":"fa-solid fa-feather","path":"/essays/"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":{"Tags":{"path":"/tags/","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories/","icon":"fa-regular fa-folder"},"Essays":{"path":"/essays/","icon":"fa-regular fa-feather"}}},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2025/2/13 22:21:00"};
-    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
     window.data = {"masonry":false};
   </script>
     
@@ -268,7 +268,7 @@ mjx-container[display="true"] + br {
                                    href="/"
                                         >
                                     <i class="fa-regular fa-house fa-fw"></i>
-                                    HOME
+                                    首页
                                     
                                 </a>
 
@@ -285,7 +285,7 @@ mjx-container[display="true"] + br {
                                    href="/tags/"
                                         >
                                     <i class="fa-solid fa-tags fa-fw"></i>
-                                    TAGS
+                                    标签
                                     
                                 </a>
 
@@ -302,7 +302,7 @@ mjx-container[display="true"] + br {
                                    href="/categories/"
                                         >
                                     <i class="fa-solid fa-folder fa-fw"></i>
-                                    CATEGORIES
+                                    分类
                                     
                                 </a>
 
@@ -360,7 +360,7 @@ mjx-container[display="true"] + br {
                            href="/"
                         >
                             <span>
-                                HOME
+                                首页
                             </span>
                             
                                 <i class="fa-regular fa-house fa-sm fa-fw"></i>
@@ -380,7 +380,7 @@ mjx-container[display="true"] + br {
                            href="/tags/"
                         >
                             <span>
-                                TAGS
+                                标签
                             </span>
                             
                                 <i class="fa-solid fa-tags fa-sm fa-fw"></i>
@@ -400,7 +400,7 @@ mjx-container[display="true"] + br {
                            href="/categories/"
                         >
                             <span>
-                                CATEGORIES
+                                分类
                             </span>
                             
                                 <i class="fa-solid fa-folder fa-sm fa-fw"></i>
@@ -444,15 +444,15 @@ mjx-container[display="true"] + br {
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
         <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">4</div>
-        <div class="label text-third-text-color text-sm">Tags</div>
+        <div class="label text-third-text-color text-sm">标签</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
         <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
-        <div class="label text-third-text-color text-sm">Categories</div>
+        <div class="label text-third-text-color text-sm">分类</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
         <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">9</div>
-        <div class="label text-third-text-color text-sm">Posts</div>
+        <div class="label text-third-text-color text-sm">文章</div>
     </a>
 </div>
     </div>
@@ -521,15 +521,15 @@ mjx-container[display="true"] + br {
                 <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
         <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">4</div>
-        <div class="label text-third-text-color text-sm">Tags</div>
+        <div class="label text-third-text-color text-sm">标签</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
         <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
-        <div class="label text-third-text-color text-sm">Categories</div>
+        <div class="label text-third-text-color text-sm">分类</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
         <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">9</div>
-        <div class="label text-third-text-color text-sm">Posts</div>
+        <div class="label text-third-text-color text-sm">文章</div>
     </a>
 </div>
             </div>
@@ -570,14 +570,14 @@ mjx-container[display="true"] + br {
         <i class="fa-regular fa-pen-fancy"></i>&nbsp;
         <span class="desktop">2026-01-01 16:12:50</span>
         <span class="mobile">2026-01-01 16:12:50</span>
-        <span class="hover-info">Created</span>
+        <span class="hover-info">创建</span>
     </span>
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
             <span class="desktop">2026-01-01 16:27:54</span>
             <span class="mobile">2026-01-01 16:27:54</span>
-            <span class="hover-info">Updated</span>
+            <span class="hover-info">更新</span>
         </span>
     
 
@@ -884,7 +884,7 @@ mjx-container[display="true"] + br {
 				<a class="next" rel="next" href="/2025/12/27/compiler-optimization-report/">
 					<span class="title flex justify-center items-center">
 						<span class="post-nav-title-item">BUAA_Compiler 优化文章</span>
-						<span class="post-nav-item">Next posts</span>
+						<span class="post-nav-item">下一篇</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-right"></i>
@@ -901,7 +901,7 @@ mjx-container[display="true"] + br {
 			<div class="comments-container mt-10 w-full ">
     <div id="comment-anchor" class="w-full h-2.5"></div>
     <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
-        Comments
+        评论
     </div>
     
 
@@ -946,7 +946,7 @@ mjx-container[display="true"] + br {
 	<div class="toc-content-container">
 		<div class="post-toc-wrap">
 	<div class="post-toc">
-		<div class="toc-title">On this page</div>
+		<div class="toc-title">目录</div>
 		<div class="page-title">BUAA_Compiler 设计文档</div>
 		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%8F%82%E8%80%83%E7%BC%96%E8%AF%91%E5%99%A8%E4%BB%8B%E7%BB%8D"><span class="nav-text">一、参考编译器介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88"><span class="nav-text">1.1 参考方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-LLVM-%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90"><span class="nav-text">1.2 LLVM 架构分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-LLVM-%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1%E5%88%86%E6%9E%90"><span class="nav-text">1.3 LLVM 接口设计分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-LLVM-%E6%96%87%E4%BB%B6%E7%BB%84%E7%BB%87%E5%88%86%E6%9E%90"><span class="nav-text">1.4 LLVM 文件组织分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E7%BC%96%E8%AF%91%E5%99%A8%E6%80%BB%E4%BD%93%E8%AE%BE%E8%AE%A1"><span class="nav-text">二、编译器总体设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87"><span class="nav-text">2.1 设计目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-text">2.2 整体架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%A8%A1%E5%9D%97%E5%88%92%E5%88%86%E8%AE%BE%E8%AE%A1"><span class="nav-text">2.3 模块划分设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E6%A0%B8%E5%BF%83%E6%8E%A5%E5%8F%A3"><span class="nav-text">2.4 核心接口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E8%AE%BE%E8%AE%A1"><span class="nav-text">三、词法分析设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E7%BC%96%E7%A0%81%E5%89%8D%E8%AE%BE%E8%AE%A1"><span class="nav-text">3.1 编码前设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E8%B0%83%E6%95%B4"><span class="nav-text">3.2 实现过程中的调整</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90%E8%AE%BE%E8%AE%A1"><span class="nav-text">四、语法分析设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E7%BC%96%E7%A0%81%E5%89%8D%E8%AE%BE%E8%AE%A1"><span class="nav-text">4.1 编码前设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E8%B0%83%E6%95%B4"><span class="nav-text">4.2 实现过程中的调整</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90%E8%AE%BE%E8%AE%A1"><span class="nav-text">五、语义分析设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E7%BC%96%E7%A0%81%E5%89%8D%E8%AE%BE%E8%AE%A1"><span class="nav-text">5.1 编码前设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E8%B0%83%E6%95%B4"><span class="nav-text">5.2 实现过程中的调整</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E8%AE%BE%E8%AE%A1"><span class="nav-text">六、代码生成设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E7%BC%96%E7%A0%81%E5%89%8D%E8%AE%BE%E8%AE%A1"><span class="nav-text">6.1 编码前设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E8%B0%83%E6%95%B4"><span class="nav-text">6.2 实现过程中的调整</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E8%AE%BE%E8%AE%A1"><span class="nav-text">七、代码优化设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E7%BC%96%E7%A0%81%E5%89%8D%E8%AE%BE%E8%AE%A1"><span class="nav-text">7.1 编码前设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E8%B0%83%E6%95%B4"><span class="nav-text">7.2 实现过程中的调整</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E7%9B%AE%E6%A0%87%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E8%AE%BE%E8%AE%A1"><span class="nav-text">八、目标代码生成设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E7%BC%96%E7%A0%81%E5%89%8D%E8%AE%BE%E8%AE%A1"><span class="nav-text">8.1 编码前设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B"><span class="nav-text">8.2 实现过程</span></a></li></ol></li></ol>
 
@@ -975,7 +975,7 @@ mjx-container[display="true"] + br {
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        9 posts in total
+                        共撰写了 9 篇文章
                     </span>
                     
                 </p>
@@ -986,26 +986,26 @@ mjx-container[display="true"] + br {
             <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
                 
                     <span id="busuanzi_container_site_uv" class="lg:!block">
-                        <span class="text-sm">VISITOR COUNT</span>
+                        <span class="text-sm">访问人数</span>
                         <span id="busuanzi_value_site_uv"></span>
                     </span>
                 
                 
                     <span id="busuanzi_container_site_pv" class="lg:!block">
-                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span class="text-sm">总访问量</span>
                         <span id="busuanzi_value_site_pv"></span>
                     </span>
                 
             </div>
         
         <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
-            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
-            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.2</a></span>
+            <span class="lg:block text-sm">由 <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a> 驱动</span>
+            <span class="text-sm lg:block">主题&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.2</a></span>
         </div>
         
         
             <div>
-                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+                博客已运行 <span class="odometer" id="runtime_days" ></span> 天 <span class="odometer" id="runtime_hours"></span> 小时 <span class="odometer" id="runtime_minutes"></span> 分钟 <span class="odometer" id="runtime_seconds"></span> 秒
             </div>
         
         
@@ -1106,7 +1106,7 @@ mjx-container[display="true"] + br {
 				<i class="fa-solid fa-keyboard"></i>
 			</span>
 			<div class="search-input-container">
-				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="站内搜索您需要的内容..." spellcheck="false" type="search" class="search-input">
 			</div>
 			<span class="popup-btn-close">
 				<i class="fa-solid fa-times"></i>
